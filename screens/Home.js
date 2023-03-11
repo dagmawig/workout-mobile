@@ -20,18 +20,21 @@ const Home = () => {
                 <View className='w-full h-full items-center justify-center'>
                     <Text className=' text-[30px] text-white font-bold text-center pt-2'>Let's get some sweat in!</Text>
                     <ImageBackground
-                        source={HomeLogo}
+                        source={require('../assets/home_logo.png')}
                         className='w-80 h-80'
                     >
-                        <TouchableOpacity className='absolute top-0 left-0 right-0 bottom-0 items-center justify-center'>
+                        <View 
+                        className='absolute top-0 left-0 right-0 bottom-0 items-center justify-center'>
                             <Animatable.View
                                 animation={'pulse'}
                                 easing='ease-in-out'
                                 iterationCount={'infinite'}
                                 className='w-28 h-28 items-center justify-center bg-[#28547B] rounded-full'>
-                                <Text className='text-white  font-bold text-[40px]'>GO</Text>
+                                <TouchableOpacity className='w-full h-full'>
+                                    <Text className='text-white  font-bold text-[40px]'>GO</Text>
+                                </TouchableOpacity>
                             </Animatable.View>
-                        </TouchableOpacity>
+                        </View>
                     </ImageBackground>
                 </View>
             </View>
