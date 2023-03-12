@@ -19,11 +19,11 @@ const Home = () => {
             <View className='pt-[18px] h-full w-full' >
                 <View className='w-full h-full items-center justify-top pt-[130px]'>
                     <View className='flex-row px-6 mt-8 items-center space-x-2'>
-                        <View className='w-40 h-18 rounded-lg items-center justify-center'>
-                            <Text className='text-white text-[60px] font-bold items-center justify-center'>FitFUSE</Text>
+                        <View className='w-60 h-18 rounded-lg items-center justify-center'>
+                            <Text className='w-full text-white text-[55px] font-bold items-center justify-center text-center'>FitFUSE</Text>
                         </View>
                     </View>
-                    <Text className=' text-[30px] text-white font-bold text-center pt-2'>Let's get some sweat in!</Text>
+                    <Text className=' text-[30px] text-white font-bold text-center pt-2'>Let's break a sweat!</Text>
                     <ImageBackground
                         source={require('../assets/home_logo.png')}
                         className='w-80 h-80'
