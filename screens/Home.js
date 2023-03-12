@@ -1,7 +1,6 @@
 import { View, Text, ImageBackground, TouchableOpacity } from 'react-native'
 import React, { useLayoutEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { HomeLogo } from '../assets';
 import * as Animatable from 'react-native-animatable';
 const Home = () => {
 

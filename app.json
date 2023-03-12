@@ -4,7 +4,7 @@
     "slug": "client",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/home_logo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash_logo_f.png",
@@ -24,7 +24,7 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon_1.png"
+      "favicon": "./assets/favicon.png"
     }
   }
 }
