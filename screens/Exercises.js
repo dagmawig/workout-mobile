@@ -31,10 +31,11 @@ const Exercises = () => {
                     </View>
                 </View>
                 <ScrollView className='mb-11 px-3'>
-                    <ExerComp/>
+                    
+                    <ExerComp />
                 </ScrollView>
                 <View className='absolute bottom-0 h-10 bg-[#28547B] w-full items-center justify-center'>
-                    dfgdf
+                    <Text> dfgdf</Text>
                 </View>
             </View>
 
