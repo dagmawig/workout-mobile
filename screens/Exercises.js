@@ -6,6 +6,7 @@ import ExerComp from '../components/ExerComp';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import exerNames from '../assets/ExerData/exerciseNames.json';
 import Fuse from 'fuse.js';
+import FilterTagComp from '../components/FilterTagComp';
 
 const Exercises = () => {
 
@@ -24,7 +25,8 @@ const Exercises = () => {
     const navigation = useNavigation();
     const [searchMode, updateSearchMode] = useState(true);
     const [exerArr, setExerArr] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState([]);
+    const [tagList, setTagList] = useState([]);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -33,13 +35,30 @@ const Exercises = () => {
     }, [])
 
     function handleChange(e) {
-        if(!e.target.value.split(' ').join('')) setExerArr(exerFuse.search("!0123456789"))
-        else setExerArr(exerFuse.search("'" + e.target.value.trim()))
+        if (!e.target.value.split(' ').join('')) {
+            setExerArr(exerFuse.search("!0123456789"));
+            setSearchTerm([]);
+        }
+        else {
+            setExerArr(exerFuse.search("'" + e.target.value.trim()));
+            setSearchTerm([e.target.value.trim()]);
+        }
         console.log(exerArr)
     }
 
     function handleBack() {
         updateSearchMode(false);
+    }
+
+    function clearTag(tagIndex) {
+        const newTagList = tagList.slice(0, tagIndex).concat(tagList.slice(tagIndex + 1));
+        setTagList(newTagList);
+    }
+
+    function clearSearch() {
+        console.log("finds function");
+        setExerArr(exerFuse.search("!0123456789"));
+        setSearchTerm([]);
     }
 
     return (
@@ -50,7 +69,13 @@ const Exercises = () => {
                         <TouchableOpacity onPress={handleBack}>
                             <FontAwesome5 name="arrow-left" size={17} color="white" />
                         </TouchableOpacity>
-                        <TextInput className='h-7 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white' cursorColor={'white'} placeholder='exercise name' placeholderTextColor={'gray'} onChange={(e)=>handleChange(e)} />
+                        <TextInput
+                            className='h-7 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white'
+                            cursorColor={'white'}
+                            placeholder='exercise name'
+                            placeholderTextColor={'gray'}
+                            value={searchTerm.length>0? searchTerm[0] : ''}
+                            onChange={(e) => handleChange(e)} />
                         <TouchableOpacity className=''>
                             <FontAwesome5 name="filter" size={16} color="white" />
                         </TouchableOpacity>
@@ -84,10 +109,10 @@ const Exercises = () => {
                     </View> */}
                 </View>
                 <ScrollView className='mb-11 px-3'>
-                    {/* <View className='items-center space-x-2 rounded-xl border-2 border-white'>
-                        <Text className='text-white'>cable</Text>
-                        <TouchableOpacity><FontAwesome5 name="times" size={16} color="white" /></TouchableOpacity>
-                    </View> */}
+                    <View className='flex-row flex-wrap w-full justify-left items-center'>
+                        <FilterTagComp tagArr={searchTerm} clearSearch={clearSearch} search={true} />
+                        <FilterTagComp tagArr={tagList} clearTag={clearTag} search={false} />
+                    </View>
                     <ExerComp filterExer={exerArr} />
                 </ScrollView>
                 <View className='absolute bottom-0 h-10 bg-[#28547B] w-full items-center justify-center'>
