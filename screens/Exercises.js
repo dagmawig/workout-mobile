@@ -108,7 +108,7 @@ const Exercises = () => {
                         </TouchableOpacity>
                     </View> */}
                 </View>
-                <ScrollView className='mb-11 px-3'>
+                <ScrollView className='mb-11 px-3' keyboardShouldPersistTaps='handled'>
                     <View className='flex-row flex-wrap w-full justify-left items-center'>
                         <FilterTagComp tagArr={searchTerm} clearSearch={clearSearch} search={true} />
                         <FilterTagComp tagArr={tagList} clearTag={clearTag} search={false} />
