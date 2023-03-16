@@ -20,7 +20,7 @@ const Exercises = () => {
         keys: ['name']
     }
 
-    const exerFuse = new Fuse(exerLocal, options);
+    const exerFuse = new Fuse(exerLocal.slice(0,100), options);
 
     const navigation = useNavigation();
     const [searchMode, updateSearchMode] = useState(true);
@@ -34,16 +34,16 @@ const Exercises = () => {
         })
     }, [])
 
-    function handleChange(e) {
-        if(e.target.value.length===0) {
+    function handleChange(text) {
+        if(text==='') {
             setExerArr(exerFuse.search("!0123456789"));
             setSearchTerm([]);
         }
         else {
-            setExerArr(exerFuse.search("'" + e.target.value.trim()));
-            setSearchTerm([e.target.value]);
+            setExerArr(exerFuse.search("'" + text.trim()));
+            setSearchTerm([text]);
         }
-        console.log(exerArr)
+        //console.log(exerArr)
     }
 
     function handleBack() {
@@ -75,7 +75,7 @@ const Exercises = () => {
                             placeholder='exercise name'
                             placeholderTextColor={'gray'}
                             value={searchTerm.length>0? searchTerm[0] : ''}
-                            onChange={(e) => handleChange(e)} />
+                            onChangeText={(text) => handleChange(text)} />
                         <TouchableOpacity className=''>
                             <FontAwesome5 name="filter" size={16} color="white" />
                         </TouchableOpacity>
