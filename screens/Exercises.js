@@ -35,13 +35,13 @@ const Exercises = () => {
     }, [])
 
     function handleChange(e) {
-        if (!e.target.value.split(' ').join('')) {
+        if(e.target.value.length===0) {
             setExerArr(exerFuse.search("!0123456789"));
             setSearchTerm([]);
         }
         else {
             setExerArr(exerFuse.search("'" + e.target.value.trim()));
-            setSearchTerm([e.target.value.trim()]);
+            setSearchTerm([e.target.value]);
         }
         console.log(exerArr)
     }
