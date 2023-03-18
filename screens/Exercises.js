@@ -8,6 +8,8 @@ import exerNames from '../assets/ExerData/exerciseNames.json';
 import Fuse from 'fuse.js';
 import TagComp from '../components/TagComp';
 import FilterTagComp from '../components/FilterTagComp';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag } from '../components/workoutSlice';
 
 const Exercises = () => {
 
@@ -24,12 +26,18 @@ const Exercises = () => {
     const exerFuse = new Fuse(exerLocal.slice(0, 100), options);
 
     const navigation = useNavigation();
+    const stateSelector = useSelector(state => state.workout);
+    const dispatch = useDispatch()
+
     const [searchMode, setSearchMode] = useState(false);
-    const [exerArr, setExerArr] = useState([]);
+    const [exerArr, setExerArr] = useState(exerFuse.search("!0123456789"));
     const [searchTerm, setSearchTerm] = useState([]);
     const [tagList, setTagList] = useState([]);
     const [filterMode, setFilterMode] = useState(true);
     const [lastMode, setLastMode] = useState('');
+
+    const activeB = stateSelector.activeB;
+    const activeM = stateSelector.activeM;
 
     const bodyParts = [
         "back",
@@ -70,6 +78,20 @@ const Exercises = () => {
         })
     }, [])
 
+    function applyFilter(eArr) {
+        const bList = bodyParts.map((body, i)=> {
+            if(activeB[i]) return body;
+        });
+
+        const mList = muscleGroups.map((muscle, i) => {
+            if(activeM[i]) return muscle;
+        })
+
+        return eArr.filter(exer=> {
+            
+        })
+    }
+
     function handleChange(text) {
         if (text === '') {
             setExerArr(exerFuse.search("!0123456789"));
@@ -101,6 +123,19 @@ const Exercises = () => {
     function clearTag(tagIndex) {
         const newTagList = tagList.slice(0, tagIndex).concat(tagList.slice(tagIndex + 1));
         setTagList(newTagList);
+    }
+
+    function handleFilterTag(filterType, activeTag, tag) {
+        if(activeTag) {
+            filterType==='body'? setBodyTag(bodyTag.filter(ele=>{
+                return ele!==tag;
+            })) : setMuscleTag(muscleTag.filter(ele=>{
+                return ele!==tag;
+            }))
+        }
+        else {
+           filterType==='body'? setBodyTag([...bodyTag, tag]) : setMuscleTag([...muscleTag, tag]) 
+        }
     }
 
     function clearSearch() {
@@ -171,7 +206,7 @@ const Exercises = () => {
                                     <Text className='text-white'>Body Part</Text>
                                 </View>
                                 <View className='flex-row flex-wrap w-full justify-left items-center'>
-                                    <FilterTagComp filterTags={bodyParts} filterType={'body'} />
+                                    <FilterTagComp filterTags={bodyParts} filterType={'body'} handleFilterTag= {handleFilterTag} />
                                 </View>
                             </View>
                             <View className='mt-3'>
@@ -179,7 +214,7 @@ const Exercises = () => {
                                     <Text className='text-white'>Muscle Group</Text>
                                 </View>
                                 <View className='flex-row flex-wrap w-full justify-left items-center'>
-                                    <FilterTagComp filterTags={muscleGroups} filterType={'muscle'} />
+                                    <FilterTagComp filterTags={muscleGroups} filterType={'muscle'} handleFilterTag= {handleFilterTag} />
                                 </View>
                             </View>
                         </View> :
