@@ -10,6 +10,7 @@ import TagComp from '../components/TagComp';
 import FilterTagComp from '../components/FilterTagComp';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateActiveB, updateActiveM } from '../components/workoutSlice';
+import ExerDetComp from '../components/ExerDetComp';
 
 const Exercises = () => {
 
@@ -33,9 +34,11 @@ const Exercises = () => {
     const [exerArr, setExerArr] = useState(exerFuse.search("!0123456789"));
     const [searchTerm, setSearchTerm] = useState([]);
     const [tagList, setTagList] = useState([]);
-    const [filterMode, setFilterMode] = useState(true);
+    const [filterMode, setFilterMode] = useState(false);
     const [lastMode, setLastMode] = useState('');
     const [fExerArr, setFExerArr] = useState(exerArr);
+    const [detMode, setDetMode] = useState(false);
+    const [exerDetIndex, setExerDetIndex] = useState(null);
 
     const activeB = stateSelector.activeB;
     const activeM = stateSelector.activeM;
@@ -133,6 +136,8 @@ const Exercises = () => {
 
     function handleBackF() {
         setFilterMode(false);
+        setDetMode(false);
+        setExerDetIndex(null);
     }
 
     function handleFilter(mode) {
@@ -171,6 +176,27 @@ const Exercises = () => {
         setFExerArr(applyFilter(sRes, activeB, activeM))
     }
 
+    function exerDet(exerIndex) {
+        setDetMode(true);
+        setExerDetIndex(exerIndex);
+    }
+
+    let exerObj = {
+        "item": {
+          "bodyPart": "waist",
+          "equipment": "body weight",
+          "gifUrl": "http://d205bpvrqc9yn1.cloudfront.net/0001.gif",
+          "id": "0001",
+          "localPng": "0.png",
+          "localUrl": "0.gif",
+          "metric": "wr",
+          "name": "3/4 sit-up",
+          "target": "abs",
+          "timeStamp": [],
+        },
+        "refIndex": 0,
+        "score": 8.569061098350962e-12,
+      }
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
             <View className='pt-[45px] h-full w-full' >
@@ -189,7 +215,7 @@ const Exercises = () => {
                         <TouchableOpacity className='' onPress={() => handleFilter('search')}>
                             <FontAwesome5 name="filter" size={16} color="white" />
                         </TouchableOpacity>
-                    </> : filterMode ? <>
+                    </> : filterMode || detMode ? <>
                         <TouchableOpacity onPress={handleBackF}>
                             <FontAwesome5 name="arrow-left" size={17} color="white" />
                         </TouchableOpacity>
@@ -232,13 +258,16 @@ const Exercises = () => {
                                     <FilterTagComp filterTags={muscleGroups} filterType={'muscle'} updateResFil={updateResFil} />
                                 </View>
                             </View>
+                        </View> : detMode? 
+                        <View>
+                            <ExerDetComp exerObj={fExerArr[exerDetIndex]}/>
                         </View> :
                         <>
                             <View className='flex-row flex-wrap w-full justify-left items-center'>
                                 <TagComp tagArr={searchTerm} clearSearch={clearSearch} search={true} />
                                 <TagComp tagArr={tagList} clearTag={clearTag} search={false} />
                             </View>
-                            <ExerComp filterExer={fExerArr} /></>
+                            <ExerComp filterExer={fExerArr} exerDet={exerDet} /></>
                     }
                 </ScrollView>
                 <View className='absolute bottom-0 h-10 bg-[#28547B] w-full items-center justify-center'>

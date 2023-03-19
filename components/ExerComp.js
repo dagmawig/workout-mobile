@@ -1,13 +1,13 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React, { useRef } from 'react'
 import { IMAGES } from '../assets'
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import exerNames from '../assets/ExerData/exerciseNames.json';
 
-const ExerComp = ({filterExer}) => {
+const ExerComp = ({filterExer, exerDet}) => {
     return filterExer.map((exer, i) => {
         return (
-            <View key={`exer-${i}`}>
+            <TouchableOpacity key={`exer-${i}`} onPress={()=>exerDet(i)}>
                 {/* <Text className='text-gray-400'>{exer.name}</Text> */}
                 <View className='flex-row mb-2 space-x-2 bg-[#28547B] border-red-500'>
                     <View>
@@ -25,7 +25,7 @@ const ExerComp = ({filterExer}) => {
                         </Text>
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     })
 }
