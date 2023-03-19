@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import ExerComp from '../components/ExerComp';
@@ -35,6 +35,7 @@ const Exercises = () => {
     const [tagList, setTagList] = useState([]);
     const [filterMode, setFilterMode] = useState(true);
     const [lastMode, setLastMode] = useState('');
+    const [fExerArr, setFExerArr] = useState(exerArr);
 
     const activeB = stateSelector.activeB;
     const activeM = stateSelector.activeM;
@@ -78,30 +79,40 @@ const Exercises = () => {
         })
     }, [])
 
-    function applyFilter(eArr) {
-        const bList = bodyParts.map((body, i)=> {
-            if(activeB[i]) return body;
+    function applyFilter(eArr, activeB, activeM) {
+        
+        const bList = bodyParts.filter((body, i)=> {
+            return activeB[i]
         });
 
-        const mList = muscleGroups.map((muscle, i) => {
-            if(activeM[i]) return muscle;
+        const mList = muscleGroups.filter((muscle, i) => {
+            return activeM[i];
         })
 
-        return eArr.filter(exer=> {
-            
+        console.log(mList, bList)
+        if(mList.length!==0 || bList.length!==0) return eArr.filter(exer=> {
+           return bList.includes(exer.item.bodyPart) || mList.includes(exer.item.target);
         })
+        else return eArr;
+    }
+
+    function updateResFil(activeB, activeM) {
+        setFExerArr(applyFilter(exerArr, activeB, activeM))
     }
 
     function handleChange(text) {
         if (text === '') {
-            setExerArr(exerFuse.search("!0123456789"));
+            let sRes = exerFuse.search("!0123456789")
+            setExerArr(sRes);
             setSearchTerm([]);
+            setFExerArr(applyFilter(sRes, activeB, activeM))
         }
         else {
-            setExerArr(exerFuse.search("'" + text.trim()));
+            let sRes = exerFuse.search("'" + text.trim())
+            setExerArr(sRes);
             setSearchTerm([text]);
+            setFExerArr(applyFilter(sRes, activeB, activeM))
         }
-        //console.log(exerArr)
     }
 
     function handleBack() {
@@ -125,28 +136,21 @@ const Exercises = () => {
         setTagList(newTagList);
     }
 
-    function handleFilterTag(filterType, activeTag, tag) {
-        if(activeTag) {
-            filterType==='body'? setBodyTag(bodyTag.filter(ele=>{
-                return ele!==tag;
-            })) : setMuscleTag(muscleTag.filter(ele=>{
-                return ele!==tag;
-            }))
-        }
-        else {
-           filterType==='body'? setBodyTag([...bodyTag, tag]) : setMuscleTag([...muscleTag, tag]) 
-        }
-    }
-
     function clearSearch() {
         console.log("finds function");
-        setExerArr(exerFuse.search("!0123456789"));
+        let sRes = exerFuse.search("!0123456789");
+        setExerArr(sRes);
         setSearchTerm([]);
+        setFExerArr(applyFilter(sRes, activeB, activeM))
+    }
+
+    function handleFilterUpdate() {
+
     }
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <View className='pt-[20px] h-full w-full' >
+            <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     {searchMode && !filterMode ? <>
                         <TouchableOpacity onPress={handleBack}>
@@ -199,22 +203,22 @@ const Exercises = () => {
                     {filterMode ?
                         <View className=''>
                             <View className='pt-2'>
-                                <Text className='text-[30px] text-white'>Filter {`(${exerArr.length})`}</Text>
+                                <Text className='text-[30px] text-white'>Filter {`(${fExerArr.length})`}</Text>
                             </View>
                             <View className='mt-3'>
                                 <View className='my-2'>
                                     <Text className='text-white'>Body Part</Text>
                                 </View>
-                                <View className='flex-row flex-wrap w-full justify-left items-center'>
-                                    <FilterTagComp filterTags={bodyParts} filterType={'body'} handleFilterTag= {handleFilterTag} />
+                                <View className='flex-row flex-wrap w-full justify-left items-center' activity={activeB}>
+                                    <FilterTagComp filterTags={bodyParts} filterType={'body'} updateResFil={updateResFil} />
                                 </View>
                             </View>
                             <View className='mt-3'>
                                 <View className='my-2'>
                                     <Text className='text-white'>Muscle Group</Text>
                                 </View>
-                                <View className='flex-row flex-wrap w-full justify-left items-center'>
-                                    <FilterTagComp filterTags={muscleGroups} filterType={'muscle'} handleFilterTag= {handleFilterTag} />
+                                <View className='flex-row flex-wrap w-full justify-left items-center' activity={activeM}>
+                                    <FilterTagComp filterTags={muscleGroups} filterType={'muscle'} updateResFil={updateResFil} />
                                 </View>
                             </View>
                         </View> :
@@ -223,7 +227,7 @@ const Exercises = () => {
                                 <TagComp tagArr={searchTerm} clearSearch={clearSearch} search={true} />
                                 <TagComp tagArr={tagList} clearTag={clearTag} search={false} />
                             </View>
-                            <ExerComp filterExer={exerArr} /></>
+                            <ExerComp filterExer={fExerArr} /></>
                     }
                 </ScrollView>
                 <View className='absolute bottom-0 h-10 bg-[#28547B] w-full items-center justify-center'>
