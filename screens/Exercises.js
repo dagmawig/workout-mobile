@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import ExerComp from '../components/ExerComp';
@@ -9,7 +9,7 @@ import Fuse from 'fuse.js';
 import TagComp from '../components/TagComp';
 import FilterTagComp from '../components/FilterTagComp';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag } from '../components/workoutSlice';
+import { updateActiveB, updateActiveM } from '../components/workoutSlice';
 
 const Exercises = () => {
 
@@ -80,8 +80,8 @@ const Exercises = () => {
     }, [])
 
     function applyFilter(eArr, activeB, activeM) {
-        
-        const bList = bodyParts.filter((body, i)=> {
+
+        const bList = bodyParts.filter((body, i) => {
             return activeB[i]
         });
 
@@ -89,15 +89,27 @@ const Exercises = () => {
             return activeM[i];
         })
 
-        console.log(mList, bList)
-        if(mList.length!==0 || bList.length!==0) return eArr.filter(exer=> {
-           return bList.includes(exer.item.bodyPart) || mList.includes(exer.item.target);
+        if (mList.length !== 0 || bList.length !== 0) return eArr.filter(exer => {
+            return bList.includes(exer.item.bodyPart) || mList.includes(exer.item.target);
         })
         else return eArr;
     }
 
-    function updateResFil(activeB, activeM) {
-        setFExerArr(applyFilter(exerArr, activeB, activeM))
+    function updateResFil(activeB, activeM, filTag) {
+        setFExerArr(applyFilter(exerArr, activeB, activeM));
+        if (filTag.remove) {
+            const tagIndex = tagList.indexOf(filTag.tag);
+            let newTagList = [...tagList];
+            newTagList.splice(tagIndex, 1);
+            console.log(filTag, tagList, newTagList, tagIndex)
+
+            setTagList(newTagList);
+        }
+        else {
+            let newTagList = [...tagList];
+            newTagList.push(filTag.tag);
+            setTagList(newTagList)
+        }
     }
 
     function handleChange(text) {
@@ -131,21 +143,32 @@ const Exercises = () => {
         else setLastMode('notS')
     }
 
-    function clearTag(tagIndex) {
+    function clearTag(tagIndex, tag) {
         const newTagList = tagList.slice(0, tagIndex).concat(tagList.slice(tagIndex + 1));
         setTagList(newTagList);
+
+        if (bodyParts.indexOf(tag) !== -1) {
+            let index = bodyParts.indexOf(tag);
+            let newActiveB = JSON.parse(JSON.stringify(activeB));
+            newActiveB[index] = false;
+            dispatch(updateActiveB(newActiveB));
+            setFExerArr(applyFilter(exerArr, newActiveB, activeM));
+
+        }
+        else {
+            let index = muscleGroups.indexOf(tag);
+            let newActiveM = JSON.parse(JSON.stringify(activeM));
+            newActiveM[index] = false;
+            dispatch(updateActiveM(newActiveM));
+            setFExerArr(applyFilter(exerArr, activeB, newActiveM));
+        }
     }
 
     function clearSearch() {
-        console.log("finds function");
         let sRes = exerFuse.search("!0123456789");
         setExerArr(sRes);
         setSearchTerm([]);
         setFExerArr(applyFilter(sRes, activeB, activeM))
-    }
-
-    function handleFilterUpdate() {
-
     }
 
     return (
@@ -186,18 +209,6 @@ const Exercises = () => {
                         </>
                     }
 
-
-                    {/* <View className=''>
-                        <Text className='text-white text-lg font-semibold'>Exercises</Text>
-                    </View>
-                    <View className='flex-row space-x-2'>
-                        <TouchableOpacity className=''>
-                            <FontAwesome5 name="search" size={16} color="white" />
-                        </TouchableOpacity>
-                        <TouchableOpacity className=''>
-                            <FontAwesome5 name="filter" size={16} color="white" />
-                        </TouchableOpacity>
-                    </View> */}
                 </View>
                 <ScrollView className='mb-11 px-3' keyboardShouldPersistTaps='handled'>
                     {filterMode ?
