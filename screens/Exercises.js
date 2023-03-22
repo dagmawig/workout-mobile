@@ -206,6 +206,7 @@ const Exercises = () => {
                             <FontAwesome5 name="arrow-left" size={17} color="white" />
                         </TouchableOpacity>
                         <TextInput
+                            autoFocus
                             className='h-7 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white'
                             cursorColor={'white'}
                             placeholder='exercise name'
