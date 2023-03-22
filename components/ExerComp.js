@@ -13,7 +13,7 @@ const ExerComp = ({filterExer, exerDet}) => {
                     <View>
                         <Image
                             source={IMAGES[exer.refIndex]}
-                            className='w-20 h-20 object-cover'
+                            className='w-20 h-20 object-cover bg-white'
                         />
                     </View>
                     <View className='w-64 justify-center'>

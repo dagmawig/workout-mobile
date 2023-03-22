@@ -1,22 +1,22 @@
 import { View, Text, Image } from 'react-native'
 import React from 'react'
-import { IMAGESGIF } from '../assets'
+import { IMAGES} from '../assets'
 
 const ExerDetComp = ({exerObj}) => {
   return (
     <View>
       <Image 
-      source={IMAGESGIF[exerObj.refIndex]}
-      className='w-full h-96 object-contain' />
+      source={IMAGES[exerObj.refIndex]}
+      className='w-full h-96 object-contain bg-white' />
       <View className='flex-row w-full flex-wrap pt-3'>
-        <Text className='w-1/4 text-right pr-1 text-white text-lg'>Workout:</Text>
-        <Text className='w-3/4 text-left pl-2 text-white text-lg'>{exerObj.item.name}</Text>
-        <Text className='w-1/4 text-right pr-1 text-white text-lg'>Body Part:</Text>
-        <Text className='w-3/4 text-left pl-2 text-white text-lg'>{exerObj.item.bodyPart}</Text>
-        <Text className='w-1/4 text-right pr-1 text-white text-lg'>Tool:</Text>
-        <Text className='w-3/4 text-left pl-2 text-white text-lg'>{exerObj.item.equipment}</Text>
-        <Text className='w-1/4 text-right pr-1 text-white text-lg'>Target:</Text>
-        <Text className='w-3/4 text-left pl-2 text-white text-lg'>{exerObj.item.target}</Text>
+        <Text className='w-1/3 text-right text-white text-base'>WORKOUT:</Text>
+        <Text className='w-2/3 text-left pl-2 text-white text-base'>{exerObj.item.name}</Text>
+        <Text className='w-1/3 text-right  text-white text-base'>BODY-PART:</Text>
+        <Text className='w-2/3 text-left pl-2 text-white text-base'>{exerObj.item.bodyPart}</Text>
+        <Text className='w-1/3 text-right text-white text-base'>TOOL:</Text>
+        <Text className='w-2/3 text-left pl-2 text-white text-base'>{exerObj.item.equipment}</Text>
+        <Text className='w-1/3 text-right text-white text-base'>TARGET:</Text>
+        <Text className='w-2/3 text-left pl-2 text-white text-base'>{exerObj.item.target}</Text>
       </View>
     </View>
   )
