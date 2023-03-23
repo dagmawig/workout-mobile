@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native'
-import React, { useLayoutEffect, useState } from 'react'
+import { View, Text, TouchableOpacity, ScrollView, TextInput, FlatList, Image, NativeEventEmitter } from 'react-native'
+import React, { useLayoutEffect, useState, componentDidMou, useEffect, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import ExerComp from '../components/ExerComp';
@@ -9,8 +9,9 @@ import Fuse from 'fuse.js';
 import TagComp from '../components/TagComp';
 import FilterTagComp from '../components/FilterTagComp';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateActiveB, updateActiveM } from '../components/workoutSlice';
+import { updateActiveB, updateActiveM, updateScroll } from '../components/workoutSlice';
 import ExerDetComp from '../components/ExerDetComp';
+import { IMAGES } from '../assets';
 
 const Exercises = () => {
 
@@ -24,7 +25,7 @@ const Exercises = () => {
         keys: ['name']
     }
 
-    const exerFuse = new Fuse(exerLocal.slice(0, 100), options);
+    const exerFuse = new Fuse(exerLocal, options);
 
     const navigation = useNavigation();
     const stateSelector = useSelector(state => state.workout);
@@ -39,6 +40,7 @@ const Exercises = () => {
     const [fExerArr, setFExerArr] = useState(exerArr);
     const [detMode, setDetMode] = useState(false);
     const [exerDetIndex, setExerDetIndex] = useState(null);
+    const [loadList, setLoadList] = useState(fExerArr.slice(0, 50));
 
     const activeB = stateSelector.activeB;
     const activeM = stateSelector.activeM;
@@ -99,7 +101,9 @@ const Exercises = () => {
     }
 
     function updateResFil(activeB, activeM, filTag) {
-        setFExerArr(applyFilter(exerArr, activeB, activeM));
+        let filteredArr = applyFilter(exerArr, activeB, activeM)
+        setFExerArr(filteredArr);
+        setLoadList(filteredArr.slice(0,50));
         if (filTag.remove) {
             const tagIndex = tagList.indexOf(filTag.tag);
             let newTagList = [...tagList];
@@ -120,13 +124,17 @@ const Exercises = () => {
             let sRes = exerFuse.search("!0123456789")
             setExerArr(sRes);
             setSearchTerm([]);
-            setFExerArr(applyFilter(sRes, activeB, activeM))
+            let filArr = applyFilter(sRes, activeB, activeM)
+            setFExerArr(filArr);
+            setLoadList(filArr.slice(0,50));
         }
         else {
             let sRes = exerFuse.search("'" + text.trim())
             setExerArr(sRes);
             setSearchTerm([text]);
-            setFExerArr(applyFilter(sRes, activeB, activeM))
+            let filArr = applyFilter(sRes, activeB, activeM);
+            setFExerArr(filArr);
+            setLoadList(filArr.slice(0,50));
         }
     }
 
@@ -157,15 +165,18 @@ const Exercises = () => {
             let newActiveB = JSON.parse(JSON.stringify(activeB));
             newActiveB[index] = false;
             dispatch(updateActiveB(newActiveB));
-            setFExerArr(applyFilter(exerArr, newActiveB, activeM));
-
+            let filArr = applyFilter(exerArr, newActiveB, activeM);
+            setFExerArr(filArr);
+            setLoadList(filArr.slice(0,50));
         }
         else {
             let index = muscleGroups.indexOf(tag);
             let newActiveM = JSON.parse(JSON.stringify(activeM));
             newActiveM[index] = false;
             dispatch(updateActiveM(newActiveM));
-            setFExerArr(applyFilter(exerArr, activeB, newActiveM));
+            let filArr = applyFilter(exerArr, activeB, newActiveM);
+            setFExerArr(filArr);
+            setLoadList(filArr.slsice(0,50));
         }
     }
 
@@ -173,7 +184,9 @@ const Exercises = () => {
         let sRes = exerFuse.search("!0123456789");
         setExerArr(sRes);
         setSearchTerm([]);
-        setFExerArr(applyFilter(sRes, activeB, activeM))
+        let filArr = applyFilter(sRes, activeB, activeM);
+        setFExerArr(filArr);
+        setLoadList(filArr.slice(0,50));
     }
 
     function exerDet(exerIndex) {
@@ -183,20 +196,37 @@ const Exercises = () => {
 
     let exerObj = {
         "item": {
-          "bodyPart": "waist",
-          "equipment": "body weight",
-          "gifUrl": "http://d205bpvrqc9yn1.cloudfront.net/0001.gif",
-          "id": "0001",
-          "localPng": "0.png",
-          "localUrl": "0.gif",
-          "metric": "wr",
-          "name": "3/4 sit-up",
-          "target": "abs",
-          "timeStamp": [],
+            "bodyPart": "waist",
+            "equipment": "body weight",
+            "gifUrl": "http://d205bpvrqc9yn1.cloudfront.net/0001.gif",
+            "id": "0001",
+            "localPng": "0.png",
+            "localUrl": "0.gif",
+            "metric": "wr",
+            "name": "3/4 sit-up",
+            "target": "abs",
+            "timeStamp": [],
         },
         "refIndex": 0,
         "score": 8.569061098350962e-12,
-      }
+    }
+
+    function fetchMore() {
+        if (loadList.length < fExerArr.length) {
+            setLoadList([...loadList, ...fExerArr.slice(loadList.length, loadList.length + 50)])
+        }
+    }
+    // function handleScroll(event) {
+    //     dispatch(updateScroll(event.nativeEvent.contentOffset.y));
+    //     console.log("acroll", stateSelector.scrollP)
+    // }
+
+    // useEffect(()=> {
+    //     const offset = stateSelector.scrollP;
+    //     setTimeout(() =>{
+    //        this.ref   scrollToOffset({offset, animated: false})
+    //     })
+    // }, [])
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
             <View className='pt-[45px] h-full w-full' >
@@ -237,8 +267,8 @@ const Exercises = () => {
                     }
 
                 </View>
-                <ScrollView className='mb-11 px-3' keyboardShouldPersistTaps='handled'>
-                    {filterMode ?
+                {filterMode ?
+                    <ScrollView className='mb-11 px-3' keyboardShouldPersistTaps='handled'>
                         <View className=''>
                             <View className='pt-2'>
                                 <Text className='text-[30px] text-white'>Filter {`(${fExerArr.length})`}</Text>
@@ -259,23 +289,58 @@ const Exercises = () => {
                                     <FilterTagComp filterTags={muscleGroups} filterType={'muscle'} updateResFil={updateResFil} />
                                 </View>
                             </View>
-                        </View> : detMode? 
-                        <View>
-                            <ExerDetComp exerObj={fExerArr[exerDetIndex]}/>
-                        </View> :
-                        <>
-                            <View className='flex-row flex-wrap w-full justify-left items-center'>
-                                <TagComp tagArr={searchTerm} clearSearch={clearSearch} search={true} />
-                                <TagComp tagArr={tagList} clearTag={clearTag} search={false} />
+                        </View>
+                    </ScrollView>
+                    : detMode ?
+                        <ScrollView className='mb-11 px-3' keyboardShouldPersistTaps='handled'>
+                            <View>
+                                <ExerDetComp exerObj={fExerArr[exerDetIndex]} />
                             </View>
-                            <ExerComp filterExer={fExerArr} exerDet={exerDet} /></>
-                    }
-                </ScrollView>
+                        </ScrollView>
+                        :
+                        <>
+
+                            <FlatList
+                                className='mb-9'
+                                data={loadList}
+                                onEndReached={fetchMore}
+                                onEndReachedThreshold={3}
+                                ListHeaderComponent={<View className='flex-row flex-wrap w-full justify-left items-center'>
+                                    <TagComp tagArr={searchTerm} clearSearch={clearSearch} search={true} />
+                                    <TagComp tagArr={tagList} clearTag={clearTag} search={false} />
+                                </View>}
+                                ListFooterComponent={loadList.length < fExerArr.length ? <View className='flex-row justify-center'><Text className='text-white'>Loading...</Text></View> : null}
+                                renderItem={({ item, index }) => (
+                                    <TouchableOpacity key={`exer-${index}`} onPress={() => exerDet(index)}>
+                                        {/* <Text className='text-gray-400'>{exer.name}</Text> */}
+                                        <View className='flex-row mb-2 space-x-2 bg-[#28547B] border-red-500'>
+                                            <View>
+                                                <Image
+                                                    source={IMAGES[item.refIndex]}
+                                                    className='w-20 h-20 object-cover bg-white'
+                                                />
+                                            </View>
+                                            <View className='w-64 justify-center'>
+                                                <Text className='text-lg text-white flex-wrap'>
+                                                    {item.item.name}
+                                                </Text>
+                                                <Text className='text-white italic'>
+                                                    {item.item.bodyPart}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                )}
+                            />
+                            <View><Text>Loading...</Text></View>
+                            {/* <ExerComp filterExer={fExerArr} exerDet={exerDet} /> */}
+                        </>
+                }
+
                 <View className='absolute bottom-0 h-10 bg-[#28547B] w-full items-center justify-center'>
                     <Text> dfgdf</Text>
                 </View>
             </View>
-
         </View>
     )
 }

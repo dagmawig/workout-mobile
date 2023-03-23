@@ -4,7 +4,8 @@ const initialState = {
     activeB: new Array(10).fill(false),
     activeM: new Array(17).fill(false),
     muscleTag: [],
-    bodyTag: []
+    bodyTag: [],
+    scrollP: 0
 }
 
 export const workoutSlice = createSlice({
@@ -23,9 +24,12 @@ export const workoutSlice = createSlice({
         updateBodyTag: (state, action) => {
             state.bodyTag = action.payload;
         },
+        updateScroll: (state, action) => {
+            state.scrollP = action.payload;
+        }
     }
 });
 
-export const { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag } = workoutSlice.actions;
+export const { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag, updateScroll } = workoutSlice.actions;
 
 export default workoutSlice.reducer;
