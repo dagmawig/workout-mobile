@@ -5,6 +5,7 @@ import Home from './screens/Home';
 import Exercises from './screens/Exercises';
 import { Provider } from 'react-redux';
 import store from './components/store';
+import Workout from './screens/Workout';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ export default function App() {
       <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator>
+            <Stack.Screen name='Workout' component={Workout} />
             <Stack.Screen name='Exercises' component={Exercises} />
             <Stack.Screen name='Home' component={Home} />
           </Stack.Navigator>
