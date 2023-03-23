@@ -27,12 +27,20 @@ const Exercises = () => {
 
     const exerFuse = new Fuse(exerLocal, options);
 
+    function sortExer(exerArr) {
+        return exerArr.sort((a, b) => {
+
+            return a.item.name < b.item.name ? -1 : b.item.name > a.item.name ? 1 : 0;
+        })
+    }
+
+
     const navigation = useNavigation();
     const stateSelector = useSelector(state => state.workout);
     const dispatch = useDispatch()
 
     const [searchMode, setSearchMode] = useState(false);
-    const [exerArr, setExerArr] = useState(exerFuse.search("!0123456789"));
+    const [exerArr, setExerArr] = useState(sortExer(exerFuse.search("!0123456789")));
     const [searchTerm, setSearchTerm] = useState([]);
     const [tagList, setTagList] = useState([]);
     const [filterMode, setFilterMode] = useState(false);
@@ -103,7 +111,7 @@ const Exercises = () => {
     function updateResFil(activeB, activeM, filTag) {
         let filteredArr = applyFilter(exerArr, activeB, activeM)
         setFExerArr(filteredArr);
-        setLoadList(filteredArr.slice(0,50));
+        setLoadList(filteredArr.slice(0, 50));
         if (filTag.remove) {
             const tagIndex = tagList.indexOf(filTag.tag);
             let newTagList = [...tagList];
@@ -121,12 +129,12 @@ const Exercises = () => {
 
     function handleChange(text) {
         if (text === '') {
-            let sRes = exerFuse.search("!0123456789")
+            let sRes = sortExer(exerFuse.search("!0123456789"));
             setExerArr(sRes);
             setSearchTerm([]);
             let filArr = applyFilter(sRes, activeB, activeM)
             setFExerArr(filArr);
-            setLoadList(filArr.slice(0,50));
+            setLoadList(filArr.slice(0, 50));
         }
         else {
             let sRes = exerFuse.search("'" + text.trim())
@@ -134,7 +142,7 @@ const Exercises = () => {
             setSearchTerm([text]);
             let filArr = applyFilter(sRes, activeB, activeM);
             setFExerArr(filArr);
-            setLoadList(filArr.slice(0,50));
+            setLoadList(filArr.slice(0, 50));
         }
     }
 
@@ -167,7 +175,7 @@ const Exercises = () => {
             dispatch(updateActiveB(newActiveB));
             let filArr = applyFilter(exerArr, newActiveB, activeM);
             setFExerArr(filArr);
-            setLoadList(filArr.slice(0,50));
+            setLoadList(filArr.slice(0, 50));
         }
         else {
             let index = muscleGroups.indexOf(tag);
@@ -176,17 +184,17 @@ const Exercises = () => {
             dispatch(updateActiveM(newActiveM));
             let filArr = applyFilter(exerArr, activeB, newActiveM);
             setFExerArr(filArr);
-            setLoadList(filArr.slsice(0,50));
+            setLoadList(filArr.slsice(0, 50));
         }
     }
 
     function clearSearch() {
-        let sRes = exerFuse.search("!0123456789");
+        let sRes = sortExer(exerFuse.search("!0123456789"));
         setExerArr(sRes);
         setSearchTerm([]);
         let filArr = applyFilter(sRes, activeB, activeM);
         setFExerArr(filArr);
-        setLoadList(filArr.slice(0,50));
+        setLoadList(filArr.slice(0, 50));
     }
 
     function exerDet(exerIndex) {
