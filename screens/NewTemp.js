@@ -1,13 +1,14 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput, FlatList, Image } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, TextInput, FlatList, Image, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import Fuse from 'fuse.js';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TagComp from '../components/TagComp';
 import { IMAGES } from '../assets';
 import FilterTagComp from '../components/FilterTagComp';
+import { updateActiveB, updateActiveM } from '../components/workoutSlice';
 
 const NewTemp = () => {
 
@@ -24,6 +25,7 @@ const NewTemp = () => {
     const exerFuse = new Fuse(exerLocal, options);
     const stateSelector = useSelector(state => state.workout);
     const navigation = useNavigation();
+    const dispatch = useDispatch();
 
     function sortExer(exerArr) {
         return exerArr.sort((a, b) => {
@@ -95,8 +97,19 @@ const NewTemp = () => {
         else return eArr;
     }
 
-    function handleBack() {
-
+    function handleDelTemp() {
+        return navigation.navigate('Workout')
+        return Alert.alert('Delete Template?', 'Are you sure you want to delete template?', [
+            {
+                text: 'CANCEL',
+                onPress: () => null,
+                style: 'cancel'
+            },
+            {
+                text: 'DELETE',
+                onPress: () => navigation.navigate('Workout')
+            }
+        ])
     }
 
     function handleSBack() {
@@ -120,11 +133,13 @@ const NewTemp = () => {
         setExerArr(sortExer(resetArr));
         setFExerArr(sortExer(resetArr));
         setLoadList(resetArr.slice(0, 50));
-        setSelIndex(new Array(1327));
+        setSelIndex(new Array(1327).fill(false));
     }
 
     function fetchMore() {
-
+        if (loadList.length < fExerArr.length) {
+            setLoadList([...loadList, ...fExerArr.slice(loadList.length, loadList.length + 50)])
+        }
     }
 
     function clearSearch() {
@@ -137,7 +152,27 @@ const NewTemp = () => {
     }
 
     function clearTag(tagIndex, tag) {
+        const newTagList = tagList.slice(0, tagIndex).concat(tagList.slice(tagIndex + 1));
+        setTagList(newTagList);
 
+        if (bodyParts.indexOf(tag) !== -1) {
+            let index = bodyParts.indexOf(tag);
+            let newActiveB = JSON.parse(JSON.stringify(activeB));
+            newActiveB[index] = false;
+            dispatch(updateActiveB(newActiveB));
+            let filArr = applyFilter(exerArr, newActiveB, activeM);
+            setFExerArr(filArr);
+            setLoadList(filArr.slice(0, 50));
+        }
+        else {
+            let index = muscleGroups.indexOf(tag);
+            let newActiveM = JSON.parse(JSON.stringify(activeM));
+            newActiveM[index] = false;
+            dispatch(updateActiveM(newActiveM));
+            let filArr = applyFilter(exerArr, activeB, newActiveM);
+            setFExerArr(filArr);
+            setLoadList(filArr.slsice(0, 50));
+        }
     }
 
     function handleExerSel(refIndex) {
@@ -174,22 +209,22 @@ const NewTemp = () => {
     }
 
     function updateResFil(activeB, activeM, filTag) {
-        // let filteredArr = applyFilter(exerArr, activeB, activeM)
-        // setFExerArr(filteredArr);
-        // setLoadList(filteredArr.slice(0, 50));
-        // if (filTag.remove) {
-        //     const tagIndex = tagList.indexOf(filTag.tag);
-        //     let newTagList = [...tagList];
-        //     newTagList.splice(tagIndex, 1);
-        //     console.log(filTag, tagList, newTagList, tagIndex)
+        let filteredArr = applyFilter(exerArr, activeB, activeM)
+        setFExerArr(filteredArr);
+        setLoadList(filteredArr.slice(0, 50));
+        if (filTag.remove) {
+            const tagIndex = tagList.indexOf(filTag.tag);
+            let newTagList = [...tagList];
+            newTagList.splice(tagIndex, 1);
+            console.log(filTag, tagList, newTagList, tagIndex)
 
-        //     setTagList(newTagList);
-        // }
-        // else {
-        //     let newTagList = [...tagList];
-        //     newTagList.push(filTag.tag);
-        //     setTagList(newTagList)
-        // }
+            setTagList(newTagList);
+        }
+        else {
+            let newTagList = [...tagList];
+            newTagList.push(filTag.tag);
+            setTagList(newTagList)
+        }
     }
 
     useLayoutEffect(() => {
@@ -207,7 +242,7 @@ const NewTemp = () => {
                             <FontAwesome5 name="times" size={17} color="white" />
                         </TouchableOpacity>
                         <View className=''>
-                            <Text className='text-white text-lg font-semibold'>Exercises</Text>
+                            <Text className='text-white text-lg font-semibold'>Select Exercises ({selIndex.filter(ind => ind === true).length})</Text>
                         </View>
                         <View className='flex-row space-x-2'>
                             <TouchableOpacity className='' onPress={e => setSearchMode(true)}>
@@ -239,8 +274,8 @@ const NewTemp = () => {
                             </TouchableOpacity>
                         </>
                             : <>
-                                <TouchableOpacity onPress={handleBack}>
-                                    <FontAwesome5 name="arrow-left" size={17} color="white" />
+                                <TouchableOpacity onPress={handleDelTemp}>
+                                    <FontAwesome5 name="times" size={17} color="white" />
                                 </TouchableOpacity>
                                 <Text className='text-white text-lg font-semibold'>New Template</Text>
                                 <TouchableOpacity onPress={saveTemp}>
@@ -252,7 +287,7 @@ const NewTemp = () => {
                 </View>
                 {exerMode && !filterMode ? <>
                     <FlatList
-                        className='mb-9'
+                        className='mb-9 px-3'
                         data={loadList}
                         onEndReached={fetchMore}
                         onEndReachedThreshold={3}
@@ -262,16 +297,17 @@ const NewTemp = () => {
                         </View>}
                         ListFooterComponent={loadList.length < fExerArr.length ? <View className='flex-row justify-center'><Text className='text-white'>Loading...</Text></View> : null}
                         renderItem={({ item, index }) => (
-                            <TouchableOpacity key={`exer-${index}`} onPress={()=>handleExerSel(item.refIndex)}>
+                            <TouchableOpacity key={`exer-${index}`} onPress={() => handleExerSel(item.refIndex)}>
                                 {/* <Text className='text-gray-400'>{exer.name}</Text> */}
                                 <View className='flex-row mb-2 space-x-2 bg-[#28547B] border-red-500'>
                                     <View>
                                         <Image
                                             source={IMAGES[item.refIndex]}
                                             className='w-20 h-20 object-cover bg-white'
+                                            style={{ opacity: selIndex[item.refIndex] ? .4 : 1 }}
                                         />
                                     </View>
-                                    <View className='w-64 justify-center' style={{backgroundColor: selIndex[item.refIndex]? '#1a364f' : ''}}>
+                                    <View className='w-64 justify-center px-2' style={{ backgroundColor: selIndex[item.refIndex] ? '#1a364f' : '' }}>
                                         <Text className='text-lg text-white flex-wrap'>
                                             {item.item.name}
                                         </Text>

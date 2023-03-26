@@ -52,6 +52,10 @@ const Workout = () => {
         setDetExer(null);
     }
 
+    function handleNewTemp() {
+        navigation.navigate('NewTemp');
+    }
+
     useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false,
@@ -75,7 +79,7 @@ const Workout = () => {
                                         <Text className='text-white text-xs'>MY TEMPLATES</Text>
                                     </View>
                                     <View>
-                                        <TouchableOpacity><FontAwesome5 name="plus" size={18} color="white" /></TouchableOpacity>
+                                        <TouchableOpacity onPress={handleNewTemp}><FontAwesome5 name="plus" size={18} color="white" /></TouchableOpacity>
                                     </View>
                                 </View>
                                 {tempList(stateSelector.userData.userTempArr, true)}
