@@ -9,6 +9,7 @@ import TagComp from '../components/TagComp';
 import { IMAGES } from '../assets';
 import FilterTagComp from '../components/FilterTagComp';
 import { updateActiveB, updateActiveM } from '../components/workoutSlice';
+import TempExerComp from '../components/TempExerComp';
 
 const NewTemp = () => {
 
@@ -27,7 +28,7 @@ const NewTemp = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
-    function sortExer(exerArr) { 
+    function sortExer(exerArr) {
         return exerArr.sort((a, b) => {
 
             return a.item.name < b.item.name ? -1 : a.item.name > b.item.name ? 1 : 0;
@@ -47,6 +48,8 @@ const NewTemp = () => {
     const [filterMode, setFilterMode] = useState(false);
     const [tagList, setTagList] = useState([]);
     const [selIndex, setSelIndex] = useState(new Array(1327).fill(false));
+    const [tempExerArr, setTempExerArr] = useState([]);
+    const [tempName, setTempName] = useState('');
 
     const bodyParts = [
         "back",
@@ -98,18 +101,25 @@ const NewTemp = () => {
     }
 
     function handleDelTemp() {
-        return navigation.navigate('Workout')
-        return Alert.alert('Delete Template?', 'Are you sure you want to delete template?', [
-            {
-                text: 'CANCEL',
-                onPress: () => null,
-                style: 'cancel'
-            },
-            {
-                text: 'DELETE',
-                onPress: () => navigation.navigate('Workout')
-            }
-        ])
+        // if (tempName.split(' ').join('') || tempExerArr.length !== 0) return Alert.alert('Delete Template?', 'Are you sure you want to delete template?', [
+        //     {
+        //         text: 'CANCEL',
+        //         onPress: () => null,
+        //         style: 'cancel'
+        //     },
+        //     {
+        //         text: 'DELETE',
+        //         onPress: () => {
+        //             setTempName('');
+        //             setTempExerArr([]);
+        //             navigation.navigate('Workout');
+        //         }
+        //     }
+        // ])
+
+        setTempName('');
+        setTempExerArr([]);
+        return navigation.navigate('Workout');
     }
 
     function handleSBack() {
@@ -185,6 +195,10 @@ const NewTemp = () => {
         setFilterMode(true);
     }
 
+    function handleTempName(text) {
+        setTempName(text);
+    }
+
     function handleChange(text) {
         if (text === '') {
             let sRes = sortExer(exerFuse.search("!0123456789"));
@@ -220,6 +234,24 @@ const NewTemp = () => {
             newTagList.push(filTag.tag);
             setTagList(newTagList)
         }
+    }
+
+    function addExer() {
+        let exerList = [];
+        selIndex.filter((index, i)=>{
+            if(index===true) exerList.push({...exerLocal[i], sets: 4})
+        });
+
+        let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
+        newTempExerArr.push(...exerList);
+        setTempExerArr(newTempExerArr);
+        handleX();
+    }
+
+    function removeExer(index) {
+        let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
+        newTempExerArr.splice(index, 1);
+        setTempExerArr(newTempExerArr);
     }
 
     useLayoutEffect(() => {
@@ -338,23 +370,26 @@ const NewTemp = () => {
                                 </View>
                             </View>
                         </View>
-                    </ScrollView> : <ScrollView className='mb-11 px-3' keyboardShouldPersistTaps='handled'>
+                    </ScrollView> : <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
                         <View>
                             <TextInput
                                 className='h-7 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white'
                                 cursorColor={'white'}
                                 placeholder='template name'
                                 placeholderTextColor={'gray'}
-                                value={searchTerm.length > 0 ? searchTerm[0] : ''}
-                                onChangeText={(text) => handleChange(text)} />
+                                value={tempName}
+                                onChangeText={(text) => handleTempName(text)} />
+                        </View>
+                        <View className='pt-3'>
+                            <TempExerComp exerArr={tempExerArr} removeExer={removeExer}/>
                         </View>
                         <View className='justify-center items-center py-3'>
                             <TouchableOpacity onPress={() => setExerMode(true)}><Text>Add Exercise</Text></TouchableOpacity>
                         </View>
                     </ScrollView>}
-                    {exerMode && !filterMode && selIndex.filter(ind=>ind===true).length>0? <View className='absolute bottom-8 right-0 mr-2  bg-[#28547B] justify-end flex-row z-50 rounded-full'>
-                        <TouchableOpacity className='bg-[#1a364f] justify-center items-center rounded-full  p-7'><FontAwesome5 name="check" size={26} color="white" /></TouchableOpacity>
-                    </View> : null}
+                {exerMode && !filterMode && selIndex.filter(ind => ind === true).length > 0 ? <View className='absolute bottom-8 right-0 mr-2  bg-[#28547B] justify-end flex-row z-50 rounded-full'>
+                    <TouchableOpacity className='bg-[#1a364f] justify-center items-center rounded-full  p-7' onPress={addExer}><FontAwesome5 name="check" size={26} color="white" /></TouchableOpacity>
+                </View> : null}
             </View>
         </View>
     )
