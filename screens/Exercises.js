@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateActiveB, updateActiveM, updateScroll } from '../components/workoutSlice';
 import ExerDetComp from '../components/ExerDetComp';
 import { IMAGES } from '../assets';
+import FooterComp from '../components/FooterComp';
 
 const Exercises = () => {
 
@@ -30,7 +31,7 @@ const Exercises = () => {
     function sortExer(exerArr) {
         return exerArr.sort((a, b) => {
 
-            return a.item.name < b.item.name ? -1 : b.item.name > a.item.name ? 1 : 0;
+            return a.item.name < b.item.name ? -1 : a.item.name > b.item.name ? 1 : 0;
         })
     }
 
@@ -40,7 +41,7 @@ const Exercises = () => {
     const dispatch = useDispatch()
 
     const [searchMode, setSearchMode] = useState(false);
-    const [exerArr, setExerArr] = useState(sortExer(exerFuse.search("!0123456789")));
+    const [exerArr, setExerArr] = useState(sortExer(sortExer(exerFuse.search("!0123456789"))));
     const [searchTerm, setSearchTerm] = useState([]);
     const [tagList, setTagList] = useState([]);
     const [filterMode, setFilterMode] = useState(false);
@@ -116,7 +117,6 @@ const Exercises = () => {
             const tagIndex = tagList.indexOf(filTag.tag);
             let newTagList = [...tagList];
             newTagList.splice(tagIndex, 1);
-            console.log(filTag, tagList, newTagList, tagIndex)
 
             setTagList(newTagList);
         }
@@ -276,7 +276,9 @@ const Exercises = () => {
 
                 </View>
                 {filterMode ?
-                    <ScrollView className='mb-11 px-3' keyboardShouldPersistTaps='handled'>
+                    <ScrollView className='px-3' 
+                    keyboardShouldPersistTaps='handled'
+                    contentContainerStyle={{paddingBottom: 70}}>
                         <View className=''>
                             <View className='pt-2'>
                                 <Text className='text-[30px] text-white'>Filter {`(${fExerArr.length})`}</Text>
@@ -300,7 +302,8 @@ const Exercises = () => {
                         </View>
                     </ScrollView>
                     : detMode ?
-                        <ScrollView className='mb-11 px-3' keyboardShouldPersistTaps='handled'>
+                        <ScrollView className='px-3' keyboardShouldPersistTaps='handled'
+                        contentContainerStyle={{paddingBottom: 70}}>
                             <View>
                                 <ExerDetComp exerObj={fExerArr[exerDetIndex]} />
                             </View>
@@ -309,7 +312,8 @@ const Exercises = () => {
                         <>
 
                             <FlatList
-                                className='mb-9'
+                                className='px-3'
+                                contentContainerStyle={{paddingBottom: 70}}
                                 data={loadList}
                                 onEndReached={fetchMore}
                                 onEndReachedThreshold={3}
@@ -340,14 +344,11 @@ const Exercises = () => {
                                     </TouchableOpacity>
                                 )}
                             />
-                            <View><Text>Loading...</Text></View>
                             {/* <ExerComp filterExer={fExerArr} exerDet={exerDet} /> */}
                         </>
                 }
 
-                <View className='absolute bottom-0 h-10 bg-[#28547B] w-full items-center justify-center'>
-                    <Text> dfgdf</Text>
-                </View>
+                <FooterComp/>
             </View>
         </View>
     )

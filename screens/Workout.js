@@ -5,6 +5,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import { useSelector } from 'react-redux';
 import ExerDetComp from '../components/ExerDetComp';
+import FooterComp from '../components/FooterComp';
 
 const Workout = () => {
 
@@ -34,7 +35,7 @@ const Workout = () => {
 
     function exerList(eList, userTemp) {
         return eList.map((exer, i) => {
-            return <View className='flex-row justify-between' key={`${userTemp? 'user':'fixed'}-exer-${i}`} >
+            return <View className='flex-row justify-between' key={`${userTemp ? 'user' : 'fixed'}-exer-${i}`} >
                 <Text className='text-white'>{`${exer.sets} X ${exer.name}`}</Text>
                 <View><TouchableOpacity onPress={() => handleExerDet(exer)}><FontAwesome5 name="info-circle" size={18} color="white" /></TouchableOpacity></View>
             </View>
@@ -70,7 +71,7 @@ const Workout = () => {
                         {detMode ? <TouchableOpacity onPress={handleBack}><FontAwesome5 name="arrow-left" size={17} color="white" /></TouchableOpacity> : <Text className='text-white text-lg font-semibold'>Workout</Text>}
                     </View>
                 </View>
-                <ScrollView className='mb-11 px-3 pt-3'>
+                <ScrollView className='px-3 pt-3' contentContainerStyle={{paddingBottom: 70}}>
                     {detMode ? <ExerDetComp exerObj={detExer} /> :
                         <>
                             <View>
@@ -92,12 +93,14 @@ const Workout = () => {
                                 </View>
                                 <View>
                                     {tempList(stateSelector.userData.fixTempArr, false)}
+                                    {tempList(stateSelector.userData.fixTempArr, false)}
                                 </View>
                             </View>
                         </>
                     }
 
                 </ScrollView>
+                <FooterComp/>
             </View>
         </View>
     )

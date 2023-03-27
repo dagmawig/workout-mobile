@@ -27,11 +27,11 @@ const NewTemp = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
-    function sortExer(exerArr) {
+    function sortExer(exerArr) { 
         return exerArr.sort((a, b) => {
 
-            return a.item.name < b.item.name ? -1 : b.item.name > a.item.name ? 1 : 0;
-        })
+            return a.item.name < b.item.name ? -1 : a.item.name > b.item.name ? 1 : 0;
+        });
     }
 
 
@@ -181,12 +181,8 @@ const NewTemp = () => {
         setSelIndex(newSelIndex);
     }
 
-    function handleFilter(mode) {
+    function handleFilter() {
         setFilterMode(true);
-        // if (mode === 'search') {
-        //     setLastMode('search');
-        // }
-        // else setLastMode('notS')
     }
 
     function handleChange(text) {
@@ -216,7 +212,6 @@ const NewTemp = () => {
             const tagIndex = tagList.indexOf(filTag.tag);
             let newTagList = [...tagList];
             newTagList.splice(tagIndex, 1);
-            console.log(filTag, tagList, newTagList, tagIndex)
 
             setTagList(newTagList);
         }
@@ -287,6 +282,7 @@ const NewTemp = () => {
                 </View>
                 {exerMode && !filterMode ? <>
                     <FlatList
+                        keyboardShouldPersistTaps='handled'
                         className='mb-9 px-3'
                         data={loadList}
                         onEndReached={fetchMore}
