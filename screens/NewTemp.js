@@ -283,7 +283,7 @@ const NewTemp = () => {
                 {exerMode && !filterMode ? <>
                     <FlatList
                         keyboardShouldPersistTaps='handled'
-                        className='mb-9 px-3'
+                        className='px-3'
                         data={loadList}
                         onEndReached={fetchMore}
                         onEndReachedThreshold={3}
@@ -352,6 +352,9 @@ const NewTemp = () => {
                             <TouchableOpacity onPress={() => setExerMode(true)}><Text>Add Exercise</Text></TouchableOpacity>
                         </View>
                     </ScrollView>}
+                    {exerMode && !filterMode && selIndex.filter(ind=>ind===true).length>0? <View className='absolute bottom-8 right-0 mr-2  bg-[#28547B] justify-end flex-row z-50 rounded-full'>
+                        <TouchableOpacity className='bg-[#1a364f] justify-center items-center rounded-full  p-7'><FontAwesome5 name="check" size={26} color="white" /></TouchableOpacity>
+                    </View> : null}
             </View>
         </View>
     )
