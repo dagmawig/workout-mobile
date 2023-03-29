@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import TagComp from '../components/TagComp';
 import { IMAGES } from '../assets';
 import FilterTagComp from '../components/FilterTagComp';
-import { updateActiveB, updateActiveM } from '../components/workoutSlice';
+import { updateActiveB, updateActiveM, updateUserTempArr } from '../components/workoutSlice';
 import TempExerComp from '../components/TempExerComp';
 
 const NewTemp = () => {
@@ -132,7 +132,37 @@ const NewTemp = () => {
     }
 
     function saveTemp() {
+        if (!tempName.split(' ').join('')) {
+            return Alert.alert('Missing Template Name!', 'Please Add Template Name.', [
+                {
+                    text: 'Ok',
+                    onPress: () => null
+                }
+            ])
+        }
+        else if (tempExerArr.length === 0) {
+            return Alert.alert('Missing Exercise!', 'Please Add Exercise(s).', [
+                {
+                    text: 'Ok',
+                    onPress: () => null
+                }
+            ])
+        }
+        else {
+            let workoutTemp = {
+                tempID: new Date().toISOString(),
+                workoutTimeArr: [],
+                name: tempName,
+                exerList: JSON.parse(JSON.stringify(tempExerArr))
+            }
 
+            let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.userTempArr));
+            newUserTempArr.push(workoutTemp);
+            dispatch(updateUserTempArr(newUserTempArr));
+            setTempName('');
+            setTempExerArr([]);
+            return navigation.navigate('Workout');
+        }
     }
 
     function handleX() {
@@ -400,7 +430,7 @@ const NewTemp = () => {
                             <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} />
                         </View>
                         <View className='justify-center items-center py-3'>
-                            <TouchableOpacity onPress={() => setExerMode(true)}><Text>Add Exercise</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>
                         </View>
                     </ScrollView>}
                 {exerMode && !filterMode && selIndex.filter(ind => ind === true).length > 0 ? <View className='absolute bottom-8 right-0 mr-2  bg-[#28547B] justify-end flex-row z-50 rounded-full'>

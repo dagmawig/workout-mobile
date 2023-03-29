@@ -12,20 +12,20 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet }) => {
                     <TouchableOpacity onPress={() => removeExer(i)}><FontAwesome5 name="minus-circle" size={16} color="white" /></TouchableOpacity>
                 </View>
                 <View className='flex-row justify-between items-center mb-1'>
-                    <Text className='w-1/4 text-center text-white'>SET</Text>
+                    <Text className='w-1/6 text-center text-white'>SET</Text>
                     <Text className='w-1/3 text-center text-white'>{exer.metric === 'wr' ? 'LBS' : exer.metric === 'dt' ? 'MILES' : 'SECONDS'}</Text>
                     <Text className='w-1/3 text-center text-white'>{exer.metric === 'wr' ? 'REPS' : exer.metric === 'dt' ? 'MIN' : ''}</Text>
                 </View>
                 {setList(exer)}
                 <View className='flex-row justify-between items-center mt-2'>
-                    <View className='w-1/4 mb-1'>
+                    <View className='w-1/6 mb-1'>
 
                     </View>
                     <View className='w-1/3 mb-1'>
-                        <TouchableOpacity onPress={()=>addSet(i)}><Text className='text-white text-right'>Add Set</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={()=>addSet(i)}><Text className='text-white text-right'>ADD SET</Text></TouchableOpacity>
                     </View>
                     <View className='w-1/3 mb-1'>
-                        {exer.sets>1? <TouchableOpacity onPress={()=>removeSet(i)}><Text className='text-white text-left'>Remove Set</Text></TouchableOpacity> : null}
+                        {exer.sets>1? <TouchableOpacity onPress={()=>removeSet(i)}><Text className='text-white text-left'>REMOVE SET</Text></TouchableOpacity> : null}
                     </View>
                 </View>
             </View>
@@ -39,7 +39,7 @@ const setList = (exer) => {
     return tempArr.map(item => {
         return (
             <View key={item + exer.name + 'setList'} className='flex-row justify-between items-center'>
-                <View className='w-1/4 mb-1'>
+                <View className='w-1/6 mb-1'>
                     <Text className='text-white text-center'>{item + 1}</Text>
                 </View>
                 <View className='w-1/3 mb-1'>

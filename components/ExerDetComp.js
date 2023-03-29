@@ -13,7 +13,7 @@ const ExerDetComp = ({exerObj}) => {
         <Text className='w-2/3 text-left pl-2 text-white text-base'>{exerObj.item.name}</Text>
         <Text className='w-1/3 text-right  text-white text-base'>BODY-PART:</Text>
         <Text className='w-2/3 text-left pl-2 text-white text-base'>{exerObj.item.bodyPart}</Text>
-        <Text className='w-1/3 text-right text-white text-base'>TOOL:</Text>
+        <Text className='w-1/3 text-right text-white text-base'>EQUIPMENT:</Text>
         <Text className='w-2/3 text-left pl-2 text-white text-base'>{exerObj.item.equipment}</Text>
         <Text className='w-1/3 text-right text-white text-base'>TARGET:</Text>
         <Text className='w-2/3 text-left pl-2 text-white text-base'>{exerObj.item.target}</Text>
