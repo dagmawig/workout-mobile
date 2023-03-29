@@ -144,6 +144,10 @@ const NewTemp = () => {
         setFExerArr(sortExer(resetArr));
         setLoadList(resetArr.slice(0, 50));
         setSelIndex(new Array(1327).fill(false));
+        setSearchTerm([]);
+        setTagList([]);
+        dispatch(updateActiveB(new Array(10).fill(false)));
+        dispatch(updateActiveM(new Array(17).fill(false)))
     }
 
     function fetchMore() {
