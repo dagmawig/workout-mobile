@@ -238,8 +238,8 @@ const NewTemp = () => {
 
     function addExer() {
         let exerList = [];
-        selIndex.filter((index, i)=>{
-            if(index===true) exerList.push({...exerLocal[i], sets: 4})
+        selIndex.filter((index, i) => {
+            if (index === true) exerList.push({ ...exerLocal[i], sets: 4 })
         });
 
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
@@ -251,6 +251,18 @@ const NewTemp = () => {
     function removeExer(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr.splice(index, 1);
+        setTempExerArr(newTempExerArr);
+    }
+
+    function addSet(index) {
+        let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
+        newTempExerArr[index].sets++;
+        setTempExerArr(newTempExerArr);
+    }
+
+    function removeSet(index) {
+        let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
+        newTempExerArr[index].sets--;
         setTempExerArr(newTempExerArr);
     }
 
@@ -381,7 +393,7 @@ const NewTemp = () => {
                                 onChangeText={(text) => handleTempName(text)} />
                         </View>
                         <View className='pt-3'>
-                            <TempExerComp exerArr={tempExerArr} removeExer={removeExer}/>
+                            <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} />
                         </View>
                         <View className='justify-center items-center py-3'>
                             <TouchableOpacity onPress={() => setExerMode(true)}><Text>Add Exercise</Text></TouchableOpacity>
