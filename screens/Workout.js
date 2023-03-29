@@ -3,14 +3,16 @@ import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ExerDetComp from '../components/ExerDetComp';
 import FooterComp from '../components/FooterComp';
+import { updateCurrentTemp } from '../components/workoutSlice';
 
 const Workout = () => {
 
     const navigation = useNavigation();
     const stateSelector = useSelector(state => state.workout);
+    const dispatch = useDispatch();
 
     const [detMode, setDetMode] = useState(false);
     const [detExer, setDetExer] = useState(null);
@@ -23,9 +25,19 @@ const Workout = () => {
         return (hourDiff < 24) ? `${hourDiff} hour(s) ago` : `${Math.floor(hourDiff / 24)} day(s) ago`;
     }
 
+    function handleShowTemp(temp, userTemp, index) {
+        dispatch(updateCurrentTemp({
+            temp: temp,
+            userTemp: userTemp,
+            index: index
+        }));
+        
+        navigation.navigate('ShowTemp');
+    }
+
     function tempList(tList, userTemp) {
         return tList.map((temp, i) => {
-            return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`}>
+            return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`} onPress={()=>handleShowTemp(temp, userTemp, i)}>
                 <View><Text className='text-white font-bold'>{temp.name}</Text></View>
                 <View><Text className='text-white pb-2 italic'>{`Last Performed: ${calcTime(temp)}`}</Text></View>
                 {exerList(temp.exerList, userTemp)}
