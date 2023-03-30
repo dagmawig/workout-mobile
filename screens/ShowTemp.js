@@ -99,6 +99,10 @@ const ShowTemp = () => {
         setDetExer(null);
     }
 
+    function handleEditTemp() {
+        navigation.navigate('EditTemp');
+    }
+
     function handleDel() {
         return Alert.alert('Delete Template?', 'Are you sure you want to delete template?', [
             {
@@ -137,7 +141,7 @@ const ShowTemp = () => {
                             </TouchableOpacity>
                         </View>
                         <View>
-                            {currentTempObj.userTemp && !detMode ? <TouchableOpacity>
+                            {currentTempObj.userTemp && !detMode ? <TouchableOpacity onPress={handleEditTemp}>
                                 <FontAwesome5 name="edit" size={17} color="white" />
                             </TouchableOpacity> : null}
                         </View>

@@ -8,6 +8,7 @@ import store from './components/store';
 import Workout from './screens/Workout';
 import NewTemp from './screens/NewTemp';
 import ShowTemp from './screens/ShowTemp';
+import EditTemp from './screens/EditTemp';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,7 @@ export default function App() {
       <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator>
+            <Stack.Screen name='EditTemp' component={EditTemp} />
             <Stack.Screen name='Workout' component={Workout} />
             <Stack.Screen name='ShowTemp' component={ShowTemp} />
             <Stack.Screen name='NewTemp' component={NewTemp} />
