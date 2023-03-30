@@ -27,7 +27,6 @@ const Workout = () => {
 
     function handleShowTemp(temp, userTemp, index) {
         dispatch(updateCurrentTemp({
-            temp: temp,
             userTemp: userTemp,
             index: index
         }));
