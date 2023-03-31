@@ -56,8 +56,11 @@ const EditTemp = () => {
     };
 
     const [exerMode, setExerMode] = useState(false);
+    const [searchMode, setSearchMode] = useState(false);
+    const [filterMode, setFilterMode] = useState(false);
     const [tempName, setTempName] = useState(temp.name);
     const [exerList, setExerList] = useState(temp.exerList);
+    const [selIndex, setSelIndex] = useState(new Array(1327).fill(false));
 
     function handleDelChange() {
 
@@ -65,6 +68,14 @@ const EditTemp = () => {
 
     function saveTemp() {
 
+    }
+
+    function handleX() {
+        setExerMode(false);
+    }
+
+    function handleFilter() {
+        
     }
 
     function handleTempName(text) {
@@ -99,13 +110,31 @@ const EditTemp = () => {
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
-                    <TouchableOpacity onPress={handleDelChange}>
-                        <FontAwesome5 name="times" size={17} color="white" />
-                    </TouchableOpacity>
-                    <Text className='text-white text-lg font-semibold'>Edit Template</Text>
-                    <TouchableOpacity onPress={saveTemp}>
-                        <FontAwesome5 name="save" size={17} color="white" />
-                    </TouchableOpacity>
+                    {exerMode && !searchMode && !filterMode ? <>
+                        <TouchableOpacity onPress={handleX}>
+                            <FontAwesome5 name="times" size={17} color="white" />
+                        </TouchableOpacity>
+                        <View className=''>
+                            <Text className='text-white text-lg font-semibold'>Select Exercises ({selIndex.filter(ind => ind === true).length})</Text>
+                        </View>
+                        <View className='flex-row space-x-2'>
+                            <TouchableOpacity className='' onPress={e => setSearchMode(true)}>
+                                <FontAwesome5 name="search" size={16} color="white" />
+                            </TouchableOpacity>
+                            <TouchableOpacity className='' onPress={handleFilter}>
+                                <FontAwesome5 name="filter" size={16} color="white" />
+                            </TouchableOpacity>
+                        </View>
+                    </> : <>
+                        <TouchableOpacity onPress={handleDelChange}>
+                            <FontAwesome5 name="times" size={17} color="white" />
+                        </TouchableOpacity>
+                        <Text className='text-white text-lg font-semibold'>Edit Template</Text>
+                        <TouchableOpacity onPress={saveTemp}>
+                            <FontAwesome5 name="save" size={17} color="white" />
+                        </TouchableOpacity>
+                    </>}
+
                 </View>
                 <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
                     <View>

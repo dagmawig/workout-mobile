@@ -18,8 +18,9 @@ export default function App() {
       <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name='EditTemp' component={EditTemp} />
             <Stack.Screen name='Workout' component={Workout} />
+            <Stack.Screen name='EditTemp' component={EditTemp} />
+
             <Stack.Screen name='ShowTemp' component={ShowTemp} />
             <Stack.Screen name='NewTemp' component={NewTemp} />
             <Stack.Screen name='Exercises' component={Exercises} />

@@ -3,45 +3,26 @@ import React, { useLayoutEffect, useState } from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
-import Fuse from 'fuse.js';
 import { useDispatch, useSelector } from 'react-redux';
 import TagComp from '../components/TagComp';
 import { IMAGES } from '../assets';
 import FilterTagComp from '../components/FilterTagComp';
 import { updateActiveB, updateActiveM, updateUserTempArr } from '../components/workoutSlice';
 import TempExerComp from '../components/TempExerComp';
+import Search from '../components/Search';
 
 const NewTemp = () => {
 
-    const options = {
-        includeScore: true,
-        shouldSort: true,
-        findAllMatches: true,
-        useExtendedSearch: true,
-        ignoreLocation: true,
-        threshold: 0.06,
-        keys: ['name']
-    }
-
-    const exerFuse = new Fuse(exerLocal, options);
     const stateSelector = useSelector(state => state.workout);
     const navigation = useNavigation();
     const dispatch = useDispatch();
-
-    function sortExer(exerArr) {
-        return exerArr.sort((a, b) => {
-
-            return a.item.name < b.item.name ? -1 : a.item.name > b.item.name ? 1 : 0;
-        });
-    }
-
 
     const activeB = stateSelector.activeB;
     const activeM = stateSelector.activeM;
 
     const [searchTerm, setSearchTerm] = useState([]);
     const [exerMode, setExerMode] = useState(false);
-    const [exerArr, setExerArr] = useState(sortExer(exerFuse.search("!0123456789")));
+    const [exerArr, setExerArr] = useState(Search.sort(Search.search('')));
     const [fExerArr, setFExerArr] = useState(exerArr);
     const [loadList, setLoadList] = useState(fExerArr.slice(0, 50));
     const [searchMode, setSearchMode] = useState(false);
@@ -84,21 +65,6 @@ const NewTemp = () => {
         "triceps"
     ];
 
-    function applyFilter(eArr, activeB, activeM) {
-
-        const bList = bodyParts.filter((body, i) => {
-            return activeB[i]
-        });
-
-        const mList = muscleGroups.filter((muscle, i) => {
-            return activeM[i];
-        })
-
-        if (mList.length !== 0 || bList.length !== 0) return eArr.filter(exer => {
-            return bList.includes(exer.item.bodyPart) || mList.includes(exer.item.target);
-        })
-        else return eArr;
-    }
 
     function handleDelTemp() {
         // if (tempName.split(' ').join('') || tempExerArr.length !== 0) return Alert.alert('Delete Template?', 'Are you sure you want to delete template?', [
@@ -169,9 +135,9 @@ const NewTemp = () => {
         setExerMode(false);
         setSearchMode(false);
         setFilterMode(false);
-        let resetArr = exerFuse.search("!0123456789")
-        setExerArr(sortExer(resetArr));
-        setFExerArr(sortExer(resetArr));
+        let resetArr = Search.search('')
+        setExerArr(Search.sort(resetArr));
+        setFExerArr(Search.sort(resetArr));
         setLoadList(resetArr.slice(0, 50));
         setSelIndex(new Array(1327).fill(false));
         setSearchTerm([]);
@@ -187,10 +153,10 @@ const NewTemp = () => {
     }
 
     function clearSearch() {
-        let sRes = sortExer(exerFuse.search("!0123456789"));
+        let sRes = Search.sort(Search.search(''));
         setExerArr(sRes);
         setSearchTerm([]);
-        let filArr = applyFilter(sRes, activeB, activeM);
+        let filArr = Search.filter(sRes, activeB, activeM);
         setFExerArr(filArr);
         setLoadList(filArr.slice(0, 50));
     }
@@ -204,7 +170,7 @@ const NewTemp = () => {
             let newActiveB = JSON.parse(JSON.stringify(activeB));
             newActiveB[index] = false;
             dispatch(updateActiveB(newActiveB));
-            let filArr = applyFilter(exerArr, newActiveB, activeM);
+            let filArr = Search.filter(exerArr, newActiveB, activeM);
             setFExerArr(filArr);
             setLoadList(filArr.slice(0, 50));
         }
@@ -213,7 +179,7 @@ const NewTemp = () => {
             let newActiveM = JSON.parse(JSON.stringify(activeM));
             newActiveM[index] = false;
             dispatch(updateActiveM(newActiveM));
-            let filArr = applyFilter(exerArr, activeB, newActiveM);
+            let filArr = Search.filter(exerArr, activeB, newActiveM);
             setFExerArr(filArr);
             setLoadList(filArr.slsice(0, 50));
         }
@@ -234,26 +200,19 @@ const NewTemp = () => {
     }
 
     function handleChange(text) {
-        if (text === '') {
-            let sRes = sortExer(exerFuse.search("!0123456789"));
-            setExerArr(sRes);
-            setSearchTerm([]);
-            let filArr = applyFilter(sRes, activeB, activeM)
-            setFExerArr(filArr);
-            setLoadList(filArr.slice(0, 50));
-        }
+        if (text === '') clearSearch();
         else {
-            let sRes = exerFuse.search("'" + text.trim())
+            let sRes = Search.search(text)
             setExerArr(sRes);
             setSearchTerm([text]);
-            let filArr = applyFilter(sRes, activeB, activeM);
+            let filArr = Search.filter(sRes, activeB, activeM);
             setFExerArr(filArr);
             setLoadList(filArr.slice(0, 50));
         }
     }
 
     function updateResFil(activeB, activeM, filTag) {
-        let filteredArr = applyFilter(exerArr, activeB, activeM)
+        let filteredArr = Search.filter(exerArr, activeB, activeM)
         setFExerArr(filteredArr);
         setLoadList(filteredArr.slice(0, 50));
         if (filTag.remove) {
