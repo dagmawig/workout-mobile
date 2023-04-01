@@ -4,6 +4,9 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 
 const TempExerComp = ({ exerArr, removeExer, addSet, removeSet }) => {
+    function getRec(exer) {
+        return 'Personal Record'
+    }
     return exerArr.map((exer, i) => {
         return (
             <View key={'newTemp-' + i} className='border-[1px] border-white rounded-md p-2 mb-2'>
@@ -17,6 +20,16 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet }) => {
                     <Text className='w-1/3 text-center text-white'>{exer.metric === 'wr' ? 'REPS' : exer.metric === 'dt' ? 'MIN' : ''}</Text>
                 </View>
                 {setList(exer)}
+                <View className='justify-center items-center'>
+                    <View className='flex-row'>
+                        <Text className='text-white w-1/4 text-right pr-2 italic'>PREV:</Text>
+                        <Text className='text-white w-3/4 text-left italic'>{getRec(exer)}</Text>
+                    </View>
+                    <View className='flex-row'>
+                        <Text className='text-white w-1/4 text-right pr-2 italic'>PR:</Text>
+                        <Text className='text-white w-3/4 text-left italic'>{getRec(exer)}</Text>
+                    </View>
+                </View>
                 <View className='flex-row justify-between items-center mt-2'>
                     <View className='w-1/6 mb-1'>
 
