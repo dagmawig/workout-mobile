@@ -1,10 +1,35 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native'
 import React from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
 
 
 const TempExerComp = ({ exerArr, removeExer, addSet, removeSet }) => {
+
+    const stateSelector = useSelector(state=>state.workout)
     function getRec(exer) {
+        if (exer.name in stateSelector.userData.record) {
+            let exerRecord = stateSelector.userData.record[exer.name];
+            let ans = '';
+            let ans2 = '';
+            ans += exerRecord.prev1;
+            ans2 += exerRecord.pr1;
+            if (exerRecord.metric === 'wr') {
+                ans += ` LBS|${exerRecord.prev2} REPS`;
+                ans2 += ` LBS|${exerRecord.pr2} REPS`;
+            }
+            else if (exerRecord.metric === 'dt') {
+                ans += ` MI | ${exerRecord.prev2} MIN`;
+                ans2 += ` MI | ${exerRecord.pr2} MIN`;
+            }
+            else {
+                ans += ' SEC';
+                ans2 += ' SEC';
+            }
+
+            return [ans, ans2];
+        }
+        else return ['-', '-'];
         return 'Personal Record'
     }
     return exerArr.map((exer, i) => {
@@ -20,14 +45,14 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet }) => {
                     <Text className='w-1/3 text-center text-white'>{exer.metric === 'wr' ? 'REPS' : exer.metric === 'dt' ? 'MIN' : ''}</Text>
                 </View>
                 {setList(exer)}
-                <View className='justify-center items-center'>
+                <View className='justify-center items-center mt-3'>
                     <View className='flex-row'>
                         <Text className='text-white w-1/4 text-right pr-2 italic'>PREV:</Text>
-                        <Text className='text-white w-3/4 text-left italic'>{getRec(exer)}</Text>
+                        <Text className='text-white w-3/4 text-left italic'>{getRec(exer)[0]}</Text>
                     </View>
                     <View className='flex-row'>
                         <Text className='text-white w-1/4 text-right pr-2 italic'>PR:</Text>
-                        <Text className='text-white w-3/4 text-left italic'>{getRec(exer)}</Text>
+                        <Text className='text-white w-3/4 text-left italic'>{getRec(exer)[1]}</Text>
                     </View>
                 </View>
                 <View className='flex-row justify-between items-center mt-2'>

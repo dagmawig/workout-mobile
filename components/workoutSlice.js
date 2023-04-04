@@ -199,6 +199,7 @@ const initialState = {
             }
         ],
         currentTemp: null,
+        record: {}
     }
 }
 
