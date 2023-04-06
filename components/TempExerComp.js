@@ -47,12 +47,12 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
                     <View className='w-1/3 mb-1'>
                         <TextInput editable={editable? true : false} 
                         keyboardType='numeric'
-                        className='text-white text-center border-white border-[1px] rounded' style={{backgroundColor: editable? '#1b4264' : '#576b7c'}} value={inputState[index][0][item] ? inputState[index][0][item] : ''} onChangeText={(text)=>updateInput(index, 0, item, text)} />
+                        className='text-white text-center border-white border-[1px] rounded' style={{backgroundColor: editable? '#1b4264' : '#576b7c'}} value={inputState? (inputState[index][0][item] ? inputState[index][0][item] : '') : ''} onChangeText={updateInput? (text)=>updateInput(index, 0, item, text) : null} />
                     </View>
                     <View className='w-1/3 mb-1'>
                         {exer.metric === 'wr' || exer.metric === 'dt' ? <TextInput editable={editable? true : false} 
                         keyboardType='numeric'
-                        className='text-white text-center border-white border-[1px] rounded' style={{backgroundColor: editable? '#1b4264' : '#576b7c'}} value={inputState[index][1][item] ? inputState[index][1][item] : ''} onChangeText={(text)=>updateInput(index, 1, item, text)} /> : null}
+                        className='text-white text-center border-white border-[1px] rounded' style={{backgroundColor: editable? '#1b4264' : '#576b7c'}} value={inputState? (inputState[index][1][item] ? inputState[index][1][item] : '') : ''} onChangeText={updateInput? (text)=>updateInput(index, 1, item, text) : null} /> : null}
                     </View>
                 </View>
             )
