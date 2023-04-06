@@ -199,7 +199,8 @@ const initialState = {
             }
         ],
         currentTemp: null,
-        record: {}
+        record: {},
+        userWorkObj: {},
     }
 }
 
@@ -227,10 +228,16 @@ export const workoutSlice = createSlice({
         },
         updateCurrentTemp: (state, action) => {
             state.userData.currentTemp = action.payload;
-        }
+        },
+         updateWorkoutObj: (state, action) => {
+            state.userData.workoutObj = action.payload;
+        },
+        updateUserData: (state, action) => {
+            state.userData = action.payload;
+        },
     }
 });
 
-export const { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag, updateScroll, updateUserTempArr, updateCurrentTemp } = workoutSlice.actions;
+export const { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag, updateScroll, updateUserTempArr, updateCurrentTemp, updateWorkoutObj, updateUserData } = workoutSlice.actions;
 
 export default workoutSlice.reducer;

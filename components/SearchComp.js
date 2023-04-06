@@ -9,7 +9,7 @@ import FilterTagComp from './FilterTagComp';
 import { updateActiveB, updateActiveM } from './workoutSlice';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 
-const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode }) => {
+const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) => {
 
     const bodyParts = [
         "back",
@@ -144,6 +144,15 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode }) => {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr.push(...exerList);
         setTempExerArr(newTempExerArr);
+        if (inputState) {
+            exerList.map(exer => {
+                let arr = [];
+                let totSets = exer.sets;
+                if (exer.metric === 'wr' || exer.metric === 'dt') arr = new Array(2).fill().map(() => new Array(totSets));
+                else arr = new Array(1).fill().map(() => new Array(totSets));
+                inputState.push(arr);
+            })
+        }
         handleX();
     }
 
@@ -176,7 +185,7 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode }) => {
             dispatch(updateActiveM(newActiveM));
             let filArr = Search.filter(exerArr, activeB, newActiveM);
             setFExerArr(filArr);
-            setLoadList(filArr.slsice(0, 50));
+            setLoadList(filArr.slice(0, 50));
         }
     }
 

@@ -4,10 +4,12 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 
 
-const TempExerComp = ({ exerArr, removeExer, addSet, removeSet }) => {
+const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputState, updateInput }) => {
 
-    const stateSelector = useSelector(state=>state.workout)
+    const stateSelector = useSelector(state=>state.workout);
+
     function getRec(exer) {
+
         if (exer.name in stateSelector.userData.record) {
             let exerRecord = stateSelector.userData.record[exer.name];
             let ans = '';
@@ -30,8 +32,33 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet }) => {
             return [ans, ans2];
         }
         else return ['-', '-'];
-        return 'Personal Record'
     }
+
+    const setList = (exer, index) => {
+
+        let tempArr = [...Array(exer.sets).keys()];
+
+        return tempArr.map(item => {
+            return (
+                <View key={item + exer.name + 'setList'} className='flex-row justify-between items-center'>
+                    <View className='w-1/6 mb-1'>
+                        <Text className='text-white text-center'>{item + 1}</Text>
+                    </View>
+                    <View className='w-1/3 mb-1'>
+                        <TextInput editable={editable? true : false} 
+                        keyboardType='numeric'
+                        className='text-white text-center border-white border-[1px] rounded' style={{backgroundColor: editable? '#1b4264' : '#576b7c'}} value={inputState[index][0][item] ? inputState[index][0][item] : ''} onChangeText={(text)=>updateInput(index, 0, item, text)} />
+                    </View>
+                    <View className='w-1/3 mb-1'>
+                        {exer.metric === 'wr' || exer.metric === 'dt' ? <TextInput editable={editable? true : false} 
+                        keyboardType='numeric'
+                        className='text-white text-center border-white border-[1px] rounded' style={{backgroundColor: editable? '#1b4264' : '#576b7c'}} value={inputState[index][1][item] ? inputState[index][1][item] : ''} onChangeText={(text)=>updateInput(index, 1, item, text)} /> : null}
+                    </View>
+                </View>
+            )
+        })
+    }
+
     return exerArr.map((exer, i) => {
         return (
             <View key={'newTemp-' + i} className='border-[1px] border-white rounded-md p-2 mb-2'>
@@ -44,7 +71,7 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet }) => {
                     <Text className='w-1/3 text-center text-white'>{exer.metric === 'wr' ? 'LBS' : exer.metric === 'dt' ? 'MILES' : 'SECONDS'}</Text>
                     <Text className='w-1/3 text-center text-white'>{exer.metric === 'wr' ? 'REPS' : exer.metric === 'dt' ? 'MIN' : ''}</Text>
                 </View>
-                {setList(exer)}
+                {setList(exer,  i)}
                 <View className='justify-center items-center mt-3'>
                     <View className='flex-row'>
                         <Text className='text-white w-1/4 text-right pr-2 italic'>PREV:</Text>
@@ -72,23 +99,6 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet }) => {
 
 }
 
-const setList = (exer) => {
-    let tempArr = [...Array(exer.sets).keys()];
-    return tempArr.map(item => {
-        return (
-            <View key={item + exer.name + 'setList'} className='flex-row justify-between items-center'>
-                <View className='w-1/6 mb-1'>
-                    <Text className='text-white text-center'>{item + 1}</Text>
-                </View>
-                <View className='w-1/3 mb-1'>
-                    <TextInput editable={false} className='text-white text-center border-white border-[1px] bg-[#576b7c]' />
-                </View>
-                <View className='w-1/3 mb-1'>
-                    {exer.metric === 'wr' || exer.metric === 'dt' ? <TextInput editable={false} className='text-white text-center border-white border-[1px] bg-[#576b7c]' /> : null}
-                </View>
-            </View>
-        )
-    })
-}
+
 
 export default TempExerComp

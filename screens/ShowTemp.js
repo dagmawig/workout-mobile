@@ -103,6 +103,10 @@ const ShowTemp = () => {
         navigation.navigate('EditTemp');
     }
 
+    function handleLogWork() {
+        navigation.navigate('LogWorkout')
+    }
+
     function handleDel() {
         return Alert.alert('Delete Template?', 'Are you sure you want to delete template?', [
             {
@@ -161,7 +165,7 @@ const ShowTemp = () => {
                                 {exerList(currentTemp.exerList, currentTempObj.userTemp)}
                             </View>
                             <View className='w-full justify-center items-center'>
-                                <TouchableOpacity><Text className='text-white font-semibold'>START WORKOUT</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={handleLogWork}><Text className='text-white font-semibold'>START WORKOUT</Text></TouchableOpacity>
                             </View>
                         </>
                     }
