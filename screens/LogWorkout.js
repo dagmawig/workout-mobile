@@ -7,6 +7,7 @@ import SearchComp from '../components/SearchComp';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCurrentTemp, updateUserData } from '../components/workoutSlice';
 import { current } from '@reduxjs/toolkit';
+import ExerDetComp from '../components/ExerDetComp';
 
 const LogWorkout = () => {
    
@@ -29,6 +30,9 @@ const LogWorkout = () => {
     const [tempExerArr, setTempExerArr] = useState(currentTemp.exerList);
     const [exerMode, setExerMode] = useState(false);
     const [inputState, setInputState] = useState(inputArr);
+    const [detMode, setDetMode] = useState(false);
+    const [exerObj, setExerObj] = useState(null);
+
     const navigation = useNavigation();
 
     function updateInput(i, j, k, val) {
@@ -67,6 +71,11 @@ const LogWorkout = () => {
                 style: 'destructive'
             }
         ])
+    }
+
+    function handleDetBack() {
+        setDetMode(false);
+        setExerObj(null);
     }
 
     function updateExerRecord(inputStateExer, exer, record) {
@@ -208,6 +217,22 @@ const LogWorkout = () => {
             <View className='pt-[45px] h-full w-full' >
                 {
                     exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr}  setExerMode={setExerMode} inputState={inputState} /> :
+                    detMode ?
+                    <>
+                        <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
+                            <>
+                                <TouchableOpacity onPress={handleDetBack}>
+                                    <FontAwesome5 name="arrow-left" size={17} color="white" />
+                                </TouchableOpacity>
+                            </>
+                        </View>
+                        <ScrollView className='px-3' keyboardShouldPersistTaps='handled'
+                            contentContainerStyle={{ paddingBottom: 70 }}>
+                            <View>
+                                <ExerDetComp exerObj={exerObj} />
+                            </View>
+                        </ScrollView>
+                    </> :
                         <>
                             <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                                 <TouchableOpacity onPress={handleCancel}><FontAwesome5 name="times" size={17} color="white" /></TouchableOpacity>
@@ -216,7 +241,7 @@ const LogWorkout = () => {
                             </View>
                             <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
                                 <View className='pt-3'>
-                                    <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} editable={true} inputState={inputState} updateInput={updateInput} />
+                                    <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} editable={true} inputState={inputState} updateInput={updateInput} setExerObj={setExerObj} setDetMode={setDetMode} />
                                 </View>
                                 <View className='justify-center items-center py-3 space-y-2'>
                                     <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>

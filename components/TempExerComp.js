@@ -2,9 +2,9 @@ import { View, Text, TouchableOpacity, TextInput } from 'react-native'
 import React from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
+import exerLocal from '../assets/ExerData/exercisesLocal.json';
 
-
-const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputState, updateInput }) => {
+const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputState, updateInput, setExerObj, setDetMode }) => {
 
     const stateSelector = useSelector(state=>state.workout);
 
@@ -59,11 +59,17 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
         })
     }
 
+    function handleExerDet(exer) {
+        let refIndex = exerLocal.findIndex(ex=>ex.name===exer.name);
+        setExerObj({item: exer, refIndex: refIndex});
+        setDetMode(true);
+    }
+
     return exerArr.map((exer, i) => {
         return (
             <View key={'newTemp-' + i} className='border-[1px] border-white rounded-md p-2 mb-2'>
                 <View className='flex-row justify-between items-center pb-2'>
-                    <Text className='text-white text-lg font-bold'>{exer.name}</Text>
+                    <TouchableOpacity onPress={()=>handleExerDet(exer)}><Text className='text-white text-lg font-bold'>{exer.name}</Text></TouchableOpacity>
                     <TouchableOpacity onPress={() => removeExer(i)}><FontAwesome5 name="minus-circle" size={16} color="white" /></TouchableOpacity>
                 </View>
                 <View className='flex-row justify-between items-center mb-1'>

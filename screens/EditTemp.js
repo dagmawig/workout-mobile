@@ -6,6 +6,7 @@ import TempExerComp from '../components/TempExerComp';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserTempArr } from '../components/workoutSlice';
 import SearchComp from '../components/SearchComp';
+import ExerDetComp from '../components/ExerDetComp';
 
 const EditTemp = () => {
 
@@ -19,6 +20,8 @@ const EditTemp = () => {
     const [exerMode, setExerMode] = useState(false);
     const [tempName, setTempName] = useState(currentTemp.name);
     const [tempExerArr, setTempExerArr] = useState(currentTemp.exerList);
+    const [detMode, setDetMode] = useState(false);
+    const [exerObj, setExerObj] = useState(null);
 
     function handleDelChange() {
         return Alert.alert('Discard Unsaved Changes?', 'Are you sure you want to discard unsaved changes?', [
@@ -36,6 +39,11 @@ const EditTemp = () => {
                 }
             }
         ])
+    }
+
+    function handleDetBack() {
+        setDetMode(false);
+        setExerObj(null);
     }
 
     function saveTemp() {
@@ -100,36 +108,52 @@ const EditTemp = () => {
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
             <View className='pt-[45px] h-full w-full' >
-                {exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} /> : <>
-                    <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
-                        <>
-                            <TouchableOpacity onPress={handleDelChange}>
-                                <FontAwesome5 name="times" size={17} color="white" />
-                            </TouchableOpacity>
-                            <Text className='text-white text-lg font-semibold'>Edit Template</Text>
-                            <TouchableOpacity onPress={saveTemp}>
-                                <FontAwesome5 name="save" size={17} color="white" />
-                            </TouchableOpacity>
-                        </>
-                    </View>
-                    <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
-                        <View>
-                            <TextInput
-                                className='h-7 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white'
-                                cursorColor={'white'}
-                                placeholder='template name'
-                                placeholderTextColor={'gray'}
-                                value={tempName}
-                                onChangeText={(text) => handleTempName(text)} />
+                {exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} /> : detMode ?
+                    <>
+                        <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
+                            <>
+                                <TouchableOpacity onPress={handleDetBack}>
+                                    <FontAwesome5 name="arrow-left" size={17} color="white" />
+                                </TouchableOpacity>
+                            </>
                         </View>
-                        <View className='pt-3'>
-                            <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} />
+                        <ScrollView className='px-3' keyboardShouldPersistTaps='handled'
+                            contentContainerStyle={{ paddingBottom: 70 }}>
+                            <View>
+                                <ExerDetComp exerObj={exerObj} />
+                            </View>
+                        </ScrollView>
+                    </> :
+                    <>
+                        <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
+                            <>
+                                <TouchableOpacity onPress={handleDelChange}>
+                                    <FontAwesome5 name="times" size={17} color="white" />
+                                </TouchableOpacity>
+                                <Text className='text-white text-lg font-semibold'>Edit Template</Text>
+                                <TouchableOpacity onPress={saveTemp}>
+                                    <FontAwesome5 name="save" size={17} color="white" />
+                                </TouchableOpacity>
+                            </>
                         </View>
-                        <View className='justify-center items-center py-3'>
-                            <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>
-                        </View>
-                    </ScrollView>
-                </>}
+                        <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
+                            <View>
+                                <TextInput
+                                    className='h-7 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white'
+                                    cursorColor={'white'}
+                                    placeholder='template name'
+                                    placeholderTextColor={'gray'}
+                                    value={tempName}
+                                    onChangeText={(text) => handleTempName(text)} />
+                            </View>
+                            <View className='pt-3'>
+                                <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} setExerObj={setExerObj} setDetMode={setDetMode} />
+                            </View>
+                            <View className='justify-center items-center py-3'>
+                                <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>
+                            </View>
+                        </ScrollView>
+                    </>}
             </View>
         </View>
     )

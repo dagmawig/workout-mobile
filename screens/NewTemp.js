@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUserTempArr } from '../components/workoutSlice';
 import TempExerComp from '../components/TempExerComp';
 import SearchComp from '../components/SearchComp';
+import ExerDetComp from '../components/ExerDetComp';
 
 const NewTemp = () => {
 
@@ -16,6 +17,8 @@ const NewTemp = () => {
     const [exerMode, setExerMode] = useState(false);
     const [tempExerArr, setTempExerArr] = useState([]);
     const [tempName, setTempName] = useState('');
+    const [detMode, setDetMode] = useState(false);
+    const [exerObj, setExerObj] = useState(null);
 
     function handleDelTemp() {
         // if (tempName.split(' ').join('') || tempExerArr.length !== 0) return Alert.alert('Delete Template?', 'Are you sure you want to delete template?', [
@@ -37,6 +40,11 @@ const NewTemp = () => {
         setTempName('');
         setTempExerArr([]);
         return navigation.navigate('Workout');
+    }
+
+    function handleDetBack() {
+        setDetMode(false);
+        setExerObj(null);
     }
 
     function saveTemp() {
@@ -104,7 +112,23 @@ const NewTemp = () => {
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
             <View className='pt-[45px] h-full w-full' >
-                {exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} /> :
+                {exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} /> : 
+                detMode ?
+                <>
+                    <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
+                        <>
+                            <TouchableOpacity onPress={handleDetBack}>
+                                <FontAwesome5 name="arrow-left" size={17} color="white" />
+                            </TouchableOpacity>
+                        </>
+                    </View>
+                    <ScrollView className='px-3' keyboardShouldPersistTaps='handled'
+                        contentContainerStyle={{ paddingBottom: 70 }}>
+                        <View>
+                            <ExerDetComp exerObj={exerObj} />
+                        </View>
+                    </ScrollView>
+                </> :
                     <>
                         <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                             <>
@@ -128,7 +152,7 @@ const NewTemp = () => {
                                     onChangeText={(text) => handleTempName(text)} />
                             </View>
                             <View className='pt-3'>
-                                <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} />
+                                <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} setExerObj={setExerObj} setDetMode={setDetMode} />
                             </View>
                             <View className='justify-center items-center py-3'>
                                 <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>
