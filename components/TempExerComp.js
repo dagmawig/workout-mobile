@@ -17,8 +17,8 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
             ans += exerRecord.prev1;
             ans2 += exerRecord.pr1;
             if (exerRecord.metric === 'wr') {
-                ans += ` LBS|${exerRecord.prev2} REPS`;
-                ans2 += ` LBS|${exerRecord.pr2} REPS`;
+                ans += ` LBS | ${exerRecord.prev2} REPS`;
+                ans2 += ` LBS | ${exerRecord.pr2} REPS`;
             }
             else if (exerRecord.metric === 'dt') {
                 ans += ` MI | ${exerRecord.prev2} MIN`;
@@ -79,11 +79,11 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
                 </View>
                 {setList(exer,  i)}
                 <View className='justify-center items-center mt-3'>
-                    <View className='flex-row'>
+                    <View className='flex-row w-full'>
                         <Text className='text-white w-1/4 text-right pr-2 italic'>PREV:</Text>
                         <Text className='text-white w-3/4 text-left italic'>{getRec(exer)[0]}</Text>
                     </View>
-                    <View className='flex-row'>
+                    <View className='flex-row w-full'>
                         <Text className='text-white w-1/4 text-right pr-2 italic'>PR:</Text>
                         <Text className='text-white w-3/4 text-left italic'>{getRec(exer)[1]}</Text>
                     </View>

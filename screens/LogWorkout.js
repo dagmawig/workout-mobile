@@ -27,13 +27,19 @@ const LogWorkout = () => {
         inputArr.push(arr);
     })
 
+    const startTime = Math.floor(Date.now()/1000);
+
     const [tempExerArr, setTempExerArr] = useState(currentTemp.exerList);
     const [exerMode, setExerMode] = useState(false);
     const [inputState, setInputState] = useState(inputArr);
     const [detMode, setDetMode] = useState(false);
     const [exerObj, setExerObj] = useState(null);
-
+    const [seconds, setSeconds] = useState(0);
     const navigation = useNavigation();
+
+    setTimeout(() => {
+        setSeconds(seconds+1);
+    }, 1000);
 
     function updateInput(i, j, k, val) {
         if(+val || val==='' || val==='0') {
@@ -162,7 +168,8 @@ const LogWorkout = () => {
             }
 
             workObj.workoutList = workoutList;
-            let tempUserObj = JSON.parse(JSON.stringify(stateSelector.userData.userWorkObj))
+            workObj.duration = seconds;
+            let tempUserObj = JSON.parse(JSON.stringify(stateSelector.userData.userWorkObj));
             tempUserObj[timeStamp] = workObj;
 
             let newTemplateArr = JSON.parse(JSON.stringify(currentTempObj.userTemp ? stateSelector.userData.userTempArr : stateSelector.userData.fixTempArr));
@@ -236,7 +243,10 @@ const LogWorkout = () => {
                         <>
                             <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                                 <TouchableOpacity onPress={handleCancel}><FontAwesome5 name="times" size={17} color="white" /></TouchableOpacity>
-                                <Text className='text-white text-lg font-semibold'>{currentTemp.name}</Text>
+                               <View className='items-center'>
+                               <Text className='text-white text-lg font-semibold'>{currentTemp.name}</Text>
+                               <Text className='text-white'>{new Date(seconds * 1000).toISOString().substr(11, 8)}</Text>
+                               </View>
                                 <TouchableOpacity onPress={handleSave}><FontAwesome5 name="save" size={17} color="white" /></TouchableOpacity>
                             </View>
                             <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
