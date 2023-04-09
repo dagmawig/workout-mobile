@@ -16,6 +16,9 @@ const FooterComp = () => {
             case 'exercises':
                 navigation.navigate('Exercises');
                 break;
+            case 'history':
+                navigation.navigate('History');
+                break;
             default:
                 navigation.navigate('Workout');
         }
@@ -23,7 +26,7 @@ const FooterComp = () => {
 
     return (
         <View className='absolute bottom-0 h-[50px] bg-[#28547B] w-full items-center justify-around flex-row'>
-            <TouchableOpacity className='items-center justify-center p-2' style={{backgroundColor: route.name==='History'? '#1a364f' : ''}} onPress={() => handleNav('')}>
+            <TouchableOpacity className='items-center justify-center p-2' style={{backgroundColor: route.name==='History'? '#1a364f' : ''}} onPress={() => handleNav('history')}>
                 <FontAwesome5 name="clock" size={16} color="white" />
                 <Text className='text-white text-xs'>History</Text>
             </TouchableOpacity>

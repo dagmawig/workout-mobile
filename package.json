@@ -13,6 +13,7 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@reduxjs/toolkit": "^1.9.3",
+    "accordion-collapse-react-native": "^1.1.1",
     "expo": "~48.0.6",
     "expo-status-bar": "~1.4.4",
     "fuse.js": "^6.6.2",

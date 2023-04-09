@@ -104,7 +104,6 @@ const Workout = () => {
                                 </View>
                                 <View>
                                     {tempList(stateSelector.userData.fixTempArr, false)}
-                                    {tempList(stateSelector.userData.fixTempArr, false)}
                                 </View>
                             </View>
                         </>
