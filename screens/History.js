@@ -124,12 +124,12 @@ const History = () => {
                         </CollapseHeader>
                         <CollapseBody>
                             <Animatable.View duration={500} easing='ease-in' animation='zoomIn' className='py-1'>
-                            <View className='flex-row justify-around pb-1'>
-                                <Text className='text-gray-300 text-xs font-semibold w-1/3 text-center underline'>SET</Text>
-                                <Text className='text-gray-300 text-xs font-semibold w-1/3 text-center underline'>{workout.metric === 'wr' ? 'LBS' : workout.metric === 'dt' ? 'MILES' : 'SECONDS'}</Text>
-                                <Text className='text-gray-300 text-xs font-semibold w-1/3 text-center underline'>{workout.metric === 'wr' ? 'REPS' : workout.metric === 'dt' ? 'MIN' : ''}</Text>
-                            </View>
-                            {setList(workout.metric1, workout.metric2, workout.exerName, i)}
+                                <View className='flex-row justify-around pb-1'>
+                                    <Text className='text-gray-300 text-xs font-semibold w-1/3 text-center underline'>SET</Text>
+                                    <Text className='text-gray-300 text-xs font-semibold w-1/3 text-center underline'>{workout.metric === 'wr' ? 'LBS' : workout.metric === 'dt' ? 'MILES' : 'SECONDS'}</Text>
+                                    <Text className='text-gray-300 text-xs font-semibold w-1/3 text-center underline'>{workout.metric === 'wr' ? 'REPS' : workout.metric === 'dt' ? 'MIN' : ''}</Text>
+                                </View>
+                                {setList(workout.metric1, workout.metric2, workout.exerName, i)}
                             </Animatable.View>
                         </CollapseBody>
                     </Collapse>
@@ -142,7 +142,7 @@ const History = () => {
             return (
                 <View className='flex-row justify-around' key={exerName + i + exerIndex}>
                     <Text className='text-gray-300 text-xs w-1/3 text-center'>{i + 1}</Text>
-                    <Text className='text-gray-300 text-xs w-1/3 text-center'>{`${val}${exerName in stateSelector.userData.record && +val===stateSelector.userData.record[exerName].pr1 && +val !== 0? '*' : ''}`}</Text>
+                    <Text className='text-gray-300 text-xs w-1/3 text-center'>{`${val}${exerName in stateSelector.userData.record && +val === stateSelector.userData.record[exerName].pr1 && +val !== 0 ? '*' : ''}`}</Text>
                     <Text className='text-gray-300 text-xs w-1/3 text-center'>{metric2 === undefined ? '' :
                         `${metric2[i]}${stateSelector.userData.record[exerName].pr1 === 0 && +metric2[i] === stateSelector.userData.record[exerName].pr2 ? '*' : ''}`
                     }</Text>
@@ -185,7 +185,14 @@ const History = () => {
                     <Text className='text-white text-lg font-semibold'>History</Text>
                 </View>
                 <ScrollView className='px-3 pt-3' contentContainerStyle={{ paddingBottom: 70 }}>
-                    {historyList(userWorkObj)}
+                    {Object.keys(userWorkObj).length !== 0 ? historyList(userWorkObj) :
+                        <View className=' p-1 m-1'>
+                            <View className='flex-row justify-between items-center mb-2'>
+                                <Text className='text-gray-300 text-lg font-semibold w-7/12 italic'>
+                                    No workout history..
+                                </Text>
+                            </View>
+                        </View>}
                 </ScrollView>
                 <FooterComp />
             </View>
