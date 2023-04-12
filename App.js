@@ -12,6 +12,8 @@ import EditTemp from './screens/EditTemp';
 import LogWorkout from './screens/LogWorkout';
 import History from './screens/History';
 import SignUp from './screens/SignUp';
+import LogIn from './screens/LogIn';
+import ResetPass from './screens/ResetPass';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +23,8 @@ export default function App() {
       <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator>
+          <Stack.Screen name='ResetPass' component={ResetPass} />
+          <Stack.Screen name='LogIn' component={LogIn} />
           <Stack.Screen name='SignUp' component={SignUp} />
           <Stack.Screen name='Workout' component={Workout} />
           <Stack.Screen name='History' component={History} />

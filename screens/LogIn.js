@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const SignUp = () => {
+const LogIn = () => {
 
     const navigation = useNavigation();
 
@@ -53,10 +53,10 @@ const SignUp = () => {
                                 <TouchableOpacity className='bg-[#1b4264] w-1/6 h-7 items-center justify-center' onPress={() => setVisible(!invisible)}><FontAwesome5 className='items-center' name={invisible ? "eye-slash" : "eye"} size={16} color="white" /></TouchableOpacity>
                             </View>
                             <TouchableOpacity className='w-60 h-7 mt-3'>
-                                <Text className='text-white w-full text-center font-semibold text-lg'>Sign Up</Text>
+                                <Text className='text-white w-full text-center font-semibold text-lg'>Log In</Text>
                             </TouchableOpacity>
                             <View className='w-60 flex-row justify-between items-center mt-10'>
-                                <TouchableOpacity onPress={() => navigation.navigate('LogIn')}><Text className='text-gray-300  text-center italic' >Login</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}><Text className='text-gray-300  text-center italic'>New User?</Text></TouchableOpacity>
                                 <TouchableOpacity onPress={() => navigation.navigate('ResetPass')}><Text className='text-gray-300 text-center italic'>Forgot Password?</Text></TouchableOpacity>
                             </View>
                         </View>
@@ -67,4 +67,4 @@ const SignUp = () => {
     )
 }
 
-export default SignUp;
+export default LogIn;

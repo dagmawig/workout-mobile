@@ -1,22 +1,15 @@
 import { View, Text, ImageBackground, TextInput, Linking, TouchableOpacity } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { FontAwesome5 } from '@expo/vector-icons';
 
-const SignUp = () => {
+const ResetPass = () => {
 
     const navigation = useNavigation();
 
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [invisible, setVisible] = useState(true)
 
     function handleEmail(email) {
         setEmail(email)
-    }
-
-    function handlePass(password) {
-        setPassword(password)
     }
 
     useLayoutEffect(() => {
@@ -40,24 +33,12 @@ const SignUp = () => {
                                 placeholderTextColor={'gray'}
                                 value={email}
                                 onChangeText={(text) => handleEmail(text)} />
-                            <View className='flex-row items-center w-60 border-white border-2 rounded-md mb-1'>
-                                <TextInput
-                                    className='h-7 w-5/6   bg-[#1b4264]  text-white px-2'
-                                    cursorColor={'white'}
-                                    placeholder='password'
-                                    placeholderTextColor={'gray'}
-                                    secureTextEntry={invisible}
-                                    value={password}
-                                    autoCorrect={false}
-                                    onChangeText={(text) => handlePass(text)} />
-                                <TouchableOpacity className='bg-[#1b4264] w-1/6 h-7 items-center justify-center' onPress={() => setVisible(!invisible)}><FontAwesome5 className='items-center' name={invisible ? "eye-slash" : "eye"} size={16} color="white" /></TouchableOpacity>
-                            </View>
                             <TouchableOpacity className='w-60 h-7 mt-3'>
-                                <Text className='text-white w-full text-center font-semibold text-lg'>Sign Up</Text>
+                                <Text className='text-white w-full text-center font-semibold text-lg'>Reset Password</Text>
                             </TouchableOpacity>
                             <View className='w-60 flex-row justify-between items-center mt-10'>
-                                <TouchableOpacity onPress={() => navigation.navigate('LogIn')}><Text className='text-gray-300  text-center italic' >Login</Text></TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigation.navigate('ResetPass')}><Text className='text-gray-300 text-center italic'>Forgot Password?</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.navigate('LogIn')}><Text className='text-gray-300  text-center italic'>Login</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}><Text className='text-gray-300 text-center italic'>New User?</Text></TouchableOpacity>
                             </View>
                         </View>
                     </ImageBackground>
@@ -67,4 +48,4 @@ const SignUp = () => {
     )
 }
 
-export default SignUp;
+export default ResetPass;
