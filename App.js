@@ -11,6 +11,7 @@ import ShowTemp from './screens/ShowTemp';
 import EditTemp from './screens/EditTemp';
 import LogWorkout from './screens/LogWorkout';
 import History from './screens/History';
+import SignUp from './screens/SignUp';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
       <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator>
+          <Stack.Screen name='SignUp' component={SignUp} />
           <Stack.Screen name='Workout' component={Workout} />
           <Stack.Screen name='History' component={History} />
           <Stack.Screen name='LogWorkout' component={LogWorkout} />
