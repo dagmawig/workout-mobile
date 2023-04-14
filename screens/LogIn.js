@@ -3,8 +3,8 @@ import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { auth } from '../components/FirebaseConfig';
-import {signInWithEmailAndPassword, sendEmailVerification} from 'firebase/auth';
-import * as SecureStore from 'expo-secure-store';
+import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import SecureSt from '../components/SecureStore';
 
 const LogIn = () => {
 
@@ -13,19 +13,6 @@ const LogIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [invisible, setVisible] = useState(true);
-
-    async function save(key, value) {
-        await SecureStore.setItemAsync(key, value);
-    }
-
-    async function getValueFor(key) {
-        let result = await SecureStore.getItemAsync(key);
-        if (result) {
-          return result;
-        } else {
-          return null;
-        }
-      }
 
     function handleEmail(email) {
         setEmail(email)
@@ -37,22 +24,22 @@ const LogIn = () => {
 
     function logIn() {
         signInWithEmailAndPassword(auth, email, password)
-        .then(userCred=> {
-            const user = userCred.user;
-            
-            if(user.emailVerified) {
-                save('email', email);
-                save('password', password);
-                navigation.navigate('Workout');
-            }
-            else {
-                sendEmailVerification(auth.currentUser).then(()=> {
-                    Alert.alert(`Email not verified. \nVerification link sent to ${email}. \nPlease verify your email.`)
-                });
+            .then(userCred => {
+                const user = userCred.user;
 
-                auth.signOut().then(() => {}).catch(err=>console.log(err))
-            }
-        }).catch(error=> Alert.alert(error.message));
+                if (user.emailVerified) {
+                    SecureSt.save('email', email);
+                    SecureSt.save('password', password);
+                    navigation.navigate('Workout');
+                }
+                else {
+                    sendEmailVerification(auth.currentUser).then(() => {
+                        Alert.alert(`Email not verified. \nVerification link sent to ${email}. \nPlease verify your email.`)
+                    });
+
+                    auth.signOut().then(() => { }).catch(err => console.log(err))
+                }
+            }).catch(error => Alert.alert(error.message));
     }
 
     useLayoutEffect(() => {

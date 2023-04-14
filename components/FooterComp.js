@@ -10,6 +10,9 @@ const FooterComp = () => {
 
     function handleNav(screen) {
         switch (screen) {
+            case 'profile':
+                navigation.navigate('Profile');
+                break;
             case 'workout':
                 navigation.navigate('Workout');
                 break;
@@ -26,6 +29,10 @@ const FooterComp = () => {
 
     return (
         <View className='absolute bottom-0 h-[50px] bg-[#28547B] w-full items-center justify-around flex-row'>
+            <TouchableOpacity className='items-center justify-center p-2' style={{backgroundColor: route.name==='Profile'? '#1a364f' : ''}} onPress={() => handleNav('profile')}>
+                <FontAwesome5 name="user" size={16} color="white" />
+                <Text className='text-white text-xs'>Profile</Text>
+            </TouchableOpacity>
             <TouchableOpacity className='items-center justify-center p-2' style={{backgroundColor: route.name==='History'? '#1a364f' : ''}} onPress={() => handleNav('history')}>
                 <FontAwesome5 name="clock" size={16} color="white" />
                 <Text className='text-white text-xs'>History</Text>
