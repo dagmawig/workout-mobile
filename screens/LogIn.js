@@ -1,7 +1,9 @@
-import { View, Text, ImageBackground, TextInput, Linking, TouchableOpacity } from 'react-native'
+import { View, Text, ImageBackground, TextInput, TouchableOpacity } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { auth } from '../components/FirebaseConfig';
+import {signInWithEmailAndPassword} from 'firebase/auth';
 
 const LogIn = () => {
 
@@ -9,7 +11,7 @@ const LogIn = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [invisible, setVisible] = useState(true)
+    const [invisible, setVisible] = useState(true);
 
     function handleEmail(email) {
         setEmail(email)
@@ -17,6 +19,19 @@ const LogIn = () => {
 
     function handlePass(password) {
         setPassword(password)
+    }
+
+    function logIn() {
+        signInWithEmailAndPassword(auth, email, password)
+        .then(userCred=> {
+            const user = userCred.user;
+            
+            if(user.emailVerified) {
+                console.log(user.emailVerified)
+            }
+        })
+        
+
     }
 
     useLayoutEffect(() => {
@@ -52,7 +67,7 @@ const LogIn = () => {
                                     onChangeText={(text) => handlePass(text)} />
                                 <TouchableOpacity className='bg-[#1b4264] w-1/6 h-7 items-center justify-center' onPress={() => setVisible(!invisible)}><FontAwesome5 className='items-center' name={invisible ? "eye-slash" : "eye"} size={16} color="white" /></TouchableOpacity>
                             </View>
-                            <TouchableOpacity className='w-60 h-7 mt-3'>
+                            <TouchableOpacity className='w-60 h-7 mt-3' onPress={logIn}>
                                 <Text className='text-white w-full text-center font-semibold text-lg'>Log In</Text>
                             </TouchableOpacity>
                             <View className='w-60 flex-row justify-between items-center mt-10'>
