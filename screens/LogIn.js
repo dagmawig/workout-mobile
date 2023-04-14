@@ -5,11 +5,14 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { auth } from '../components/FirebaseConfig';
 import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import SecureSt from '../components/SecureStore';
+import { useDispatch} from 'react-redux';
+import { updateEmail } from '../components/workoutSlice';
 
 const LogIn = () => {
 
     const navigation = useNavigation();
-
+    const dispatch = useDispatch();
+    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [invisible, setVisible] = useState(true);
@@ -30,16 +33,18 @@ const LogIn = () => {
                 if (user.emailVerified) {
                     SecureSt.save('email', email);
                     SecureSt.save('password', password);
+                    SecureSt.save('uid', user.uid);
+                    dispatch(updateEmail(email));
                     navigation.navigate('Workout');
                 }
                 else {
                     sendEmailVerification(auth.currentUser).then(() => {
-                        Alert.alert(`Email not verified. \nVerification link sent to ${email}. \nPlease verify your email.`)
+                        Alert.alert(`Email not verified!`,`Verification link sent to: \n${email}. \nPlease verify your email.`)
                     });
 
                     auth.signOut().then(() => { }).catch(err => console.log(err))
                 }
-            }).catch(error => Alert.alert(error.message));
+            }).catch(error => Alert.alert(`Error`, error.message));
     }
 
     useLayoutEffect(() => {
@@ -73,7 +78,7 @@ const LogIn = () => {
                                     value={password}
                                     autoCorrect={false}
                                     onChangeText={(text) => handlePass(text)} />
-                                <TouchableOpacity className='bg-[#1b4264] w-1/6 h-7 items-center justify-center' onPress={() => setVisible(!invisible)}><FontAwesome5 className='items-center' name={invisible ? "eye-slash" : "eye"} size={16} color="white" /></TouchableOpacity>
+                                <TouchableOpacity className='bg-[#1b4264] w-1/6 h-7 items-center justify-center' onPress={() => setVisible(!invisible)}><FontAwesome5 className='items-center' name={invisible ? "eye" : "eye-slash"} size={16} color="white" /></TouchableOpacity>
                             </View>
                             <TouchableOpacity className='w-60 h-7 mt-3' onPress={logIn}>
                                 <Text className='text-white w-full text-center font-semibold text-lg'>Log In</Text>

@@ -1,7 +1,10 @@
-import { View, Text, ImageBackground, TextInput, Linking, TouchableOpacity } from 'react-native'
+import { View, Text, ImageBackground, TextInput, Linking, TouchableOpacity, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { auth } from '../components/FirebaseConfig';
+
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 
 const SignUp = () => {
 
@@ -17,6 +20,18 @@ const SignUp = () => {
 
     function handlePass(password) {
         setPassword(password)
+    }
+
+    function signUp() {
+        createUserWithEmailAndPassword(auth, email, password)
+        .then(()=> {
+                sendEmailVerification(auth.currentUser).then(() => {
+                    auth.signOut().then(() => {
+                        Alert.alert(`Email not verified!`, `Verification link sent to ${email}. \nPlease click on the link to verify your email and log into your acount.`);
+                        navigation.navigate('LogIn');
+                    }).catch(error=>console.log(error))
+                }).catch(error=>console.log(error))
+            }).catch(error=>Alert.alert(`Error`, error))
     }
 
     useLayoutEffect(() => {
@@ -50,10 +65,10 @@ const SignUp = () => {
                                     value={password}
                                     autoCorrect={false}
                                     onChangeText={(text) => handlePass(text)} />
-                                <TouchableOpacity className='bg-[#1b4264] w-1/6 h-7 items-center justify-center' onPress={() => setVisible(!invisible)}><FontAwesome5 className='items-center' name={invisible ? "eye-slash" : "eye"} size={16} color="white" /></TouchableOpacity>
+                                <TouchableOpacity className='bg-[#1b4264] w-1/6 h-7 items-center justify-center' onPress={() => setVisible(!invisible)}><FontAwesome5 className='items-center' name={invisible ? "eye" : "eye-slash"} size={16} color="white" /></TouchableOpacity>
                             </View>
                             <TouchableOpacity className='w-60 h-7 mt-3'>
-                                <Text className='text-white w-full text-center font-semibold text-lg'>Sign Up</Text>
+                                <Text className='text-white w-full text-center font-semibold text-lg' onPress={signUp}>Sign Up</Text>
                             </TouchableOpacity>
                             <View className='w-60 flex-row justify-between items-center mt-10'>
                                 <TouchableOpacity onPress={() => navigation.navigate('LogIn')}><Text className='text-gray-300  text-center italic' >Login</Text></TouchableOpacity>

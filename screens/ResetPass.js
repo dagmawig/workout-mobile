@@ -1,6 +1,8 @@
-import { View, Text, ImageBackground, TextInput, Linking, TouchableOpacity } from 'react-native'
+import { View, Text, ImageBackground, TextInput, Linking, TouchableOpacity, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../components/FirebaseConfig';
 
 const ResetPass = () => {
 
@@ -10,6 +12,13 @@ const ResetPass = () => {
 
     function handleEmail(email) {
         setEmail(email)
+    }
+
+    function resetPass() {
+        sendPasswordResetEmail(auth, email).then(() => {
+            Alert.alert(`Email sent!`, `Password reset link sent to: \n${email}.`);
+            navigation.navigate('LogIn');
+        }).catch(error=>Alert.alert(`Error`, `${error.message}`))
     }
 
     useLayoutEffect(() => {
@@ -34,7 +43,7 @@ const ResetPass = () => {
                                 value={email}
                                 onChangeText={(text) => handleEmail(text)} />
                             <TouchableOpacity className='w-60 h-7 mt-3'>
-                                <Text className='text-white w-full text-center font-semibold text-lg'>Reset Password</Text>
+                                <Text className='text-white w-full text-center font-semibold text-lg' onPress={resetPass}>Reset Password</Text>
                             </TouchableOpacity>
                             <View className='w-60 flex-row justify-between items-center mt-10'>
                                 <TouchableOpacity onPress={() => navigation.navigate('LogIn')}><Text className='text-gray-300  text-center italic'>Login</Text></TouchableOpacity>
