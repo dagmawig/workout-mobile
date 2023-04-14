@@ -1,9 +1,10 @@
-import { View, Text, ImageBackground, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, ImageBackground, TextInput, TouchableOpacity, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { auth } from '../components/FirebaseConfig';
-import {signInWithEmailAndPassword} from 'firebase/auth';
+import {signInWithEmailAndPassword, sendEmailVerification} from 'firebase/auth';
+import * as SecureStore from 'expo-secure-store';
 
 const LogIn = () => {
 
@@ -12,6 +13,19 @@ const LogIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [invisible, setVisible] = useState(true);
+
+    async function save(key, value) {
+        await SecureStore.setItemAsync(key, value);
+    }
+
+    async function getValueFor(key) {
+        let result = await SecureStore.getItemAsync(key);
+        if (result) {
+          return result;
+        } else {
+          return null;
+        }
+      }
 
     function handleEmail(email) {
         setEmail(email)
@@ -27,11 +41,18 @@ const LogIn = () => {
             const user = userCred.user;
             
             if(user.emailVerified) {
-                console.log(user.emailVerified)
+                save('email', email);
+                save('password', password);
+                navigation.navigate('Workout');
             }
-        })
-        
+            else {
+                sendEmailVerification(auth.currentUser).then(()=> {
+                    Alert.alert(`Email not verified. \nVerification link sent to ${email}. \nPlease verify your email.`)
+                });
 
+                auth.signOut().then(() => {}).catch(err=>console.log(err))
+            }
+        }).catch(error=> Alert.alert(error.message));
     }
 
     useLayoutEffect(() => {
