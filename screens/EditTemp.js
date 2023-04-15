@@ -19,7 +19,7 @@ const EditTemp = () => {
     const stateSelector = useSelector(state => state.workout)
     const dispatch = useDispatch();
 
-    const currentTemp = stateSelector.userData.templateArr[stateSelector.userData.currentTemp.index];
+    const currentTemp = stateSelector.userData.templateArr[stateSelector.currentTemp.index];
 
     const [exerMode, setExerMode] = useState(false);
     const [tempName, setTempName] = useState(currentTemp.name);
@@ -79,7 +79,7 @@ const EditTemp = () => {
             updatedTemp.name = tempName;
             updatedTemp.exerList = tempExerArr;
             let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
-            newUserTempArr[stateSelector.userData.currentTemp.index] = updatedTemp;
+            newUserTempArr[stateSelector.currentTemp.index] = updatedTemp;
             dispatch(updateUserTempArr(newUserTempArr));
 
             dispatch(updateLoading(true));
@@ -101,7 +101,7 @@ const EditTemp = () => {
                         }
                     })
                 }
-                else console.log('invalid uid')
+                else console.log('invalid uid: ', uid)
 
             })
         }

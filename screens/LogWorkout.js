@@ -5,17 +5,20 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import TempExerComp from '../components/TempExerComp';
 import SearchComp from '../components/SearchComp';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateCurrentTemp, updateUserData } from '../components/workoutSlice';
+import { updateCurrentTemp, updateLoading, updateUserData } from '../components/workoutSlice';
 import { current } from '@reduxjs/toolkit';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
+import { REACT_APP_API_URI } from '@env'
+import axios from 'axios';
+import SecureSt from '../components/SecureStore';
 
 const LogWorkout = () => {
    
     const stateSelector = useSelector(state=>state.workout);
     const dispatch = useDispatch();
 
-    const currentTempObj = stateSelector.userData.currentTemp;
+    const currentTempObj = stateSelector.currentTemp;
     let currentTemp = currentTempObj.userTemp? stateSelector.userData.templateArr[currentTempObj.index] :
     stateSelector.userData.fixTempArr[currentTempObj.index];
 
@@ -129,6 +132,13 @@ const LogWorkout = () => {
         return record;
     }
 
+    async function saveWorkout(workoutObj, user, updatedTempArr, record, uid) {
+        let updateURI = REACT_APP_API_URI + 'updateWorkoutObj';
+        let res = await axios.post(updateURI, {userID: uid, workoutObj, user, updatedTempArr, record}).catch(err=> console.log(err));
+
+        return res;
+    }
+
     function handleSave() {
         if(tempExerArr.length===0) {
             Alert.alert('No Exercise under Template!', 'There are no exercises under current template. Please add exercise(s) and log workout data before saving current sesssion.', [
@@ -176,16 +186,33 @@ const LogWorkout = () => {
             let newTemplateArr = JSON.parse(JSON.stringify(currentTempObj.userTemp ? stateSelector.userData.templateArr : stateSelector.userData.fixTempArr));
             newTemplateArr[currentTempObj.index].workoutTimeArr.push(new Date().toISOString());
             
-            let userData = JSON.parse(JSON.stringify(stateSelector.userData));
-            userData.workoutObj = tempUserObj;
-            if(currentTempObj.userTemp) userData.templateArr = newTemplateArr;
-            else userData.fixTempArr = newTemplateArr;
-            userData.record = record;
+            // let userData = JSON.parse(JSON.stringify(stateSelector.userData));
+            // userData.workoutObj = tempUserObj;
+            // if(currentTempObj.userTemp) userData.templateArr = newTemplateArr;
+            // else userData.fixTempArr = newTemplateArr;
+            // userData.record = record;
             
-            dispatch(updateUserData(userData));
-            setTempExerArr([]);
-            navigation.navigate('Workout');
-            dispatch(updateCurrentTemp(null));
+            dispatch(updateLoading(true));
+            SecureSt.getVal('uid').then(uid=> {
+                if(uid) {
+                    saveWorkout(tempUserObj, currentTempObj.userTemp, newTemplateArr, record, uid).then(res=> {
+                        let data = res.data;
+                        if(data.success) {
+                            dispatch(updateUserData(data.data));
+                            Alert.alert(`Success`, `Workout under template "${currentTemp.name}" saved successfully!`);
+                            setTempExerArr([]);
+                            navigation.navigate('Workout');
+                            dispatch(updateCurrentTemp(null));
+                            dispatch(updateLoading(false));
+                        }
+                        else {
+                            dispatch(updateLoading(false));
+                            Alert.alert(`Error`, `${data.err}`)
+                        }
+                    })
+                }
+                else console.log('invalid uid: ', uid)
+            })            
         }
     }
 

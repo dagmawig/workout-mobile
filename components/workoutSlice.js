@@ -7,6 +7,7 @@ const initialState = {
     bodyTag: [],
     scrollP: 0,
     loading: false,
+    currentTemp: null,
     userData: {
         email: '',
         templateArr: [
@@ -154,7 +155,6 @@ const initialState = {
                 ]
             }
         ],
-        currentTemp: null,
         record: {},
         workoutObj: {},
     }
@@ -183,7 +183,7 @@ export const workoutSlice = createSlice({
             state.userData.templateArr = action.payload;
         },
         updateCurrentTemp: (state, action) => {
-            state.userData.currentTemp = action.payload;
+            state.currentTemp = action.payload;
         },
         updateWorkoutObj: (state, action) => {
             state.userData.workoutObj = action.payload;

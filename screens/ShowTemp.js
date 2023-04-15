@@ -13,7 +13,7 @@ const ShowTemp = () => {
     const stateSelector = useSelector(state => state.workout);
     const dispatch = useDispatch();
 
-    const currentTempObj = stateSelector.userData.currentTemp;
+    const currentTempObj = stateSelector.currentTemp;
     let currentTemp = currentTempObj.userTemp? stateSelector.userData.templateArr[currentTempObj.index] :
     stateSelector.userData.fixTempArr[currentTempObj.index];
 

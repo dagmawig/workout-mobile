@@ -100,7 +100,7 @@ const Workout = () => {
                     }
                 })
             }
-            else console.log('invalid uid')
+            else console.log('invalid uid: ', uid)
         }) 
     }, [])
 
