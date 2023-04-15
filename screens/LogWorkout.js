@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateCurrentTemp, updateUserData } from '../components/workoutSlice';
 import { current } from '@reduxjs/toolkit';
 import ExerDetComp from '../components/ExerDetComp';
+import Loading from '../components/Loading';
 
 const LogWorkout = () => {
    
@@ -15,7 +16,7 @@ const LogWorkout = () => {
     const dispatch = useDispatch();
 
     const currentTempObj = stateSelector.userData.currentTemp;
-    let currentTemp = currentTempObj.userTemp? stateSelector.userData.userTempArr[currentTempObj.index] :
+    let currentTemp = currentTempObj.userTemp? stateSelector.userData.templateArr[currentTempObj.index] :
     stateSelector.userData.fixTempArr[currentTempObj.index];
 
     let inputArr = [];
@@ -166,21 +167,21 @@ const LogWorkout = () => {
 
                 updateExerRecord(inputStateExer, exer, record);
             }
-
+            
             workObj.workoutList = workoutList;
             workObj.duration = seconds;
-            let tempUserObj = JSON.parse(JSON.stringify(stateSelector.userData.userWorkObj));
+            let tempUserObj = JSON.parse(JSON.stringify(stateSelector.userData.workoutObj));
             tempUserObj[timeStamp] = workObj;
-
-            let newTemplateArr = JSON.parse(JSON.stringify(currentTempObj.userTemp ? stateSelector.userData.userTempArr : stateSelector.userData.fixTempArr));
+            
+            let newTemplateArr = JSON.parse(JSON.stringify(currentTempObj.userTemp ? stateSelector.userData.templateArr : stateSelector.userData.fixTempArr));
             newTemplateArr[currentTempObj.index].workoutTimeArr.push(new Date().toISOString());
-
+            
             let userData = JSON.parse(JSON.stringify(stateSelector.userData));
-            userData.userWorkObj = tempUserObj;
-            if(currentTempObj.userTemp) userData.userTempArr = newTemplateArr;
+            userData.workoutObj = tempUserObj;
+            if(currentTempObj.userTemp) userData.templateArr = newTemplateArr;
             else userData.fixTempArr = newTemplateArr;
             userData.record = record;
-
+            
             dispatch(updateUserData(userData));
             setTempExerArr([]);
             navigation.navigate('Workout');
@@ -221,6 +222,7 @@ const LogWorkout = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='pt-[45px] h-full w-full' >
                 {
                     exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr}  setExerMode={setExerMode} inputState={inputState} /> :

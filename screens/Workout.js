@@ -1,12 +1,16 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useLayoutEffect, useState } from 'react'
+import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import { useDispatch, useSelector } from 'react-redux';
 import ExerDetComp from '../components/ExerDetComp';
 import FooterComp from '../components/FooterComp';
-import { updateCurrentTemp } from '../components/workoutSlice';
+import { updateCurrentTemp, updateLoading, updateUserData } from '../components/workoutSlice';
+import { REACT_APP_API_URI } from '@env';
+import axios from 'axios';
+import SecureSt from '../components/SecureStore';
+import Loading from '../components/Loading';
 
 const Workout = () => {
 
@@ -74,8 +78,35 @@ const Workout = () => {
         })
     }, []);
 
+    useEffect(() => {
+        async function loadData(uid) { 
+            let loadURI = REACT_APP_API_URI + 'loadData';
+            let res = await axios.post(loadURI, {userID: uid, email: stateSelector.userData.email});
+            return res;
+        }
+
+        dispatch(updateLoading(true));
+        SecureSt.getVal('uid').then(uid=> {
+            if(uid) {
+                loadData(uid).then(res=> {
+                    let data = res.data;
+                    if(data.success) {
+                        dispatch(updateUserData(data.data))
+                        dispatch(updateLoading(false))
+                    }
+                    else {
+                        dispatch(updateLoading(false))
+                        Alert.alert(`Error`, `${data.err}`)
+                    }
+                })
+            }
+            else console.log('invalid uid')
+        }) 
+    }, [])
+
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <View className=''>
@@ -94,7 +125,7 @@ const Workout = () => {
                                         <TouchableOpacity onPress={handleNewTemp}><FontAwesome5 name="plus" size={18} color="white" /></TouchableOpacity>
                                     </View>
                                 </View>
-                                {tempList(stateSelector.userData.userTempArr, true)}
+                                {tempList(stateSelector.userData.templateArr, true)}
                             </View>
                             <View>
                                 <View className='flex-row justify-between py-3'>

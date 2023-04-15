@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateCurrentTemp, updateUserTempArr } from '../components/workoutSlice';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import ExerDetComp from '../components/ExerDetComp';
+import Loading from '../components/Loading';
 
 const ShowTemp = () => {
 
@@ -13,7 +14,7 @@ const ShowTemp = () => {
     const dispatch = useDispatch();
 
     const currentTempObj = stateSelector.userData.currentTemp;
-    let currentTemp = currentTempObj.userTemp? stateSelector.userData.userTempArr[currentTempObj.index] :
+    let currentTemp = currentTempObj.userTemp? stateSelector.userData.templateArr[currentTempObj.index] :
     stateSelector.userData.fixTempArr[currentTempObj.index];
 
     const [detMode, setDetMode] = useState(false);
@@ -117,7 +118,7 @@ const ShowTemp = () => {
             {
                 text: 'DELETE',
                 onPress: () => {
-                    let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.userTempArr));
+                    let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
                     newUserTempArr.splice(currentTempObj.index, 1);
                     navigation.navigate('Workout');
                     dispatch(updateUserTempArr(newUserTempArr));
@@ -136,6 +137,7 @@ const ShowTemp = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <View className='w-full flex-row items-center justify-between'>

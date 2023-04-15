@@ -5,7 +5,8 @@ import FooterComp from '../components/FooterComp';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import SecureSt from '../components/SecureStore';
 import { useSelector, useDispatch } from 'react-redux';
-import { initialState, updateReset } from '../components/workoutSlice';
+import { initialState, updateLoading, updateReset } from '../components/workoutSlice';
+import Loading from '../components/Loading';
 
 const Profile = () => {
 
@@ -14,11 +15,13 @@ const Profile = () => {
     const dispatch = useDispatch();
 
     function handleLogOut() {
+        dispatch(updateLoading(true));
         SecureSt.save('email', '');
         SecureSt.save('password', '');
         SecureSt.save('uid', '');
         dispatch(updateReset(initialState));
         navigation.navigate('LogIn');
+        dispatch(updateLoading(false));
     }
 
     useLayoutEffect(() => {
@@ -29,6 +32,7 @@ const Profile = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <View className=''>

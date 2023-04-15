@@ -7,6 +7,7 @@ import { updateUserTempArr } from '../components/workoutSlice';
 import TempExerComp from '../components/TempExerComp';
 import SearchComp from '../components/SearchComp';
 import ExerDetComp from '../components/ExerDetComp';
+import Loading from '../components/Loading';
 
 const NewTemp = () => {
 
@@ -72,7 +73,7 @@ const NewTemp = () => {
                 exerList: JSON.parse(JSON.stringify(tempExerArr))
             }
 
-            let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.userTempArr));
+            let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
             newUserTempArr.push(workoutTemp);
             dispatch(updateUserTempArr(newUserTempArr));
             setTempName('');
@@ -111,6 +112,7 @@ const NewTemp = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='pt-[45px] h-full w-full' >
                 {exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} /> : 
                 detMode ?

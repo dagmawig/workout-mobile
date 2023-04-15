@@ -6,6 +6,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native'
 import { useSelector } from 'react-redux';
 import * as Animatable from 'react-native-animatable'
+import Loading from '../components/Loading';
 
 const History = () => {
 
@@ -65,7 +66,7 @@ const History = () => {
     //     }
     // }
 
-    const userWorkObj = stateSelector.userData.userWorkObj;
+    const userWorkObj = stateSelector.userData.workoutObj;
 
     const [expanded, setExpanded] = useState(
         Object.keys(userWorkObj).reduce((expObj, key) => {
@@ -180,6 +181,7 @@ const History = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <Text className='text-white text-lg font-semibold'>History</Text>

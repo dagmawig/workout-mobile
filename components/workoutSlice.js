@@ -6,55 +6,10 @@ const initialState = {
     muscleTag: [],
     bodyTag: [],
     scrollP: 0,
+    loading: false,
     userData: {
         email: '',
-        userTempArr: [
-            {
-                tempID: '2023-03-29T01:50:05.740Z',
-                workoutTimeArr: [],
-                name: 'Dagmawi',
-                exerList: [
-                    {
-                        bodyPart: 'back',
-                        equipment: 'leverage machine',
-                        gifUrl: 'http://d205bpvrqc9yn1.cloudfront.net/0015.gif',
-                        id: '0015',
-                        name: 'assisted parallel close grip pull-up',
-                        target: 'lats',
-                        localUrl: '22.gif',
-                        metric: 'wr',
-                        timeStamp: [],
-                        localPng: '22.png',
-                        sets: 3
-                    },
-                    {
-                        bodyPart: 'upper legs',
-                        equipment: 'band',
-                        gifUrl: 'http://d205bpvrqc9yn1.cloudfront.net/0980.gif',
-                        id: '0980',
-                        name: 'band bent-over hip extension',
-                        target: 'glutes',
-                        localUrl: '47.gif',
-                        metric: 'wr',
-                        timeStamp: [],
-                        localPng: '47.png',
-                        sets: 2
-                    },
-                    {
-                        bodyPart: 'chest',
-                        equipment: 'barbell',
-                        gifUrl: 'http://d205bpvrqc9yn1.cloudfront.net/0025.gif',
-                        id: '0025',
-                        name: 'barbell bench press',
-                        target: 'pectorals',
-                        localUrl: '98.gif',
-                        metric: 'wr',
-                        timeStamp: [],
-                        localPng: '98.png',
-                        sets: 5
-                    }
-                ]
-            }
+        templateArr: [
         ],
         fixTempArr: [
             {
@@ -201,7 +156,7 @@ const initialState = {
         ],
         currentTemp: null,
         record: {},
-        userWorkObj: {},
+        workoutObj: {},
     }
 }
 
@@ -225,7 +180,7 @@ export const workoutSlice = createSlice({
             state.scrollP = action.payload;
         },
         updateUserTempArr: (state, action) => {
-            state.userData.userTempArr = action.payload;
+            state.userData.templateArr = action.payload;
         },
         updateCurrentTemp: (state, action) => {
             state.userData.currentTemp = action.payload;
@@ -242,10 +197,13 @@ export const workoutSlice = createSlice({
         updateReset: (state, action) => {
             state = action.payload;
         },
+        updateLoading: (state, action) => {
+            state.loading = action.payload;
+        },
     }
 });
 
-export const { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag, updateScroll, updateUserTempArr, updateCurrentTemp, updateWorkoutObj, updateUserData, updateEmail, updateReset } = workoutSlice.actions;
+export const { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag, updateScroll, updateUserTempArr, updateCurrentTemp, updateWorkoutObj, updateUserData, updateEmail, updateReset, updateLoading } = workoutSlice.actions;
 
 export {initialState};
 export default workoutSlice.reducer;

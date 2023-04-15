@@ -10,6 +10,7 @@ import ExerDetComp from '../components/ExerDetComp';
 import { IMAGES } from '../assets';
 import FooterComp from '../components/FooterComp';
 import Search from '../components/Search';
+import Loading from '../components/Loading';
 
 const Exercises = () => {
 
@@ -186,6 +187,7 @@ const Exercises = () => {
     // }, [])
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     {searchMode && !filterMode ? <>

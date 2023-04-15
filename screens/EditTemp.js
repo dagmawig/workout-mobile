@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUserTempArr } from '../components/workoutSlice';
 import SearchComp from '../components/SearchComp';
 import ExerDetComp from '../components/ExerDetComp';
+import Loading from '../components/Loading';
 
 const EditTemp = () => {
 
@@ -15,7 +16,7 @@ const EditTemp = () => {
     const stateSelector = useSelector(state => state.workout)
     const dispatch = useDispatch();
 
-    const currentTemp = stateSelector.userData.userTempArr[stateSelector.userData.currentTemp.index];
+    const currentTemp = stateSelector.userData.templateArr[stateSelector.userData.currentTemp.index];
 
     const [exerMode, setExerMode] = useState(false);
     const [tempName, setTempName] = useState(currentTemp.name);
@@ -67,7 +68,7 @@ const EditTemp = () => {
             let updatedTemp = JSON.parse(JSON.stringify(currentTemp));
             updatedTemp.name = tempName;
             updatedTemp.exerList = tempExerArr;
-            let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.userTempArr));
+            let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
             newUserTempArr[stateSelector.userData.currentTemp.index] = updatedTemp;
             dispatch(updateUserTempArr(newUserTempArr));
 
@@ -107,6 +108,7 @@ const EditTemp = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='pt-[45px] h-full w-full' >
                 {exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} /> : detMode ?
                     <>
