@@ -4,10 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import TempExerComp from '../components/TempExerComp';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUserTempArr } from '../components/workoutSlice';
+import { updateLoading, updateUserTempArr } from '../components/workoutSlice';
 import SearchComp from '../components/SearchComp';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
+import { REACT_APP_API_URI } from '@env';
+import axios from 'axios';
+import SecureSt from '../components/SecureStore';
 
 const EditTemp = () => {
 
@@ -47,6 +50,13 @@ const EditTemp = () => {
         setExerObj(null);
     }
 
+    async function saveTemplate(newTempArr, uid) {
+        let updateURI = REACT_APP_API_URI + 'updateTemp';
+        let res = await axios.post(updateURI, { userID: uid, templateArr: newTempArr }).catch(err => console.log(err));
+
+        return res;
+    }
+
     function saveTemp() {
         if (!tempName.split(' ').join('')) {
             return Alert.alert('Missing Template Name!', 'Please Add Template Name.', [
@@ -72,9 +82,28 @@ const EditTemp = () => {
             newUserTempArr[stateSelector.userData.currentTemp.index] = updatedTemp;
             dispatch(updateUserTempArr(newUserTempArr));
 
-            navigation.navigate('Workout');
-            setTempName('');
-            setTempExerArr([]);
+            dispatch(updateLoading(true));
+            SecureSt.getVal('uid').then(uid => {
+                if (uid) {
+                    saveTemplate(newUserTempArr, uid).then(res => {
+                        let data = res.data;
+                        if (data.success) {
+                            dispatch(updateUserTempArr(data.data.templateArr));
+                            Alert.alert(`Success`, `Template ${tempName} updated successfully!`);
+                            setTempName('');
+                            setTempExerArr([]);
+                            navigation.navigate('Workout');
+                            dispatch(updateLoading(false));
+                        }
+                        else {
+                            dispatch(updateLoading(false));
+                            Alert.alert(`Error`, `${data.err}`)
+                        }
+                    })
+                }
+                else console.log('invalid uid')
+
+            })
         }
     }
 
@@ -108,7 +137,7 @@ const EditTemp = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <Loading/>
+            <Loading />
             <View className='pt-[45px] h-full w-full' >
                 {exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} /> : detMode ?
                     <>
