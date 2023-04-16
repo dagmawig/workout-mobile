@@ -24,18 +24,18 @@ export default function App() {
       <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator>
-          <Stack.Screen name='LogIn' component={LogIn} />
-          <Stack.Screen name='Profile' component={Profile} />
-          <Stack.Screen name='ResetPass' component={ResetPass} />
-          <Stack.Screen name='SignUp' component={SignUp} />
-          <Stack.Screen name='Workout' component={Workout} />
-          <Stack.Screen name='History' component={History} />
-          <Stack.Screen name='LogWorkout' component={LogWorkout} />
+            <Stack.Screen name='Home' component={Home} />
+            <Stack.Screen name='LogIn' component={LogIn} />
+            <Stack.Screen name='Profile' component={Profile} />
+            <Stack.Screen name='ResetPass' component={ResetPass} />
+            <Stack.Screen name='SignUp' component={SignUp} />
+            <Stack.Screen name='Workout' component={Workout} />
+            <Stack.Screen name='History' component={History} />
+            <Stack.Screen name='LogWorkout' component={LogWorkout} />
             <Stack.Screen name='EditTemp' component={EditTemp} />
             <Stack.Screen name='ShowTemp' component={ShowTemp} />
             <Stack.Screen name='NewTemp' component={NewTemp} />
             <Stack.Screen name='Exercises' component={Exercises} />
-            <Stack.Screen name='Home' component={Home} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

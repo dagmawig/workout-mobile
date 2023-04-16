@@ -2,9 +2,19 @@ import { View, Text, ImageBackground, TouchableOpacity } from 'react-native'
 import React, { useLayoutEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
+import SecureSt from '../components/SecureStore';
+
 const Home = () => {
 
     const navigation = useNavigation();
+
+    function handleGo() {
+        console.log('gooo');
+        SecureSt.getVal('uid').then(uid=> {
+            if(uid) navigation.navigate('Workout');
+            else navigation.navigate('LogIn')
+        })
+    }
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -34,7 +44,7 @@ const Home = () => {
                                 easing='ease-in-out'
                                 iterationCount={'infinite'}
                                 className='w-28 h-28 items-center justify-center bg-[#28547B] rounded-full'>
-                                <TouchableOpacity className='w-full h-full items-center justify-center'>
+                                <TouchableOpacity className='w-full h-full items-center justify-center' onPress={handleGo}>
                                     <Text className='text-white  font-bold text-[40px]'>GO</Text>
                                 </TouchableOpacity>
                             </Animatable.View>
