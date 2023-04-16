@@ -89,7 +89,7 @@ const EditTemp = () => {
                         let data = res.data;
                         if (data.success) {
                             dispatch(updateUserTempArr(data.data.templateArr));
-                            Alert.alert(`Success`, `Template ${tempName} updated successfully!`);
+                            Alert.alert(`Success`, `Template "${tempName}" updated successfully!`);
                             setTempName('');
                             setTempExerArr([]);
                             navigation.navigate('Workout');
@@ -99,11 +99,10 @@ const EditTemp = () => {
                             dispatch(updateLoading(false));
                             Alert.alert(`Error`, `${data.err}`)
                         }
-                    })
+                    }).catch(err=>console.log(err))
                 }
                 else console.log('invalid uid: ', uid)
-
-            })
+            }).catch(err=>console.log(err))
         }
     }
 

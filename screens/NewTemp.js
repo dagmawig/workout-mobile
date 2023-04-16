@@ -3,11 +3,14 @@ import React, { useLayoutEffect, useState } from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUserTempArr } from '../components/workoutSlice';
+import { updateLoading, updateUserTempArr } from '../components/workoutSlice';
 import TempExerComp from '../components/TempExerComp';
 import SearchComp from '../components/SearchComp';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
+import { REACT_APP_API_URI} from '@env';
+import SecureSt from '../components/SecureStore';
+import axios from 'axios';
 
 const NewTemp = () => {
 
@@ -48,6 +51,13 @@ const NewTemp = () => {
         setExerObj(null);
     }
 
+    async function saveTemplate(newTempArr, uid) {
+        let updateURI = REACT_APP_API_URI + 'updateTemp';
+        let res = await axios.post(updateURI, {userID: uid, templateArr: newTempArr}).catch(err=>console.log(err));
+
+        return res;
+    }
+
     function saveTemp() {
         if (!tempName.split(' ').join('')) {
             return Alert.alert('Missing Template Name!', 'Please Add Template Name.', [
@@ -75,10 +85,28 @@ const NewTemp = () => {
 
             let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
             newUserTempArr.push(workoutTemp);
-            dispatch(updateUserTempArr(newUserTempArr));
-            setTempName('');
-            setTempExerArr([]);
-            return navigation.navigate('Workout');
+
+            dispatch(updateLoading(true));
+            SecureSt.getVal('uid').then(uid=> {
+                if(uid) {
+                    saveTemplate(newUserTempArr, uid).then(res=> {
+                        let data = res.data;
+                        if(data.success) {
+                            dispatch(updateUserTempArr(data.data.templateArr));
+                            Alert.alert(`Success`, `Template "${tempName}" saved successfully!`);
+                            navigation.navigate('Workout');
+                            setTempName('');
+                            setTempExerArr([]);
+                            dispatch(updateLoading(false));
+                        }
+                        else {
+                            dispatch(updateLoading(false));
+                            Alert.alert(`Error`, `${data.err}`);
+                        }
+                    }).catch(err=>console.log(err))
+                }
+                else console.log('invalid uid: ', uid)
+            }).catch(err=>console.log(err))           
         }
     }
 
