@@ -5,14 +5,14 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { auth } from '../components/FirebaseConfig';
 import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import SecureSt from '../components/SecureStore';
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateEmail } from '../components/workoutSlice';
 
 const LogIn = () => {
 
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [invisible, setVisible] = useState(true);
@@ -39,7 +39,7 @@ const LogIn = () => {
                 }
                 else {
                     sendEmailVerification(auth.currentUser).then(() => {
-                        Alert.alert(`Email not verified!`,`Verification link sent to: \n${email}. \nPlease verify your email.`)
+                        Alert.alert(`Email not verified!`, `Verification link sent to: \n${email}. \nPlease verify your email.`)
                     });
 
                     auth.signOut().then(() => { }).catch(err => console.log(err))

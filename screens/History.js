@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import FooterComp from '../components/FooterComp';
@@ -12,59 +12,6 @@ const History = () => {
 
     const navigation = useNavigation();
     const stateSelector = useSelector(state => state.workout);
-
-    // let tempObj = {
-    //     '2023-04-09T02:14:42.349Z': {
-    //         tempName: 'Dagmawi',
-    //         workoutList: [
-    //             {
-    //                 exerName: 'band bent-over hip extension',
-    //                 metric: 'wr',
-    //                 metric1: [
-    //                     '0',
-    //                     '0'
-    //                 ],
-    //                 metric2: [
-    //                     '45',
-    //                     '60'
-    //                 ]
-    //             }
-    //         ],
-    //         duration: 13
-    //     },
-    //     '2023-04-09T02:15:58.522Z': {
-    //         tempName: 'Dagmawi',
-    //         workoutList: [
-    //             {
-    //                 exerName: 'assisted parallel close grip pull-up',
-    //                 metric: 'wr',
-    //                 metric1: [
-    //                     '1',
-    //                     '4',
-    //                     '56'
-    //                 ],
-    //                 metric2: [
-    //                     '3',
-    //                     '56',
-    //                     '3445'
-    //                 ]
-    //             },
-    //             {
-    //                 exerName: 'band bent-over hip extension',
-    //                 metric: 'wr',
-    //                 metric1: [
-    //                     '56',
-    //                     '546'
-    //                 ],
-    //                 metric2: [
-    //                     '675',
-    //                     '879'
-    //                 ]
-    //             }
-    //         ],
-    //         duration: 35
-    //     }
-    // }
 
     const userWorkObj = stateSelector.userData.workoutObj;
 
@@ -107,10 +54,6 @@ const History = () => {
         return workoutList.map((workout, i) => {
             return (
                 <View key={'history-exer' + key + i} className=' my-[1px] '>
-                    {/* <TouchableOpacity
-                    title={"Click here too"}
-                    onPress={() => setExpanded(!expanded)}
-                /> */}
                     <Collapse
                         isExpanded={expanded[key][i]}
                         onToggle={() => handleExpand(key, i)}>
@@ -152,11 +95,6 @@ const History = () => {
         })
     }
 
-    /*
- ${exerName in stateSelector.userData.record && +val===stateSelector.userData.record[exerName].pr1 && +val !== 0? '*' : ''}
- ${stateSelector.userData.record[exerName].pr1 === 0 && +metric2[i] === stateSelector.userData.record[exerName].pr2 ? '*' : ''}
-    */
-
     function handleExpand(key, index) {
         let updatedExpanded = JSON.parse(JSON.stringify(expanded));
 
@@ -181,7 +119,7 @@ const History = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <Loading/>
+            <Loading />
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <Text className='text-white text-lg font-semibold'>History</Text>

@@ -34,13 +34,13 @@ const Workout = () => {
             userTemp: userTemp,
             index: index
         }));
-        
+
         navigation.navigate('ShowTemp');
     }
 
     function tempList(tList, userTemp) {
         return tList.map((temp, i) => {
-            return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`} onPress={()=>handleShowTemp(temp, userTemp, i)}>
+            return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`} onPress={() => handleShowTemp(temp, userTemp, i)}>
                 <View><Text className='text-white font-bold'>{temp.name}</Text></View>
                 <View><Text className='text-white pb-2 italic'>{`Last Performed: ${calcTime(temp)}`}</Text></View>
                 {exerList(temp.exerList, userTemp)}
@@ -79,18 +79,18 @@ const Workout = () => {
     }, []);
 
     useEffect(() => {
-        async function loadData(uid) { 
+        async function loadData(uid) {
             let loadURI = REACT_APP_API_URI + 'loadData';
-            let res = await axios.post(loadURI, {userID: uid, email: stateSelector.userData.email});
+            let res = await axios.post(loadURI, { userID: uid, email: stateSelector.userData.email });
             return res;
         }
 
         dispatch(updateLoading(true));
-        SecureSt.getVal('uid').then(uid=> {
-            if(uid) {
-                loadData(uid).then(res=> {
+        SecureSt.getVal('uid').then(uid => {
+            if (uid) {
+                loadData(uid).then(res => {
                     let data = res.data;
-                    if(data.success) {
+                    if (data.success) {
                         dispatch(updateUserData(data.data))
                         dispatch(updateLoading(false))
                     }
@@ -101,19 +101,19 @@ const Workout = () => {
                 })
             }
             else console.log('invalid uid: ', uid)
-        }) 
+        })
     }, [])
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <Loading/>
+            <Loading />
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <View className=''>
                         {detMode ? <TouchableOpacity onPress={handleBack}><FontAwesome5 name="arrow-left" size={17} color="white" /></TouchableOpacity> : <Text className='text-white text-lg font-semibold'>Workout</Text>}
                     </View>
                 </View>
-                <ScrollView className='px-3 pt-3' contentContainerStyle={{paddingBottom: 70}}>
+                <ScrollView className='px-3 pt-3' contentContainerStyle={{ paddingBottom: 70 }}>
                     {detMode ? <ExerDetComp exerObj={detExer} /> :
                         <>
                             <View>
@@ -141,7 +141,7 @@ const Workout = () => {
                     }
 
                 </ScrollView>
-                <FooterComp/>
+                <FooterComp />
             </View>
         </View>
     )

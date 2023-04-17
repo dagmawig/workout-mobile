@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, TextInput, Linking, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, ImageBackground, TextInput, TouchableOpacity, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -18,7 +18,7 @@ const ResetPass = () => {
         sendPasswordResetEmail(auth, email).then(() => {
             Alert.alert(`Email sent!`, `Password reset link sent to: \n${email}.`);
             navigation.navigate('LogIn');
-        }).catch(error=>Alert.alert(`Error`, `${error.message}`))
+        }).catch(error => Alert.alert(`Error`, `${error.message}`))
     }
 
     useLayoutEffect(() => {

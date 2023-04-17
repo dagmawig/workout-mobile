@@ -110,7 +110,7 @@ const Exercises = () => {
         setExerDetIndex(null);
     }
 
-    function handleFilter(mode) {
+    function handleFilter() {
         setFilterMode(true);
     }
 
@@ -152,42 +152,15 @@ const Exercises = () => {
         setExerDetIndex(exerIndex);
     }
 
-    let exerObj = {
-        "item": {
-            "bodyPart": "waist",
-            "equipment": "body weight",
-            "gifUrl": "http://d205bpvrqc9yn1.cloudfront.net/0001.gif",
-            "id": "0001",
-            "localPng": "0.png",
-            "localUrl": "0.gif",
-            "metric": "wr",
-            "name": "3/4 sit-up",
-            "target": "abs",
-            "timeStamp": [],
-        },
-        "refIndex": 0,
-        "score": 8.569061098350962e-12,
-    }
-
     function fetchMore() {
         if (loadList.length < fExerArr.length) {
             setLoadList([...loadList, ...fExerArr.slice(loadList.length, loadList.length + 50)])
         }
     }
-    // function handleScroll(event) {
-    //     dispatch(updateScroll(event.nativeEvent.contentOffset.y));
-    //     console.log("acroll", stateSelector.scrollP)
-    // }
 
-    // useEffect(()=> {
-    //     const offset = stateSelector.scrollP;
-    //     setTimeout(() =>{
-    //        this.ref   scrollToOffset({offset, animated: false})
-    //     })
-    // }, [])
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <Loading/>
+            <Loading />
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     {searchMode && !filterMode ? <>
@@ -227,9 +200,9 @@ const Exercises = () => {
 
                 </View>
                 {filterMode ?
-                    <ScrollView className='px-3' 
-                    keyboardShouldPersistTaps='handled'
-                    contentContainerStyle={{paddingBottom: 70}}>
+                    <ScrollView className='px-3'
+                        keyboardShouldPersistTaps='handled'
+                        contentContainerStyle={{ paddingBottom: 70 }}>
                         <View className=''>
                             <View className='pt-2'>
                                 <Text className='text-[30px] text-white'>Filter {`(${fExerArr.length})`}</Text>
@@ -254,7 +227,7 @@ const Exercises = () => {
                     </ScrollView>
                     : detMode ?
                         <ScrollView className='px-3' keyboardShouldPersistTaps='handled'
-                        contentContainerStyle={{paddingBottom: 70}}>
+                            contentContainerStyle={{ paddingBottom: 70 }}>
                             <View>
                                 <ExerDetComp exerObj={fExerArr[exerDetIndex]} />
                             </View>
@@ -264,7 +237,7 @@ const Exercises = () => {
 
                             <FlatList
                                 className='px-3'
-                                contentContainerStyle={{paddingBottom: 70}}
+                                contentContainerStyle={{ paddingBottom: 70 }}
                                 data={loadList}
                                 onEndReached={fetchMore}
                                 onEndReachedThreshold={3}
@@ -275,7 +248,6 @@ const Exercises = () => {
                                 ListFooterComponent={loadList.length < fExerArr.length ? <View className='flex-row justify-center'><Text className='text-white'>Loading...</Text></View> : null}
                                 renderItem={({ item, index }) => (
                                     <TouchableOpacity key={`exer-${index}`} onPress={() => exerDet(index)}>
-                                        {/* <Text className='text-gray-400'>{exer.name}</Text> */}
                                         <View className='flex-row mb-2 space-x-2 bg-[#28547B] border-red-500'>
                                             <View>
                                                 <Image
@@ -295,11 +267,10 @@ const Exercises = () => {
                                     </TouchableOpacity>
                                 )}
                             />
-                            {/* <ExerComp filterExer={fExerArr} exerDet={exerDet} /> */}
                         </>
                 }
 
-                <FooterComp/>
+                <FooterComp />
             </View>
         </View>
     )

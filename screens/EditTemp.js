@@ -99,10 +99,10 @@ const EditTemp = () => {
                             dispatch(updateLoading(false));
                             Alert.alert(`Error`, `${data.err}`)
                         }
-                    }).catch(err=>console.log(err))
+                    }).catch(err => console.log(err))
                 }
                 else console.log('invalid uid: ', uid)
-            }).catch(err=>console.log(err))
+            }).catch(err => console.log(err))
         }
     }
 

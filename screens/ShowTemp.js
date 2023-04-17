@@ -14,58 +14,11 @@ const ShowTemp = () => {
     const dispatch = useDispatch();
 
     const currentTempObj = stateSelector.currentTemp;
-    let currentTemp = currentTempObj.userTemp? stateSelector.userData.templateArr[currentTempObj.index] :
-    stateSelector.userData.fixTempArr[currentTempObj.index];
+    let currentTemp = currentTempObj.userTemp ? stateSelector.userData.templateArr[currentTempObj.index] :
+        stateSelector.userData.fixTempArr[currentTempObj.index];
 
     const [detMode, setDetMode] = useState(false);
     const [detExer, setDetExer] = useState(null);
-
-    // const temp = {
-    //     tempID: '2023-03-29T01:50:05.740Z',
-    //     workoutTimeArr: [],
-    //     name: 'Dagmawi',
-    //     exerList: [
-    //         {
-    //             bodyPart: 'back',
-    //             equipment: 'leverage machine',
-    //             gifUrl: 'http://d205bpvrqc9yn1.cloudfront.net/0015.gif',
-    //             id: '0015',
-    //             name: 'assisted parallel close grip pull-up',
-    //             target: 'lats',
-    //             localUrl: '22.gif',
-    //             metric: 'wr',
-    //             timeStamp: [],
-    //             localPng: '22.png',
-    //             sets: 3
-    //         },
-    //         {
-    //             bodyPart: 'upper legs',
-    //             equipment: 'band',
-    //             gifUrl: 'http://d205bpvrqc9yn1.cloudfront.net/0980.gif',
-    //             id: '0980',
-    //             name: 'band bent-over hip extension',
-    //             target: 'glutes',
-    //             localUrl: '47.gif',
-    //             metric: 'wr',
-    //             timeStamp: [],
-    //             localPng: '47.png',
-    //             sets: 2
-    //         },
-    //         {
-    //             bodyPart: 'chest',
-    //             equipment: 'barbell',
-    //             gifUrl: 'http://d205bpvrqc9yn1.cloudfront.net/0025.gif',
-    //             id: '0025',
-    //             name: 'barbell bench press',
-    //             target: 'pectorals',
-    //             localUrl: '98.gif',
-    //             metric: 'wr',
-    //             timeStamp: [],
-    //             localPng: '98.png',
-    //             sets: 5
-    //         }
-    //     ]
-    // };
 
     function calcTime(template) {
         let arr = template.workoutTimeArr;
@@ -137,7 +90,7 @@ const ShowTemp = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <Loading/>
+            <Loading />
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <View className='w-full flex-row items-center justify-between'>

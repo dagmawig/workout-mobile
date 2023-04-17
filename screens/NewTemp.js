@@ -8,7 +8,7 @@ import TempExerComp from '../components/TempExerComp';
 import SearchComp from '../components/SearchComp';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
-import { REACT_APP_API_URI} from '@env';
+import { REACT_APP_API_URI } from '@env';
 import SecureSt from '../components/SecureStore';
 import axios from 'axios';
 
@@ -25,22 +25,6 @@ const NewTemp = () => {
     const [exerObj, setExerObj] = useState(null);
 
     function handleDelTemp() {
-        // if (tempName.split(' ').join('') || tempExerArr.length !== 0) return Alert.alert('Delete Template?', 'Are you sure you want to delete template?', [
-        //     {
-        //         text: 'CANCEL',
-        //         onPress: () => null,
-        //         style: 'cancel'
-        //     },
-        //     {
-        //         text: 'DELETE',
-        //         onPress: () => {
-        //             setTempName('');
-        //             setTempExerArr([]);
-        //             navigation.navigate('Workout');
-        //         }
-        //     }
-        // ])
-
         setTempName('');
         setTempExerArr([]);
         return navigation.navigate('Workout');
@@ -53,7 +37,7 @@ const NewTemp = () => {
 
     async function saveTemplate(newTempArr, uid) {
         let updateURI = REACT_APP_API_URI + 'updateTemp';
-        let res = await axios.post(updateURI, {userID: uid, templateArr: newTempArr}).catch(err=>console.log(err));
+        let res = await axios.post(updateURI, { userID: uid, templateArr: newTempArr }).catch(err => console.log(err));
 
         return res;
     }
@@ -87,11 +71,11 @@ const NewTemp = () => {
             newUserTempArr.push(workoutTemp);
 
             dispatch(updateLoading(true));
-            SecureSt.getVal('uid').then(uid=> {
-                if(uid) {
-                    saveTemplate(newUserTempArr, uid).then(res=> {
+            SecureSt.getVal('uid').then(uid => {
+                if (uid) {
+                    saveTemplate(newUserTempArr, uid).then(res => {
                         let data = res.data;
-                        if(data.success) {
+                        if (data.success) {
                             dispatch(updateUserTempArr(data.data.templateArr));
                             Alert.alert(`Success`, `Template "${tempName}" saved successfully!`);
                             navigation.navigate('Workout');
@@ -103,10 +87,10 @@ const NewTemp = () => {
                             dispatch(updateLoading(false));
                             Alert.alert(`Error`, `${data.err}`);
                         }
-                    }).catch(err=>console.log(err))
+                    }).catch(err => console.log(err))
                 }
                 else console.log('invalid uid: ', uid)
-            }).catch(err=>console.log(err))           
+            }).catch(err => console.log(err))
         }
     }
 
@@ -140,55 +124,55 @@ const NewTemp = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <Loading/>
+            <Loading />
             <View className='pt-[45px] h-full w-full' >
-                {exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} /> : 
-                detMode ?
-                <>
-                    <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
+                {exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} /> :
+                    detMode ?
                         <>
-                            <TouchableOpacity onPress={handleDetBack}>
-                                <FontAwesome5 name="arrow-left" size={17} color="white" />
-                            </TouchableOpacity>
+                            <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
+                                <>
+                                    <TouchableOpacity onPress={handleDetBack}>
+                                        <FontAwesome5 name="arrow-left" size={17} color="white" />
+                                    </TouchableOpacity>
+                                </>
+                            </View>
+                            <ScrollView className='px-3' keyboardShouldPersistTaps='handled'
+                                contentContainerStyle={{ paddingBottom: 70 }}>
+                                <View>
+                                    <ExerDetComp exerObj={exerObj} />
+                                </View>
+                            </ScrollView>
+                        </> :
+                        <>
+                            <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
+                                <>
+                                    <TouchableOpacity onPress={handleDelTemp}>
+                                        <FontAwesome5 name="times" size={17} color="white" />
+                                    </TouchableOpacity>
+                                    <Text className='text-white text-lg font-semibold'>New Template</Text>
+                                    <TouchableOpacity onPress={saveTemp}>
+                                        <FontAwesome5 name="save" size={17} color="white" />
+                                    </TouchableOpacity>
+                                </>
+                            </View>
+                            <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
+                                <View>
+                                    <TextInput
+                                        className='h-7 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white'
+                                        cursorColor={'white'}
+                                        placeholder='template name'
+                                        placeholderTextColor={'gray'}
+                                        value={tempName}
+                                        onChangeText={(text) => handleTempName(text)} />
+                                </View>
+                                <View className='pt-3'>
+                                    <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} setExerObj={setExerObj} setDetMode={setDetMode} />
+                                </View>
+                                <View className='justify-center items-center py-3'>
+                                    <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>
+                                </View>
+                            </ScrollView>
                         </>
-                    </View>
-                    <ScrollView className='px-3' keyboardShouldPersistTaps='handled'
-                        contentContainerStyle={{ paddingBottom: 70 }}>
-                        <View>
-                            <ExerDetComp exerObj={exerObj} />
-                        </View>
-                    </ScrollView>
-                </> :
-                    <>
-                        <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
-                            <>
-                                <TouchableOpacity onPress={handleDelTemp}>
-                                    <FontAwesome5 name="times" size={17} color="white" />
-                                </TouchableOpacity>
-                                <Text className='text-white text-lg font-semibold'>New Template</Text>
-                                <TouchableOpacity onPress={saveTemp}>
-                                    <FontAwesome5 name="save" size={17} color="white" />
-                                </TouchableOpacity>
-                            </>
-                        </View>
-                        <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
-                            <View>
-                                <TextInput
-                                    className='h-7 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white'
-                                    cursorColor={'white'}
-                                    placeholder='template name'
-                                    placeholderTextColor={'gray'}
-                                    value={tempName}
-                                    onChangeText={(text) => handleTempName(text)} />
-                            </View>
-                            <View className='pt-3'>
-                                <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} setExerObj={setExerObj} setDetMode={setDetMode} />
-                            </View>
-                            <View className='justify-center items-center py-3'>
-                                <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>
-                            </View>
-                        </ScrollView>
-                    </>
                 }
             </View>
         </View>

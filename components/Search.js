@@ -1,8 +1,5 @@
-import { View, Text } from 'react-native'
-import React from 'react'
 import Fuse from 'fuse.js';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
-import { useSelector } from 'react-redux';
 
 const bodyParts = [
     "back",

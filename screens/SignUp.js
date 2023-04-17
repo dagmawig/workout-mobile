@@ -1,9 +1,8 @@
-import { View, Text, ImageBackground, TextInput, Linking, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, ImageBackground, TextInput, TouchableOpacity, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { auth } from '../components/FirebaseConfig';
-
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 
 const SignUp = () => {
@@ -24,14 +23,14 @@ const SignUp = () => {
 
     function signUp() {
         createUserWithEmailAndPassword(auth, email, password)
-        .then(()=> {
+            .then(() => {
                 sendEmailVerification(auth.currentUser).then(() => {
                     auth.signOut().then(() => {
                         Alert.alert(`Email not verified!`, `Verification link sent to ${email}. \nPlease click on the link to verify your email and log into your acount.`);
                         navigation.navigate('LogIn');
-                    }).catch(error=>console.log(error))
-                }).catch(error=>console.log(error))
-            }).catch(error=>Alert.alert(`Error`, error))
+                    }).catch(error => console.log(error))
+                }).catch(error => console.log(error))
+            }).catch(error => Alert.alert(`Error`, error))
     }
 
     useLayoutEffect(() => {

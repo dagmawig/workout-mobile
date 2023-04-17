@@ -6,7 +6,6 @@ import TempExerComp from '../components/TempExerComp';
 import SearchComp from '../components/SearchComp';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCurrentTemp, updateLoading, updateUserData } from '../components/workoutSlice';
-import { current } from '@reduxjs/toolkit';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
 import { REACT_APP_API_URI } from '@env'
@@ -14,13 +13,13 @@ import axios from 'axios';
 import SecureSt from '../components/SecureStore';
 
 const LogWorkout = () => {
-   
-    const stateSelector = useSelector(state=>state.workout);
+
+    const stateSelector = useSelector(state => state.workout);
     const dispatch = useDispatch();
 
     const currentTempObj = stateSelector.currentTemp;
-    let currentTemp = currentTempObj.userTemp? stateSelector.userData.templateArr[currentTempObj.index] :
-    stateSelector.userData.fixTempArr[currentTempObj.index];
+    let currentTemp = currentTempObj.userTemp ? stateSelector.userData.templateArr[currentTempObj.index] :
+        stateSelector.userData.fixTempArr[currentTempObj.index];
 
     let inputArr = [];
     currentTemp.exerList.map(exer => {
@@ -31,8 +30,6 @@ const LogWorkout = () => {
         inputArr.push(arr);
     })
 
-    const startTime = Math.floor(Date.now()/1000);
-
     const [tempExerArr, setTempExerArr] = useState(currentTemp.exerList);
     const [exerMode, setExerMode] = useState(false);
     const [inputState, setInputState] = useState(inputArr);
@@ -42,11 +39,11 @@ const LogWorkout = () => {
     const navigation = useNavigation();
 
     setTimeout(() => {
-        setSeconds(seconds+1);
+        setSeconds(seconds + 1);
     }, 1000);
 
     function updateInput(i, j, k, val) {
-        if(+val || val==='' || val==='0') {
+        if (+val || val === '' || val === '0') {
             inputState[i][j][k] = val === '' ? undefined : val;
             setInputState(JSON.parse(JSON.stringify(inputState)));
         }
@@ -92,27 +89,27 @@ const LogWorkout = () => {
         let maxVal = Math.max(...inputStateExer[0]);
         let maxIndex = inputStateExer[0].indexOf(maxVal.toString());
         let maxRep;
-        if(exer.metric==='wr' && maxVal===0) {
+        if (exer.metric === 'wr' && maxVal === 0) {
             maxRep = Math.max(...inputStateExer[1]);
             maxIndex = inputStateExer[1].indexOf(maxRep.toString());
         }
-        if(exer.name in record) {
+        if (exer.name in record) {
             let exerRecord = record[exer.name];
             exerRecord.metric = exer.metric;
 
             exerRecord.prev1 = inputStateExer[0][inputStateExer[0].length - 1];
-            if(exer.metric === 'wr' || exer.metric === 'dt') {
+            if (exer.metric === 'wr' || exer.metric === 'dt') {
                 exerRecord.prev2 = inputStateExer[1][inputStateExer[1].length - 1];
             }
 
-            if(maxVal>exerRecord.pr1) {
+            if (maxVal > exerRecord.pr1) {
                 exerRecord.pr1 = maxVal;
-                if(exer.metric==='wr' || exer.metric==='dt') {
+                if (exer.metric === 'wr' || exer.metric === 'dt') {
                     exerRecord.pr2 = parseInt(inputStateExer[1][maxIndex]);
                 }
             }
-            else if(exer.metric ==='wr'  && maxVal===0 && exerRecord.pr1===0) {
-                if(maxRep>exerRecord.pr2) exerRecord.pr2=maxRep;
+            else if (exer.metric === 'wr' && maxVal === 0 && exerRecord.pr1 === 0) {
+                if (maxRep > exerRecord.pr2) exerRecord.pr2 = maxRep;
             }
         }
         else {
@@ -121,7 +118,7 @@ const LogWorkout = () => {
             exerRecord.prev1 = inputStateExer[0][inputStateExer[0].length - 1];
             exerRecord.pr1 = maxVal;
 
-            if(exer.metric==='wr' || exer.metric ==='dt') {
+            if (exer.metric === 'wr' || exer.metric === 'dt') {
                 exerRecord.prev2 = inputStateExer[1][inputStateExer[1].length - 1];
                 exerRecord.pr2 = parseInt(inputStateExer[1][maxIndex]);
             }
@@ -134,13 +131,13 @@ const LogWorkout = () => {
 
     async function saveWorkout(workoutObj, user, updatedTempArr, record, uid) {
         let updateURI = REACT_APP_API_URI + 'updateWorkoutObj';
-        let res = await axios.post(updateURI, {userID: uid, workoutObj, user, updatedTempArr, record}).catch(err=> console.log(err));
+        let res = await axios.post(updateURI, { userID: uid, workoutObj, user, updatedTempArr, record }).catch(err => console.log(err));
 
         return res;
     }
 
     function handleSave() {
-        if(tempExerArr.length===0) {
+        if (tempExerArr.length === 0) {
             Alert.alert('No Exercise under Template!', 'There are no exercises under current template. Please add exercise(s) and log workout data before saving current sesssion.', [
                 {
                     text: 'OK',
@@ -149,7 +146,7 @@ const LogWorkout = () => {
                 }
             ])
         }
-        else if(!checkInput(inputState)) {
+        else if (!checkInput(inputState)) {
             Alert.alert('Missing set data!', 'Some exercise sets are not complete. Either complete sets or remove incomplete sets before saving current sesssion. If doing weightless exercise, put 0 in the LBS box.', [
                 {
                     text: 'OK',
@@ -165,39 +162,33 @@ const LogWorkout = () => {
             workObj.tempName = currentTemp.name;
             let workoutList = [];
 
-            for (let i=0; i<inputState.length; i++) {
+            for (let i = 0; i < inputState.length; i++) {
                 let inputStateExer = inputState[i];
                 let exer = tempExerArr[i];
                 let exercise = {};
                 exercise.exerName = exer.name;
                 exercise.metric = exer.metric;
                 exercise.metric1 = inputStateExer[0];
-                if(exer.metric==='wr' || exer.metric==='dt') exercise.metric2=inputStateExer[1];
+                if (exer.metric === 'wr' || exer.metric === 'dt') exercise.metric2 = inputStateExer[1];
                 workoutList.push(exercise);
 
                 updateExerRecord(inputStateExer, exer, record);
             }
-            
+
             workObj.workoutList = workoutList;
             workObj.duration = seconds;
             let tempUserObj = JSON.parse(JSON.stringify(stateSelector.userData.workoutObj));
             tempUserObj[timeStamp] = workObj;
-            
+
             let newTemplateArr = JSON.parse(JSON.stringify(currentTempObj.userTemp ? stateSelector.userData.templateArr : stateSelector.userData.fixTempArr));
             newTemplateArr[currentTempObj.index].workoutTimeArr.push(new Date().toISOString());
-            
-            // let userData = JSON.parse(JSON.stringify(stateSelector.userData));
-            // userData.workoutObj = tempUserObj;
-            // if(currentTempObj.userTemp) userData.templateArr = newTemplateArr;
-            // else userData.fixTempArr = newTemplateArr;
-            // userData.record = record;
-            
+
             dispatch(updateLoading(true));
-            SecureSt.getVal('uid').then(uid=> {
-                if(uid) {
-                    saveWorkout(tempUserObj, currentTempObj.userTemp, newTemplateArr, record, uid).then(res=> {
+            SecureSt.getVal('uid').then(uid => {
+                if (uid) {
+                    saveWorkout(tempUserObj, currentTempObj.userTemp, newTemplateArr, record, uid).then(res => {
                         let data = res.data;
-                        if(data.success) {
+                        if (data.success) {
                             dispatch(updateUserData(data.data));
                             Alert.alert(`Success`, `Workout under template "${currentTemp.name}" saved successfully!`);
                             setTempExerArr([]);
@@ -212,7 +203,7 @@ const LogWorkout = () => {
                     })
                 }
                 else console.log('invalid uid: ', uid)
-            })            
+            })
         }
     }
 
@@ -220,14 +211,14 @@ const LogWorkout = () => {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr[index].sets++;
         setTempExerArr(newTempExerArr);
-        inputState[index].map(ar=>ar.push(undefined));
+        inputState[index].map(ar => ar.push(undefined));
     }
 
     function removeSet(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr[index].sets--;
         setTempExerArr(newTempExerArr);
-        inputState[index].map(ar=>ar.pop());
+        inputState[index].map(ar => ar.pop());
     }
 
     function removeExer(index) {
@@ -249,46 +240,46 @@ const LogWorkout = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <Loading/>
+            <Loading />
             <View className='pt-[45px] h-full w-full' >
                 {
-                    exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr}  setExerMode={setExerMode} inputState={inputState} /> :
-                    detMode ?
-                    <>
-                        <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
+                    exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} inputState={inputState} /> :
+                        detMode ?
                             <>
-                                <TouchableOpacity onPress={handleDetBack}>
-                                    <FontAwesome5 name="arrow-left" size={17} color="white" />
-                                </TouchableOpacity>
+                                <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
+                                    <>
+                                        <TouchableOpacity onPress={handleDetBack}>
+                                            <FontAwesome5 name="arrow-left" size={17} color="white" />
+                                        </TouchableOpacity>
+                                    </>
+                                </View>
+                                <ScrollView className='px-3' keyboardShouldPersistTaps='handled'
+                                    contentContainerStyle={{ paddingBottom: 70 }}>
+                                    <View>
+                                        <ExerDetComp exerObj={exerObj} />
+                                    </View>
+                                </ScrollView>
+                            </> :
+                            <>
+                                <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
+                                    <TouchableOpacity onPress={handleCancel}><FontAwesome5 name="times" size={17} color="white" /></TouchableOpacity>
+                                    <View className='items-center'>
+                                        <Text className='text-white text-lg font-semibold'>{currentTemp.name}</Text>
+                                        <Text className='text-white'>{new Date(seconds * 1000).toISOString().substr(11, 8)}</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={handleSave}><FontAwesome5 name="save" size={17} color="white" /></TouchableOpacity>
+                                </View>
+                                <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
+                                    <View className='pt-3'>
+                                        <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} editable={true} inputState={inputState} updateInput={updateInput} setExerObj={setExerObj} setDetMode={setDetMode} />
+                                    </View>
+                                    <View className='justify-center items-center py-3 space-y-2'>
+                                        <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>
+                                        <TouchableOpacity onPress={handleSave}><Text className='text-white text-lg'>FINISH WORKOUT</Text></TouchableOpacity>
+                                        <TouchableOpacity onPress={handleCancel}><Text className='text-white'>CANCEL WORKOUT</Text></TouchableOpacity>
+                                    </View>
+                                </ScrollView>
                             </>
-                        </View>
-                        <ScrollView className='px-3' keyboardShouldPersistTaps='handled'
-                            contentContainerStyle={{ paddingBottom: 70 }}>
-                            <View>
-                                <ExerDetComp exerObj={exerObj} />
-                            </View>
-                        </ScrollView>
-                    </> :
-                        <>
-                            <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
-                                <TouchableOpacity onPress={handleCancel}><FontAwesome5 name="times" size={17} color="white" /></TouchableOpacity>
-                               <View className='items-center'>
-                               <Text className='text-white text-lg font-semibold'>{currentTemp.name}</Text>
-                               <Text className='text-white'>{new Date(seconds * 1000).toISOString().substr(11, 8)}</Text>
-                               </View>
-                                <TouchableOpacity onPress={handleSave}><FontAwesome5 name="save" size={17} color="white" /></TouchableOpacity>
-                            </View>
-                            <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
-                                <View className='pt-3'>
-                                    <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} editable={true} inputState={inputState} updateInput={updateInput} setExerObj={setExerObj} setDetMode={setDetMode} />
-                                </View>
-                                <View className='justify-center items-center py-3 space-y-2'>
-                                    <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>
-                                    <TouchableOpacity onPress={handleSave}><Text className='text-white text-lg'>FINISH WORKOUT</Text></TouchableOpacity>
-                                    <TouchableOpacity onPress={handleCancel}><Text className='text-white'>CANCEL WORKOUT</Text></TouchableOpacity>
-                                </View>
-                            </ScrollView>
-                        </>
                 }
             </View>
         </View>

@@ -6,7 +6,7 @@ import exerLocal from '../assets/ExerData/exercisesLocal.json';
 
 const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputState, updateInput, setExerObj, setDetMode }) => {
 
-    const stateSelector = useSelector(state=>state.workout);
+    const stateSelector = useSelector(state => state.workout);
 
     function getRec(exer) {
 
@@ -45,14 +45,14 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
                         <Text className='text-white text-center'>{item + 1}</Text>
                     </View>
                     <View className='w-1/3 mb-1'>
-                        <TextInput editable={editable? true : false} 
-                        keyboardType='numeric'
-                        className='text-white text-center border-white border-[1px] rounded' style={{backgroundColor: editable? '#1b4264' : '#576b7c'}} value={inputState? (inputState[index][0][item] ? inputState[index][0][item] : '') : ''} onChangeText={updateInput? (text)=>updateInput(index, 0, item, text) : null} />
+                        <TextInput editable={editable ? true : false}
+                            keyboardType='numeric'
+                            className='text-white text-center border-white border-[1px] rounded' style={{ backgroundColor: editable ? '#1b4264' : '#576b7c' }} value={inputState ? (inputState[index][0][item] ? inputState[index][0][item] : '') : ''} onChangeText={updateInput ? (text) => updateInput(index, 0, item, text) : null} />
                     </View>
                     <View className='w-1/3 mb-1'>
-                        {exer.metric === 'wr' || exer.metric === 'dt' ? <TextInput editable={editable? true : false} 
-                        keyboardType='numeric'
-                        className='text-white text-center border-white border-[1px] rounded' style={{backgroundColor: editable? '#1b4264' : '#576b7c'}} value={inputState? (inputState[index][1][item] ? inputState[index][1][item] : '') : ''} onChangeText={updateInput? (text)=>updateInput(index, 1, item, text) : null} /> : null}
+                        {exer.metric === 'wr' || exer.metric === 'dt' ? <TextInput editable={editable ? true : false}
+                            keyboardType='numeric'
+                            className='text-white text-center border-white border-[1px] rounded' style={{ backgroundColor: editable ? '#1b4264' : '#576b7c' }} value={inputState ? (inputState[index][1][item] ? inputState[index][1][item] : '') : ''} onChangeText={updateInput ? (text) => updateInput(index, 1, item, text) : null} /> : null}
                     </View>
                 </View>
             )
@@ -60,8 +60,8 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
     }
 
     function handleExerDet(exer) {
-        let refIndex = exerLocal.findIndex(ex=>ex.name===exer.name);
-        setExerObj({item: exer, refIndex: refIndex});
+        let refIndex = exerLocal.findIndex(ex => ex.name === exer.name);
+        setExerObj({ item: exer, refIndex: refIndex });
         setDetMode(true);
     }
 
@@ -69,7 +69,7 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
         return (
             <View key={'newTemp-' + i} className='border-[1px] border-white rounded-md p-2 mb-2'>
                 <View className='flex-row justify-between items-center pb-2'>
-                    <TouchableOpacity onPress={()=>handleExerDet(exer)}><Text className='text-white text-lg font-bold'>{exer.name}</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleExerDet(exer)}><Text className='text-white text-lg font-bold'>{exer.name}</Text></TouchableOpacity>
                     <TouchableOpacity onPress={() => removeExer(i)}><FontAwesome5 name="minus-circle" size={16} color="white" /></TouchableOpacity>
                 </View>
                 <View className='flex-row justify-between items-center mb-1'>
@@ -77,7 +77,7 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
                     <Text className='w-1/3 text-center text-white'>{exer.metric === 'wr' ? 'LBS' : exer.metric === 'dt' ? 'MILES' : 'SECONDS'}</Text>
                     <Text className='w-1/3 text-center text-white'>{exer.metric === 'wr' ? 'REPS' : exer.metric === 'dt' ? 'MIN' : ''}</Text>
                 </View>
-                {setList(exer,  i)}
+                {setList(exer, i)}
                 <View className='justify-center items-center mt-3'>
                     <View className='flex-row w-full'>
                         <Text className='text-white w-1/4 text-right pr-2 italic'>PREV:</Text>
@@ -93,10 +93,10 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
 
                     </View>
                     <View className='w-1/3 mb-1'>
-                        <TouchableOpacity onPress={()=>addSet(i)}><Text className='text-white text-right'>ADD SET</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => addSet(i)}><Text className='text-white text-right'>ADD SET</Text></TouchableOpacity>
                     </View>
                     <View className='w-1/3 mb-1'>
-                        {exer.sets>1? <TouchableOpacity onPress={()=>removeSet(i)}><Text className='text-white text-left'>REMOVE SET</Text></TouchableOpacity> : null}
+                        {exer.sets > 1 ? <TouchableOpacity onPress={() => removeSet(i)}><Text className='text-white text-left'>REMOVE SET</Text></TouchableOpacity> : null}
                     </View>
                 </View>
             </View>
