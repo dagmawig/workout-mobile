@@ -1,8 +1,7 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Text, TouchableOpacity } from 'react-native'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag } from './workoutSlice';
-import { getElementById } from 'domutils';
+import { updateActiveB, updateActiveM } from './workoutSlice';
 
 const FilterTagComp = ({ filterTags, filterType, updateResFil }) => {
 
@@ -64,7 +63,7 @@ const FilterTagComp = ({ filterTags, filterType, updateResFil }) => {
 
 
         return (
-            <TouchableOpacity id={pref + 'TagF' + i.toString()} key={pref + 'TagF' + i.toString()} className='flex-row p-1 self-start items-center space-x-2 rounded-xl border-2 border-white m-1' style={{ backgroundColor: (filterType === 'body' && activeB[i]) || (filterType === 'muscle' && activeM[i]) ? '#24323f' : '' }} onPress={(e) => handleActive(i)}>
+            <TouchableOpacity id={pref + 'TagF' + i.toString()} key={pref + 'TagF' + i.toString()} className='flex-row p-1 self-start items-center space-x-2 rounded-xl border-2 border-white m-1' style={{ backgroundColor: (filterType === 'body' && activeB[i]) || (filterType === 'muscle' && activeM[i]) ? '#24323f' : 'transparent' }} onPress={(e) => handleActive(i)}>
                 <Text className='text-white'>{tag}</Text>
             </TouchableOpacity>
         )
