@@ -163,7 +163,7 @@ const Exercises = () => {
             <Loading />
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
-                    {searchMode && !filterMode ? <>
+                    {searchMode && !filterMode && !detMode ? <>
                         <TouchableOpacity onPress={handleBack}>
                             <FontAwesome5 name="arrow-left" size={17} color="white" />
                         </TouchableOpacity>

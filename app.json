@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "client",
-    "slug": "client",
+    "name": "workouttracker",
+    "slug": "workouttracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/home_logo.png",
@@ -18,6 +18,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.fitfusion.workout.tracker",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -26,6 +28,13 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["./config_plugins/withAnimatedWebp"]
+    "plugins": [
+      "./config_plugins/withAnimatedWebp"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ac925d22-f79c-429b-af6b-5ade05f40e55"
+      }
+    }
   }
 }
