@@ -28,7 +28,7 @@ const EditTemp = () => {
     const [exerObj, setExerObj] = useState(null);
 
     function handleDelChange() {
-        return Alert.alert('Discard Unsaved Changes?', 'Are you sure you want to discard unsaved changes?', [
+        return Alert.alert('Discard Changes?', 'Are you sure you want to discard unsaved changes?', [
             {
                 text: 'CANCEL',
                 onPress: () => null,

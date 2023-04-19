@@ -9,7 +9,6 @@ const Home = () => {
     const navigation = useNavigation();
 
     function handleGo() {
-        console.log('gooo');
         SecureSt.getVal('uid').then(uid => {
             if (uid) navigation.navigate('Workout');
             else navigation.navigate('LogIn')

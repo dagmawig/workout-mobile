@@ -156,54 +156,66 @@ const LogWorkout = () => {
             ])
         }
         else {
-            let record = JSON.parse(JSON.stringify(stateSelector.userData.record));
-            let timeStamp = new Date().toISOString();
-            let workObj = {};
-            workObj.tempName = currentTemp.name;
-            let workoutList = [];
+            Alert.alert('Finish workout?', 'Do you want to finish workout?', [
+                {
+                    text: 'No',
+                    onPress: null,
+                    style: 'cancel'
+                },
+                {
+                    text: 'Yes',
+                    onPress: () => {
+                        let record = JSON.parse(JSON.stringify(stateSelector.userData.record));
+                        let timeStamp = new Date().toISOString();
+                        let workObj = {};
+                        workObj.tempName = currentTemp.name;
+                        let workoutList = [];
 
-            for (let i = 0; i < inputState.length; i++) {
-                let inputStateExer = inputState[i];
-                let exer = tempExerArr[i];
-                let exercise = {};
-                exercise.exerName = exer.name;
-                exercise.metric = exer.metric;
-                exercise.metric1 = inputStateExer[0];
-                if (exer.metric === 'wr' || exer.metric === 'dt') exercise.metric2 = inputStateExer[1];
-                workoutList.push(exercise);
+                        for (let i = 0; i < inputState.length; i++) {
+                            let inputStateExer = inputState[i];
+                            let exer = tempExerArr[i];
+                            let exercise = {};
+                            exercise.exerName = exer.name;
+                            exercise.metric = exer.metric;
+                            exercise.metric1 = inputStateExer[0];
+                            if (exer.metric === 'wr' || exer.metric === 'dt') exercise.metric2 = inputStateExer[1];
+                            workoutList.push(exercise);
 
-                updateExerRecord(inputStateExer, exer, record);
-            }
-
-            workObj.workoutList = workoutList;
-            workObj.duration = seconds;
-            let tempUserObj = JSON.parse(JSON.stringify(stateSelector.userData.workoutObj));
-            tempUserObj[timeStamp] = workObj;
-
-            let newTemplateArr = JSON.parse(JSON.stringify(currentTempObj.userTemp ? stateSelector.userData.templateArr : stateSelector.userData.fixTempArr));
-            newTemplateArr[currentTempObj.index].workoutTimeArr.push(new Date().toISOString());
-
-            dispatch(updateLoading(true));
-            SecureSt.getVal('uid').then(uid => {
-                if (uid) {
-                    saveWorkout(tempUserObj, currentTempObj.userTemp, newTemplateArr, record, uid).then(res => {
-                        let data = res.data;
-                        if (data.success) {
-                            dispatch(updateUserData(data.data));
-                            Alert.alert(`Success`, `Workout under template "${currentTemp.name}" saved successfully!`);
-                            setTempExerArr([]);
-                            navigation.navigate('Workout');
-                            dispatch(updateCurrentTemp(null));
-                            dispatch(updateLoading(false));
+                            updateExerRecord(inputStateExer, exer, record);
                         }
-                        else {
-                            dispatch(updateLoading(false));
-                            Alert.alert(`Error`, `${data.err}`)
-                        }
-                    })
+
+                        workObj.workoutList = workoutList;
+                        workObj.duration = seconds;
+                        let tempUserObj = JSON.parse(JSON.stringify(stateSelector.userData.workoutObj));
+                        tempUserObj[timeStamp] = workObj;
+
+                        let newTemplateArr = JSON.parse(JSON.stringify(currentTempObj.userTemp ? stateSelector.userData.templateArr : stateSelector.userData.fixTempArr));
+                        newTemplateArr[currentTempObj.index].workoutTimeArr.push(new Date().toISOString());
+
+                        dispatch(updateLoading(true));
+                        SecureSt.getVal('uid').then(uid => {
+                            if (uid) {
+                                saveWorkout(tempUserObj, currentTempObj.userTemp, newTemplateArr, record, uid).then(res => {
+                                    let data = res.data;
+                                    if (data.success) {
+                                        dispatch(updateUserData(data.data));
+                                        Alert.alert(`Success`, `Workout under template "${currentTemp.name}" saved successfully!`);
+                                        setTempExerArr([]);
+                                        navigation.navigate('Workout');
+                                        dispatch(updateCurrentTemp(null));
+                                        dispatch(updateLoading(false));
+                                    }
+                                    else {
+                                        dispatch(updateLoading(false));
+                                        Alert.alert(`Error`, `${data.err}`)
+                                    }
+                                })
+                            }
+                            else console.log('invalid uid: ', uid)
+                        })
+                    }
                 }
-                else console.log('invalid uid: ', uid)
-            })
+            ])
         }
     }
 

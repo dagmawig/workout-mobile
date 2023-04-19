@@ -80,15 +80,15 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
                 {setList(exer, i)}
                 <View className='justify-center items-center mt-3'>
                     <View className='flex-row w-full'>
-                        <Text className='text-white w-1/4 text-right pr-2 italic'>PREV:</Text>
-                        <Text className='text-white w-3/4 text-left italic'>{getRec(exer)[0]}</Text>
+                        <Text className='text-gray-300 text-xm w-1/4 text-right pr-2 italic'>PREV:</Text>
+                        <Text className='text-gray-300 text-xm w-3/4 text-left italic'>{getRec(exer)[0]}</Text>
                     </View>
                     <View className='flex-row w-full'>
-                        <Text className='text-white w-1/4 text-right pr-2 italic'>PR:</Text>
-                        <Text className='text-white w-3/4 text-left italic'>{getRec(exer)[1]}</Text>
+                        <Text className='text-gray-300 text-xm w-1/4 text-right pr-2 italic'>PR:</Text>
+                        <Text className='text-gray-300 text-xm w-3/4 text-left italic'>{getRec(exer)[1]}</Text>
                     </View>
                 </View>
-                <View className='flex-row justify-between items-center mt-2'>
+                <View className='flex-row justify-between items-center mt-3'>
                     <View className='w-1/6 mb-1'>
 
                     </View>

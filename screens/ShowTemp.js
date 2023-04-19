@@ -119,8 +119,8 @@ const ShowTemp = () => {
                                 <View><Text className='text-white pb-2 italic'>{`Last Performed: ${calcTime(currentTemp)}`}</Text></View>
                                 {exerList(currentTemp.exerList, currentTempObj.userTemp)}
                             </View>
-                            <View className='w-full justify-center items-center'>
-                                <TouchableOpacity onPress={handleLogWork}><Text className='text-white font-semibold'>START WORKOUT</Text></TouchableOpacity>
+                            <View className='w-full justify-center items-center py-3'>
+                                <TouchableOpacity onPress={handleLogWork}><Text className='text-white font-semibold text-lg'>START WORKOUT</Text></TouchableOpacity>
                             </View>
                         </>
                     }
