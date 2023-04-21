@@ -3,15 +3,23 @@ import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import FooterComp from '../components/FooterComp';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Animatable from 'react-native-animatable'
 import Loading from '../components/Loading';
+import { TouchableOpacity } from 'react-native';
+import { Alert } from 'react-native';
+import { updateLoading, updateUserData } from '../components/workoutSlice';
+import { REACT_APP_API_URI } from '@env';
+import axios from 'axios';
+import SecureSt from '../components/SecureStore';
 
 const History = () => {
 
     const navigation = useNavigation();
     const stateSelector = useSelector(state => state.workout);
+    const dispatch = useDispatch();
 
     const userWorkObj = stateSelector.userData.workoutObj;
 
@@ -110,6 +118,47 @@ const History = () => {
         }
     }
 
+    async function resetH(uid) {
+        let updateURI = REACT_APP_API_URI + 'resetHistory';
+        let res = await axios.post(updateURI, { userID: uid }).catch(err => console.log(err));
+
+        return res;
+    }
+
+    function clearHistory() {
+        Alert.alert(`Clear History`, `Are you sure you want to clear workout history?`, [
+            {
+                text: 'No',
+                onPress: null,
+                style: 'cancel'
+            },
+            {
+                text: 'Yes',
+                onPress: () => {
+                    dispatch(updateLoading(true));
+                    SecureSt.getVal('uid').then(uid => {
+                        if (uid) {
+                            resetH(uid).then(res => {
+                                let data = res.data;
+                                if (data.success) {
+                                    dispatch(updateUserData(data.data))
+                                    Alert.alert(`Success`, `Workout history cleared successfully!`);
+                                    dispatch(updateLoading(false));
+                                }
+                                else {
+                                    dispatch(updateLoading(false));
+                                    Alert.alert(`Error`, `${data.err}`);
+                                }
+                            }).catch(err => console.log(err))
+                        }
+                        else console.log('invalid uid: ', uid)
+                    }).catch(err => console.log(err))
+                },
+                style: 'destructive'
+            }
+        ])
+    }
+
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -123,6 +172,7 @@ const History = () => {
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <Text className='text-white text-lg font-semibold'>History</Text>
+                    {Object.keys(userWorkObj).length !== 0? <TouchableOpacity onPress={clearHistory}><Feather name="rotate-ccw" size={24} color="white" /></TouchableOpacity> : null}
                 </View>
                 <ScrollView className='px-3 pt-3' contentContainerStyle={{ paddingBottom: 70 }}>
                     {Object.keys(userWorkObj).length !== 0 ? historyList(userWorkObj) :
