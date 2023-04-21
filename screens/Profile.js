@@ -5,8 +5,11 @@ import FooterComp from '../components/FooterComp';
 import { FontAwesome5 } from '@expo/vector-icons';
 import SecureSt from '../components/SecureStore';
 import { useSelector, useDispatch } from 'react-redux';
-import { initialState, updateLoading, updateReset } from '../components/workoutSlice';
+import { initialState, updateLoading, updateReset, updateUserData } from '../components/workoutSlice';
 import Loading from '../components/Loading';
+import { REACT_APP_API_URI } from '@env';
+import axios from 'axios';
+import { Alert } from 'react-native';
 
 const Profile = () => {
 
@@ -22,6 +25,49 @@ const Profile = () => {
         dispatch(updateReset(initialState));
         navigation.navigate('LogIn');
         dispatch(updateLoading(false));
+    }
+
+    async function resetD(uid) {
+        let updateURI = REACT_APP_API_URI + 'resetData';
+        let res = await axios.post(updateURI, { userID: uid }).catch(err => console.log(err));
+
+        return res;
+    }
+
+    function handleReset() {
+        Alert.alert(`Warning!`, `Are you sure you want to reset account? This would wipe out ALL workout data including user created templates.`, [
+            {
+                text: 'No',
+                onPress: () => null,
+                style: 'cancel'
+            },
+            {
+                text: 'Yes',
+                onPress: () => {
+                    dispatch(updateLoading(true));
+                    SecureSt.getVal('uid').then(uid => {
+                        if (uid) {
+                            resetD(uid).then(res => {
+                                let data = res.data;
+                                if (data.success) {
+                                    dispatch(updateUserData(data.data))
+                                    Alert.alert(`Success`, `Account reset successfully!`);
+                                    navigation.navigate('Workout');
+                                    dispatch(updateLoading(false));
+                                }
+                                else {
+                                    dispatch(updateLoading(false));
+                                    Alert.alert(`Error`, `${data.err}`);
+                                }
+                            }).catch(err => console.log(err))
+                        }
+                        else console.log('invalid uid: ', uid)
+                    }).catch(err => console.log(err))
+                },
+                style: 'destructive'
+            }
+        ])
+
     }
 
     useLayoutEffect(() => {
@@ -44,9 +90,12 @@ const Profile = () => {
                         <FontAwesome5 name="user-circle" size={45} color="white" />
                         <Text className='text-white'>{stateSelector.userData.email}</Text>
                     </View>
-                    <View className='mx-2 h-8 w-full items-center'>
+                    <View className='mx-2 h-8 w-full items-center space-y-3'>
                         <TouchableOpacity className='h-full w-60 bg-[#1a364f]  rounded-md flex justify-center' onPress={handleLogOut}>
                             <Text className='text-white text-center'>Log Out</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className='h-full w-60 bg-red-900  rounded-md flex justify-center' onPress={handleReset}>
+                            <Text className='text-white text-center'>Reset Account</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
