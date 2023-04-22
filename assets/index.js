@@ -2666,4 +2666,4 @@ export const IMAGES = {
 //         1326: require('./ExerGif/1326.gif')
 //     }
 
-export const LOADING = require('./ExerImg/loading.jpg')
+export const LOADING = require('./ExerImg/loading.gif')
