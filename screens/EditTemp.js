@@ -169,7 +169,7 @@ const EditTemp = () => {
                         <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
                             <View>
                                 <TextInput
-                                    className='h-7 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white'
+                                    className='h-10 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white text-base'
                                     cursorColor={'white'}
                                     placeholder='template name'
                                     placeholderTextColor={'gray'}

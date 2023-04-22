@@ -158,7 +158,7 @@ const NewTemp = () => {
                             <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
                                 <View>
                                     <TextInput
-                                        className='h-7 w-60  border-white border-2 rounded-md bg-[#345b7c] px-2 text-white mt-1'
+                                        className='h-10 w-60  border-white text-base border-2 rounded-md bg-[#345b7c] px-2 text-white mt-1'
                                         cursorColor={'white'}
                                         placeholder='template name'
                                         placeholderTextColor={'gray'}
