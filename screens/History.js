@@ -2,8 +2,7 @@ import { View, Text, ScrollView } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import FooterComp from '../components/FooterComp';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native'
 import { useDispatch, useSelector } from 'react-redux';
 import * as Animatable from 'react-native-animatable'
@@ -171,8 +170,8 @@ const History = () => {
             <Loading />
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
-                    <Text className='text-white text-lg font-semibold'>History</Text>
-                    {Object.keys(userWorkObj).length !== 0? <TouchableOpacity onPress={clearHistory}><Feather name="rotate-ccw" size={24} color="white" /></TouchableOpacity> : null}
+                    <Text className='text-white text-xl font-semibold'>History</Text>
+                    {Object.keys(userWorkObj).length !== 0? <TouchableOpacity onPress={clearHistory}><FontAwesome name="rotate-left" size={25} color="white" /></TouchableOpacity> : null}
                 </View>
                 <ScrollView className='px-3 pt-3' contentContainerStyle={{ paddingBottom: 70 }}>
                     {Object.keys(userWorkObj).length !== 0 ? historyList(userWorkObj) :

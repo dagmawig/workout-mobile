@@ -31,8 +31,8 @@ const ShowTemp = () => {
     function exerList(eList, userTemp) {
         return eList.map((exer, i) => {
             return <View className='flex-row justify-between' key={`${userTemp ? 'user' : 'fixed'}-exer-${i}`} >
-                <Text className='text-white'>{`${exer.sets} X ${exer.name}`}</Text>
-                <View><TouchableOpacity onPress={() => handleExerDet(exer)}><FontAwesome5 name="info-circle" size={18} color="white" /></TouchableOpacity></View>
+                <Text className='text-white text-lg'>{`${exer.sets} X ${exer.name}`}</Text>
+                <View><TouchableOpacity onPress={() => handleExerDet(exer)}><FontAwesome5 name="info-circle" size={25} color="white" /></TouchableOpacity></View>
             </View>
         })
     }
@@ -96,17 +96,17 @@ const ShowTemp = () => {
                     <View className='w-full flex-row items-center justify-between'>
                         <View>
                             <TouchableOpacity onPress={detMode ? handleBack2 : handleBack}>
-                                <FontAwesome5 name="arrow-left" size={17} color="white" />
+                                <FontAwesome5 name="arrow-left" size={25} color="white" />
                             </TouchableOpacity>
                         </View>
                         <View>
                             {currentTempObj.userTemp && !detMode ? <TouchableOpacity onPress={handleEditTemp}>
-                                <FontAwesome5 name="edit" size={17} color="white" />
+                                <FontAwesome5 name="edit" size={25} color="white" />
                             </TouchableOpacity> : null}
                         </View>
                         <View>
                             {currentTempObj.userTemp && !detMode ? <TouchableOpacity onPress={handleDel}>
-                                <FontAwesome5 name="trash-alt" size={17} color="white" />
+                                <FontAwesome5 name="trash-alt" size={25} color="white" />
                             </TouchableOpacity> : null}
                         </View>
                     </View>
@@ -115,7 +115,7 @@ const ShowTemp = () => {
                     {detMode ? <ExerDetComp exerObj={detExer} /> :
                         <>
                             <View className='border-[1px] rounded-lg p-1 border-white m-1' key='temp'>
-                                <View><Text className='text-white font-bold'>{currentTemp.name}</Text></View>
+                                <View><Text className='text-white font-bold text-lg'>{currentTemp.name}</Text></View>
                                 <View><Text className='text-white pb-2 italic'>{`Last Performed: ${calcTime(currentTemp)}`}</Text></View>
                                 {exerList(currentTemp.exerList, currentTempObj.userTemp)}
                             </View>

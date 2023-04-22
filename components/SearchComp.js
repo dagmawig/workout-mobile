@@ -260,7 +260,7 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
             <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                 {searchMode && !filterMode ? <>
                     <TouchableOpacity onPress={handleSBack}>
-                        <FontAwesome5 name="arrow-left" size={17} color="white" />
+                        <FontAwesome5 name="arrow-left" size={25} color="white" />
                     </TouchableOpacity>
                     <TextInput
                         autoFocus
@@ -271,26 +271,26 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
                         value={searchTerm.length > 0 ? searchTerm[0] : ''}
                         onChangeText={(text) => handleChange(text)} />
                     <TouchableOpacity className='' onPress={handleFilter}>
-                        <FontAwesome5 name="filter" size={16} color="white" />
+                        <FontAwesome5 name="filter" size={23} color="white" />
                     </TouchableOpacity>
                 </> : filterMode ? <>
                     <TouchableOpacity onPress={handleBackF}>
-                        <FontAwesome5 name="arrow-left" size={17} color="white" />
+                        <FontAwesome5 name="arrow-left" size={25} color="white" />
                     </TouchableOpacity>
                 </> :
                     <>
                         <TouchableOpacity onPress={handleX}>
-                            <FontAwesome5 name="times" size={17} color="white" />
+                            <FontAwesome5 name="times" size={25} color="white" />
                         </TouchableOpacity>
                         <View className=''>
-                            <Text className='text-white text-lg font-semibold'>Select Exercises ({selIndex.filter(ind => ind === true).length})</Text>
+                            <Text className='text-white text-xl font-semibold'>Select Exercises ({selIndex.filter(ind => ind === true).length})</Text>
                         </View>
                         <View className='flex-row space-x-2'>
                             <TouchableOpacity className='' onPress={e => setSearchMode(true)}>
-                                <FontAwesome5 name="search" size={16} color="white" />
+                                <FontAwesome5 name="search" size={23} color="white" />
                             </TouchableOpacity>
                             <TouchableOpacity className='' onPress={handleFilter}>
-                                <FontAwesome5 name="filter" size={16} color="white" />
+                                <FontAwesome5 name="filter" size={23} color="white" />
                             </TouchableOpacity>
                         </View>
                     </>}

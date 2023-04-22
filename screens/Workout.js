@@ -41,7 +41,7 @@ const Workout = () => {
     function tempList(tList, userTemp) {
         return tList.map((temp, i) => {
             return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`} onPress={() => handleShowTemp(temp, userTemp, i)}>
-                <View><Text className='text-white font-bold'>{temp.name}</Text></View>
+                <View><Text className='text-white text-lg font-bold'>{temp.name}</Text></View>
                 <View><Text className='text-white pb-2 italic'>{`Last Performed: ${calcTime(temp)}`}</Text></View>
                 {exerList(temp.exerList, userTemp)}
             </TouchableOpacity>
@@ -51,8 +51,8 @@ const Workout = () => {
     function exerList(eList, userTemp) {
         return eList.map((exer, i) => {
             return <View className='flex-row justify-between' key={`${userTemp ? 'user' : 'fixed'}-exer-${i}`} >
-                <Text className='text-white'>{`${exer.sets} X ${exer.name}`}</Text>
-                <View><TouchableOpacity onPress={() => handleExerDet(exer)}><FontAwesome5 name="info-circle" size={18} color="white" /></TouchableOpacity></View>
+                <Text className='text-white text-lg'>{`${exer.sets} X ${exer.name}`}</Text>
+                <View><TouchableOpacity onPress={() => handleExerDet(exer)}><FontAwesome5 name="info-circle" size={25} color="white" /></TouchableOpacity></View>
             </View>
         })
     }
@@ -110,19 +110,19 @@ const Workout = () => {
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <View className=''>
-                        {detMode ? <TouchableOpacity onPress={handleBack}><FontAwesome5 name="arrow-left" size={17} color="white" /></TouchableOpacity> : <Text className='text-white text-lg font-semibold'>Workout</Text>}
+                        {detMode ? <TouchableOpacity onPress={handleBack}><FontAwesome5 name="arrow-left" size={25} color="white" /></TouchableOpacity> : <Text className='text-white text-xl font-semibold'>Workout</Text>}
                     </View>
                 </View>
                 <ScrollView className='px-3 pt-3' contentContainerStyle={{ paddingBottom: 70 }}>
                     {detMode ? <ExerDetComp exerObj={detExer} /> :
                         <>
                             <View>
-                                <View className='flex-row justify-between py-3'>
+                                <View className='flex-row justify-between pb-3'>
                                     <View>
-                                        <Text className='text-white text-xs'>MY TEMPLATES</Text>
+                                        <Text className='text-white text-lg'>MY TEMPLATES</Text>
                                     </View>
                                     <View>
-                                        <TouchableOpacity onPress={handleNewTemp}><FontAwesome5 name="plus" size={18} color="white" /></TouchableOpacity>
+                                        <TouchableOpacity onPress={handleNewTemp}><FontAwesome5 name="plus" size={25} color="white" /></TouchableOpacity>
                                     </View>
                                 </View>
                                 {tempList(stateSelector.userData.templateArr, true)}
@@ -130,7 +130,7 @@ const Workout = () => {
                             <View>
                                 <View className='flex-row justify-between py-3'>
                                     <View>
-                                        <Text className='text-white text-xs'>SAMPLE TEMPLATES</Text>
+                                        <Text className='text-white text-lg'>SAMPLE TEMPLATES</Text>
                                     </View>
                                 </View>
                                 <View>

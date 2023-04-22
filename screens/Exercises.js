@@ -165,7 +165,7 @@ const Exercises = () => {
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     {searchMode && !filterMode && !detMode ? <>
                         <TouchableOpacity onPress={handleBack}>
-                            <FontAwesome5 name="arrow-left" size={17} color="white" />
+                            <FontAwesome5 name="arrow-left" size={25} color="white" />
                         </TouchableOpacity>
                         <TextInput
                             autoFocus
@@ -176,23 +176,23 @@ const Exercises = () => {
                             value={searchTerm.length > 0 ? searchTerm[0] : ''}
                             onChangeText={(text) => handleChange(text)} />
                         <TouchableOpacity className='' onPress={() => handleFilter('search')}>
-                            <FontAwesome5 name="filter" size={16} color="white" />
+                            <FontAwesome5 name="filter" size={23} color="white" />
                         </TouchableOpacity>
                     </> : filterMode || detMode ? <>
                         <TouchableOpacity onPress={handleBackF}>
-                            <FontAwesome5 name="arrow-left" size={17} color="white" />
+                            <FontAwesome5 name="arrow-left" size={25} color="white" />
                         </TouchableOpacity>
                     </> :
                         <>
                             <View className=''>
-                                <Text className='text-white text-lg font-semibold'>Exercises</Text>
+                                <Text className='text-white text-xl font-semibold'>Exercises</Text>
                             </View>
                             <View className='flex-row space-x-2'>
                                 <TouchableOpacity className='' onPress={e => setSearchMode(true)}>
-                                    <FontAwesome5 name="search" size={16} color="white" />
+                                    <FontAwesome5 name="search" size={23} color="white" />
                                 </TouchableOpacity>
                                 <TouchableOpacity className='' onPress={() => handleFilter('notS')}>
-                                    <FontAwesome5 name="filter" size={16} color="white" />
+                                    <FontAwesome5 name="filter" size={23} color="white" />
                                 </TouchableOpacity>
                             </View>
                         </>

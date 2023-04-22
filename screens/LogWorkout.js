@@ -261,7 +261,7 @@ const LogWorkout = () => {
                                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                                     <>
                                         <TouchableOpacity onPress={handleDetBack}>
-                                            <FontAwesome5 name="arrow-left" size={17} color="white" />
+                                            <FontAwesome5 name="arrow-left" size={25} color="white" />
                                         </TouchableOpacity>
                                     </>
                                 </View>
@@ -274,21 +274,21 @@ const LogWorkout = () => {
                             </> :
                             <>
                                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
-                                    <TouchableOpacity onPress={handleCancel}><FontAwesome5 name="times" size={17} color="white" /></TouchableOpacity>
+                                    <TouchableOpacity onPress={handleCancel}><FontAwesome5 name="times" size={25} color="white" /></TouchableOpacity>
                                     <View className='items-center'>
                                         <Text className='text-white text-lg font-semibold'>{currentTemp.name}</Text>
                                         <Text className='text-white'>{new Date(seconds * 1000).toISOString().substr(11, 8)}</Text>
                                     </View>
-                                    <TouchableOpacity onPress={handleSave}><FontAwesome5 name="save" size={17} color="white" /></TouchableOpacity>
+                                    <TouchableOpacity onPress={handleSave}><FontAwesome5 name="save" size={25} color="white" /></TouchableOpacity>
                                 </View>
                                 <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
                                     <View className='pt-3'>
                                         <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} editable={true} inputState={inputState} updateInput={updateInput} setExerObj={setExerObj} setDetMode={setDetMode} />
                                     </View>
                                     <View className='justify-center items-center py-3 space-y-2'>
-                                        <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>
-                                        <TouchableOpacity onPress={handleSave}><Text className='text-white text-lg'>FINISH WORKOUT</Text></TouchableOpacity>
-                                        <TouchableOpacity onPress={handleCancel}><Text className='text-white'>CANCEL WORKOUT</Text></TouchableOpacity>
+                                        <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white text-lg'>ADD EXERCISE</Text></TouchableOpacity>
+                                        <TouchableOpacity onPress={handleSave}><Text className='text-white text-xl'>FINISH WORKOUT</Text></TouchableOpacity>
+                                        <TouchableOpacity onPress={handleCancel}><Text className='text-white text-lg'>CANCEL WORKOUT</Text></TouchableOpacity>
                                     </View>
                                 </ScrollView>
                             </>

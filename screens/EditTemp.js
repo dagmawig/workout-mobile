@@ -143,7 +143,7 @@ const EditTemp = () => {
                         <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                             <>
                                 <TouchableOpacity onPress={handleDetBack}>
-                                    <FontAwesome5 name="arrow-left" size={17} color="white" />
+                                    <FontAwesome5 name="arrow-left" size={25} color="white" />
                                 </TouchableOpacity>
                             </>
                         </View>
@@ -158,11 +158,11 @@ const EditTemp = () => {
                         <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                             <>
                                 <TouchableOpacity onPress={handleDelChange}>
-                                    <FontAwesome5 name="times" size={17} color="white" />
+                                    <FontAwesome5 name="times" size={25} color="white" />
                                 </TouchableOpacity>
-                                <Text className='text-white text-lg font-semibold'>Edit Template</Text>
+                                <Text className='text-white text-xl font-semibold'>Edit Template</Text>
                                 <TouchableOpacity onPress={saveTemp}>
-                                    <FontAwesome5 name="save" size={17} color="white" />
+                                    <FontAwesome5 name="save" size={25} color="white" />
                                 </TouchableOpacity>
                             </>
                         </View>
@@ -180,7 +180,7 @@ const EditTemp = () => {
                                 <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} setExerObj={setExerObj} setDetMode={setDetMode} />
                             </View>
                             <View className='justify-center items-center py-3'>
-                                <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white'>ADD EXERCISE</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => setExerMode(true)}><Text className='text-white text-lg'>ADD EXERCISE</Text></TouchableOpacity>
                             </View>
                         </ScrollView>
                     </>}

@@ -69,8 +69,8 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
         return (
             <View key={'newTemp-' + i} className='border-[1px] border-white rounded-md p-2 mb-2'>
                 <View className='flex-row justify-between items-center pb-2'>
-                    <TouchableOpacity onPress={() => handleExerDet(exer)}><Text className='text-white text-lg font-bold'>{exer.name}</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={() => removeExer(i)}><FontAwesome5 name="minus-circle" size={16} color="white" /></TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleExerDet(exer)}><Text className='text-white text-xl font-bold'>{exer.name}</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => removeExer(i)}><FontAwesome5 name="minus-circle" size={25} color="white" /></TouchableOpacity>
                 </View>
                 <View className='flex-row justify-between items-center mb-1'>
                     <Text className='w-1/6 text-center text-white'>SET</Text>
