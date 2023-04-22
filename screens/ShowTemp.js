@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateCurrentTemp, updateUserTempArr } from '../components/workoutSlice';
+import { updateCurrentTemp, updateStartTime, updateUserTempArr } from '../components/workoutSlice';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
@@ -58,7 +58,8 @@ const ShowTemp = () => {
     }
 
     function handleLogWork() {
-        navigation.navigate('LogWorkout')
+        navigation.navigate('LogWorkout');
+        dispatch(updateStartTime(Math.floor(Date.now() / 1000)));
     }
 
     function handleDel() {

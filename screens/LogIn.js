@@ -6,7 +6,8 @@ import { auth } from '../components/FirebaseConfig';
 import { signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import SecureSt from '../components/SecureStore';
 import { useDispatch } from 'react-redux';
-import { updateEmail } from '../components/workoutSlice';
+import { updateEmail, updateLoading } from '../components/workoutSlice';
+import Loading from '../components/Loading';
 
 const LogIn = () => {
 
@@ -26,6 +27,7 @@ const LogIn = () => {
     }
 
     function logIn() {
+        dispatch(updateLoading(true));
         signInWithEmailAndPassword(auth, email, password)
             .then(userCred => {
                 const user = userCred.user;
@@ -39,12 +41,16 @@ const LogIn = () => {
                 }
                 else {
                     sendEmailVerification(auth.currentUser).then(() => {
-                        Alert.alert(`Email not verified!`, `Verification link sent to: \n${email}. \nPlease verify your email.`)
+                        Alert.alert(`Email not verified!`, `Verification link sent to: \n${email}. \nPlease verify your email.`);
                     });
 
                     auth.signOut().then(() => { }).catch(err => console.log(err))
                 }
-            }).catch(error => Alert.alert(`Error`, error.message));
+                dispatch(updateLoading(false));
+            }).catch(error => {
+                Alert.alert(`Error`, error.message)
+                dispatch(updateLoading(false));
+            });
     }
 
     useLayoutEffect(() => {
@@ -55,6 +61,7 @@ const LogIn = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='pt-[45px] h-full w-full' >
                 <View className='w-full h-full items-center justify-top pt-[200px]'>
                     <ImageBackground

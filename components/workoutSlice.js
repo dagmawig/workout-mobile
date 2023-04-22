@@ -8,6 +8,7 @@ const initialState = {
     scrollP: 0,
     loading: false,
     currentTemp: null,
+    startTime: null,
     userData: {
         email: '',
         templateArr: [
@@ -200,10 +201,13 @@ export const workoutSlice = createSlice({
         updateLoading: (state, action) => {
             state.loading = action.payload;
         },
+        updateStartTime: (state, action) => {
+            state.startTime = action.payload;
+        },
     }
 });
 
-export const { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag, updateScroll, updateUserTempArr, updateCurrentTemp, updateWorkoutObj, updateUserData, updateEmail, updateReset, updateLoading } = workoutSlice.actions;
+export const { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag, updateScroll, updateUserTempArr, updateCurrentTemp, updateWorkoutObj, updateUserData, updateEmail, updateReset, updateLoading, updateStartTime } = workoutSlice.actions;
 
 export {initialState};
 export default workoutSlice.reducer;
