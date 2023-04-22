@@ -38,6 +38,7 @@ const LogIn = () => {
                     SecureSt.save('uid', user.uid);
                     dispatch(updateEmail(email));
                     navigation.navigate('Workout');
+                    setPassword('');
                 }
                 else {
                     sendEmailVerification(auth.currentUser).then(() => {
