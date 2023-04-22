@@ -8,6 +8,7 @@ import SecureSt from '../components/SecureStore';
 import { useDispatch } from 'react-redux';
 import { updateEmail, updateLoading } from '../components/workoutSlice';
 import Loading from '../components/Loading';
+import { customStyle } from '../components/Style';
 
 const LogIn = () => {
 
@@ -63,7 +64,7 @@ const LogIn = () => {
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
             <Loading/>
-            <View className='pt-[45px] h-full w-full' >
+            <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-full items-center justify-top pt-[200px]'>
                     <ImageBackground
                         source={require('../assets/home_logo_clear.png')}

@@ -11,6 +11,7 @@ import Loading from '../components/Loading';
 import { REACT_APP_API_URI } from '@env'
 import axios from 'axios';
 import SecureSt from '../components/SecureStore';
+import { customStyle } from '../components/Style';
 
 const LogWorkout = () => {
 
@@ -256,7 +257,7 @@ const LogWorkout = () => {
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
             <Loading />
-            <View className='pt-[45px] h-full w-full' >
+            <View className='h-full w-full' style={customStyle.topPad}>
                 {
                     exerMode ? <SearchComp tempExerArr={tempExerArr} setTempExerArr={setTempExerArr} setExerMode={setExerMode} inputState={inputState} /> :
                         detMode ?

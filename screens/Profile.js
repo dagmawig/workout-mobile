@@ -10,6 +10,7 @@ import Loading from '../components/Loading';
 import { REACT_APP_API_URI } from '@env';
 import axios from 'axios';
 import { Alert } from 'react-native';
+import { customStyle } from '../components/Style';
 
 const Profile = () => {
 
@@ -79,7 +80,7 @@ const Profile = () => {
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
             <Loading />
-            <View className='pt-[45px] h-full w-full' >
+            <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <View className=''>
                         <Text className='text-white text-lg font-semibold'>Profile</Text>

@@ -11,6 +11,7 @@ import { IMAGES } from '../assets';
 import FooterComp from '../components/FooterComp';
 import Search from '../components/Search';
 import Loading from '../components/Loading';
+import { customStyle } from '../components/Style';
 
 const Exercises = () => {
 
@@ -161,7 +162,7 @@ const Exercises = () => {
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
             <Loading />
-            <View className='pt-[45px] h-full w-full' >
+            <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     {searchMode && !filterMode && !detMode ? <>
                         <TouchableOpacity onPress={handleBack}>

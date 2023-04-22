@@ -11,6 +11,7 @@ import { REACT_APP_API_URI } from '@env';
 import axios from 'axios';
 import SecureSt from '../components/SecureStore';
 import Loading from '../components/Loading';
+import { customStyle } from '../components/Style';
 
 const Workout = () => {
 
@@ -107,7 +108,7 @@ const Workout = () => {
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
             <Loading />
-            <View className='pt-[45px] h-full w-full' >
+            <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <View className=''>
                         {detMode ? <TouchableOpacity onPress={handleBack}><FontAwesome5 name="arrow-left" size={25} color="white" /></TouchableOpacity> : <Text className='text-white text-xl font-semibold'>Workout</Text>}

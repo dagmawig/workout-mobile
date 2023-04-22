@@ -3,6 +3,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../components/FirebaseConfig';
+import { customStyle } from '../components/Style';
 
 const ResetPass = () => {
 
@@ -29,7 +30,7 @@ const ResetPass = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <View className='pt-[45px] h-full w-full' >
+            <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-full items-center justify-top pt-[200px]'>
                     <ImageBackground
                         source={require('../assets/home_logo_clear.png')}
