@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "workouttracker",
-    "slug": "workouttracker",
+    "name": "FitFUSE",
+    "slug": "FitFUSE",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/home_logo.png",
@@ -18,11 +18,11 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.fitfusion.workout.tracker",
+      "package": "com.fitfuse.workout.tracker",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/favicon.png",
+        "backgroundColor": "#28547B"
       }
     },
     "web": {
