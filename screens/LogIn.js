@@ -50,7 +50,7 @@ const LogIn = () => {
                 }
                 dispatch(updateLoading(false));
             }).catch(error => {
-                Alert.alert(`Error`, error.message)
+                Alert.alert(`${error.name}`, `${error.code}`)
                 dispatch(updateLoading(false));
             });
     }
@@ -76,7 +76,8 @@ const LogIn = () => {
                                 placeholder='email'
                                 placeholderTextColor={'gray'}
                                 value={email}
-                                onChangeText={(text) => handleEmail(text)} />
+                                onChangeText={(text) => handleEmail(text)}
+                                onSubmitEditing={logIn} />
                             <View className='flex-row items-center w-60 border-white border-2 rounded-md mb-1'>
                                 <TextInput
                                     className='h-7 w-5/6   bg-[#1b4264]  text-white px-2'
@@ -86,7 +87,8 @@ const LogIn = () => {
                                     secureTextEntry={invisible}
                                     value={password}
                                     autoCorrect={false}
-                                    onChangeText={(text) => handlePass(text)} />
+                                    onChangeText={(text) => handlePass(text)}
+                                    onSubmitEditing={logIn} />
                                 <TouchableOpacity className='bg-[#1b4264] w-1/6 h-7 items-center justify-center' onPress={() => setVisible(!invisible)}><FontAwesome5 className='items-center' name={invisible ? "eye" : "eye-slash"} size={16} color="white" /></TouchableOpacity>
                             </View>
                             <TouchableOpacity className='w-60 h-7 mt-3' onPress={logIn}>

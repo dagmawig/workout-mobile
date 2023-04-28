@@ -4,11 +4,14 @@ import { useNavigation } from '@react-navigation/native';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../components/FirebaseConfig';
 import { customStyle } from '../components/Style';
+import { updateLoading } from '../components/workoutSlice';
+import { useDispatch } from 'react-redux';
 
 const ResetPass = () => {
 
     const navigation = useNavigation();
-
+    const dispatch = useDispatch();
+    
     const [email, setEmail] = useState('');
 
     function handleEmail(email) {
@@ -16,10 +19,15 @@ const ResetPass = () => {
     }
 
     function resetPass() {
+        dispatch(updateLoading(true));
         sendPasswordResetEmail(auth, email).then(() => {
             Alert.alert(`Email sent!`, `Password reset link sent to: \n${email}.`);
             navigation.navigate('LogIn');
-        }).catch(error => Alert.alert(`Error`, `${error.message}`))
+            dispatch(updateLoading(false));
+        }).catch(error => {
+            Alert.alert(`${error.name}`, `${error.code}`);
+            dispatch(updateLoading(false));
+        })
     }
 
     useLayoutEffect(() => {
@@ -42,7 +50,8 @@ const ResetPass = () => {
                                 placeholder='email'
                                 placeholderTextColor={'gray'}
                                 value={email}
-                                onChangeText={(text) => handleEmail(text)} />
+                                onChangeText={(text) => handleEmail(text)}
+                                onSubmitEditing={resetPass} />
                             <TouchableOpacity className='w-60 h-7 mt-3'>
                                 <Text className='text-white w-full text-center font-semibold text-lg' onPress={resetPass}>Reset Password</Text>
                             </TouchableOpacity>

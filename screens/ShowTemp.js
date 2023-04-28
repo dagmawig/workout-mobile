@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Alert, Image } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -8,6 +8,8 @@ import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
 import { customStyle } from '../components/Style';
+import { IMAGES } from '../assets';
+
 
 const ShowTemp = () => {
 
@@ -31,9 +33,23 @@ const ShowTemp = () => {
 
     function exerList(eList, userTemp) {
         return eList.map((exer, i) => {
-            return <View className='flex-row justify-between' key={`${userTemp ? 'user' : 'fixed'}-exer-${i}`} >
-                <Text className='text-white text-lg'>{`${exer.sets} X ${exer.name}`}</Text>
-                <View><TouchableOpacity onPress={() => handleExerDet(exer)}><FontAwesome5 name="info-circle" size={25} color="white" /></TouchableOpacity></View>
+            
+            let exerIndex = exerLocal.findIndex(ex => ex.name === exer.name);
+
+            return <View className='flex-row justify-between items-center' key={`${userTemp ? 'user' : 'fixed'}-exer-${i}`} >
+                <View className='flex-row justify-start items-center w-10/12'>
+                    <Image
+                        source={IMAGES[exerIndex]}
+                        className='w-20 h-20 m-1 object-cover bg-white'
+                    />
+                    <View>
+                        <Text className='text-white text ml-1'>{`${exer.sets} X ${exer.name}`}</Text>
+                        <Text className='text-white text-sm ml-1'>{`${exer.bodyPart}`}</Text>
+                    </View>
+
+                </View>
+
+                <View className='w-1/12'><TouchableOpacity onPress={() => handleExerDet(exer)}><FontAwesome5 name="info-circle" size={30} color="white" /></TouchableOpacity></View>
             </View>
         })
     }

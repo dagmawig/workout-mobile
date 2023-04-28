@@ -172,7 +172,7 @@ const History = () => {
             <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <Text className='text-white text-xl font-semibold'>History</Text>
-                    {Object.keys(userWorkObj).length !== 0? <TouchableOpacity onPress={clearHistory}><FontAwesome name="rotate-left" size={25} color="white" /></TouchableOpacity> : null}
+                    {Object.keys(userWorkObj).length !== 0? <TouchableOpacity onPress={clearHistory}><FontAwesome name="eraser" size={25} color="white" /></TouchableOpacity> : null}
                 </View>
                 <ScrollView className='px-3 pt-3' contentContainerStyle={{ paddingBottom: 70 }}>
                     {Object.keys(userWorkObj).length !== 0 ? historyList(userWorkObj) :

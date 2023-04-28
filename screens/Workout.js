@@ -52,8 +52,8 @@ const Workout = () => {
     function exerList(eList, userTemp) {
         return eList.map((exer, i) => {
             return <View className='flex-row justify-between' key={`${userTemp ? 'user' : 'fixed'}-exer-${i}`} >
-                <Text className='text-white text-lg'>{`${exer.sets} X ${exer.name}`}</Text>
-                <View><TouchableOpacity onPress={() => handleExerDet(exer)}><FontAwesome5 name="info-circle" size={25} color="white" /></TouchableOpacity></View>
+                <Text className='text-white text'>{`${exer.sets} X ${exer.name}`}</Text>
+                {/* <View><TouchableOpacity onPress={() => handleExerDet(exer)}><FontAwesome5 name="info-circle" size={25} color="white" /></TouchableOpacity></View> */}
             </View>
         })
     }
@@ -120,7 +120,7 @@ const Workout = () => {
                             <View>
                                 <View className='flex-row justify-between pb-3'>
                                     <View>
-                                        <Text className='text-white text-lg'>MY TEMPLATES</Text>
+                                        <Text className='text-white text-base'>MY TEMPLATES</Text>
                                     </View>
                                     <View>
                                         <TouchableOpacity onPress={handleNewTemp}><FontAwesome5 name="plus" size={25} color="white" /></TouchableOpacity>
@@ -131,7 +131,7 @@ const Workout = () => {
                             <View>
                                 <View className='flex-row justify-between py-3'>
                                     <View>
-                                        <Text className='text-white text-lg'>SAMPLE TEMPLATES</Text>
+                                        <Text className='text-white text-base'>SAMPLE TEMPLATES</Text>
                                     </View>
                                 </View>
                                 <View>
