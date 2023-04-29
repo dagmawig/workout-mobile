@@ -103,7 +103,7 @@ const Workout = () => {
             }
             else console.log('invalid uid: ', uid)
         })
-    }, [])
+    }, [stateSelector.userData.email])
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>

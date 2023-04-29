@@ -6,12 +6,13 @@ import { auth } from '../components/FirebaseConfig';
 import { customStyle } from '../components/Style';
 import { updateLoading } from '../components/workoutSlice';
 import { useDispatch } from 'react-redux';
+import Loading from '../components/Loading';
 
 const ResetPass = () => {
 
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    
+
     const [email, setEmail] = useState('');
 
     function handleEmail(email) {
@@ -38,6 +39,7 @@ const ResetPass = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-full items-center justify-top pt-[200px]'>
                     <ImageBackground
@@ -57,7 +59,7 @@ const ResetPass = () => {
                             </TouchableOpacity>
                             <View className='w-60 flex-row justify-between items-center mt-10'>
                                 <TouchableOpacity onPress={() => navigation.navigate('LogIn')}><Text className='text-gray-300  text-center italic'>Login</Text></TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}><Text className='text-gray-300 text-center italic'>New User?</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => {navigation.navigate('SignUp'); setEmail('')}}><Text className='text-gray-300 text-center italic'>New User?</Text></TouchableOpacity>
                             </View>
                         </View>
                     </ImageBackground>

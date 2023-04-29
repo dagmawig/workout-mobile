@@ -7,6 +7,7 @@ import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/
 import { customStyle } from '../components/Style';
 import { useDispatch } from 'react-redux';
 import { updateLoading } from '../components/workoutSlice';
+import Loading from '../components/Loading';
 
 const SignUp = () => {
 
@@ -39,6 +40,7 @@ const SignUp = () => {
             }).catch(error =>{
                 console.log(error.message)
                 Alert.alert(`${error.name}`, `${error.code}` );
+                setPassword('')
                 dispatch(updateLoading(false));
             })
     }
@@ -51,6 +53,7 @@ const SignUp = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
+            <Loading/>
             <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-full items-center justify-top pt-[200px]'>
                     <ImageBackground
@@ -82,8 +85,8 @@ const SignUp = () => {
                                 <Text className='text-white w-full text-center font-semibold text-lg' onPress={signUp}>Sign Up</Text>
                             </TouchableOpacity>
                             <View className='w-60 flex-row justify-between items-center mt-10'>
-                                <TouchableOpacity onPress={() => navigation.navigate('LogIn')}><Text className='text-gray-300  text-center italic' >Login</Text></TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigation.navigate('ResetPass')}><Text className='text-gray-300 text-center italic'>Forgot Password?</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => {navigation.navigate('LogIn'); setEmail(''); setPassword('')}}><Text className='text-gray-300  text-center italic' >Login</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => {navigation.navigate('ResetPass'); setPassword(''); setEmail('')}}><Text className='text-gray-300 text-center italic'>Forgot Password?</Text></TouchableOpacity>
                             </View>
                         </View>
                     </ImageBackground>

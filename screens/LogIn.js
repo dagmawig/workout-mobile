@@ -36,21 +36,24 @@ const LogIn = () => {
                 if (user.emailVerified) {
                     SecureSt.save('email', email);
                     SecureSt.save('password', password);
-                    SecureSt.save('uid', user.uid);
-                    dispatch(updateEmail(email));
-                    navigation.navigate('Workout');
                     setPassword('');
+                    SecureSt.save('uid', user.uid).then(() => {
+                        dispatch(updateEmail(email));
+                        navigation.navigate('Workout'); 
+                    });
                 }
                 else {
                     sendEmailVerification(auth.currentUser).then(() => {
                         Alert.alert(`Email not verified!`, `Verification link sent to: \n${email}. \nPlease verify your email.`);
                     });
-
+                    setPassword('');
                     auth.signOut().then(() => { }).catch(err => console.log(err))
                 }
+
                 dispatch(updateLoading(false));
             }).catch(error => {
-                Alert.alert(`${error.name}`, `${error.code}`)
+                Alert.alert(`${error.name}`, `${error.code}`);
+                setPassword('')
                 dispatch(updateLoading(false));
             });
     }
@@ -63,7 +66,7 @@ const LogIn = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <Loading/>
+            <Loading />
             <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-full items-center justify-top pt-[200px]'>
                     <ImageBackground
@@ -95,8 +98,8 @@ const LogIn = () => {
                                 <Text className='text-white w-full text-center font-semibold text-lg'>Log In</Text>
                             </TouchableOpacity>
                             <View className='w-60 flex-row justify-between items-center mt-10'>
-                                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}><Text className='text-gray-300  text-center italic'>New User?</Text></TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigation.navigate('ResetPass')}><Text className='text-gray-300 text-center italic'>Forgot Password?</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => { navigation.navigate('SignUp'); setEmail(''); setPassword('') }}><Text className='text-gray-300  text-center italic'>New User?</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => { navigation.navigate('ResetPass'); setEmail(''), setPassword('') }}><Text className='text-gray-300 text-center italic'>Forgot Password?</Text></TouchableOpacity>
                             </View>
                         </View>
                     </ImageBackground>
