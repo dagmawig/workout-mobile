@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import React, { useState } from 'react'
-import { IMAGES, LOADING } from '../assets'
+import { IMAGES } from '../assets'
 import { Image } from 'expo-image'
 import gifLink from '../assets/ExerData/gitLink.json'
 const ExerDetComp = ({ exerObj }) => {
@@ -11,9 +11,10 @@ const ExerDetComp = ({ exerObj }) => {
     <View>
       {/* <Image
         source={IMAGES[exerObj.refIndex]}
-        className='w-full h-96 object-contain bg-white' /> */}
+        className='w-full h-96 sobject-contain bg-white' /> */}
       <Image
         transition={1000}
+        contentFit='contain'
         source={valid? gifLink[exerObj.refIndex] : IMAGES[exerObj.refIndex]}
         onError={()=>setValid(false)}
         className='w-full h-96 object-contain bg-white' />

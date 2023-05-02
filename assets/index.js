@@ -2667,3 +2667,5 @@ export const IMAGES = {
 //     }
 
 export const LOADING = require('./ExerImg/loading.gif')
+
+// export const LOADINGIMG = require('./ExerImg/loading.png')
