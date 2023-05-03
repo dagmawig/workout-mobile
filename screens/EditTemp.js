@@ -81,7 +81,6 @@ const EditTemp = () => {
             updatedTemp.exerList = tempExerArr;
             let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
             newUserTempArr[stateSelector.currentTemp.index] = updatedTemp;
-            dispatch(updateUserTempArr(newUserTempArr));
 
             dispatch(updateLoading(true));
             SecureSt.getVal('uid').then(uid => {

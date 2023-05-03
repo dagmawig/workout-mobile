@@ -3,12 +3,15 @@ import React, { useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateCurrentTemp, updateStartTime, updateUserTempArr } from '../components/workoutSlice';
+import { updateCurrentTemp, updateLoading, updateStartTime, updateUserTempArr } from '../components/workoutSlice';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
 import { customStyle } from '../components/Style';
 import { IMAGES } from '../assets';
+import SecureSt from '../components/SecureStore';
+import { REACT_APP_API_URI } from '@env';
+import axios from 'axios';
 
 
 const ShowTemp = () => {
@@ -79,6 +82,13 @@ const ShowTemp = () => {
         dispatch(updateStartTime(Math.floor(Date.now() / 1000)));
     }
 
+    async function saveTemplate(newTempArr, uid) {
+        let updateURI = REACT_APP_API_URI + 'updateTemp';
+        let res = await axios.post(updateURI, { userID: uid, templateArr: newTempArr }).catch(err => console.log(err));
+
+        return res;
+    }
+
     function handleDel() {
         return Alert.alert('Delete Template?', 'Are you sure you want to delete template?', [
             {
@@ -89,11 +99,29 @@ const ShowTemp = () => {
             {
                 text: 'DELETE',
                 onPress: () => {
+                   
                     let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
                     newUserTempArr.splice(currentTempObj.index, 1);
-                    navigation.navigate('Workout');
-                    dispatch(updateUserTempArr(newUserTempArr));
-                    dispatch(updateCurrentTemp(null));
+                    dispatch(updateLoading(true));
+                    SecureSt.getVal('uid').then(uid=> {
+                        if(uid) {
+                            saveTemplate(newUserTempArr, uid).then(res => {
+                                let data = res.data;
+                                if(data.success) {
+                                    
+                                    Alert.alert(`Success`, `Template "${currentTemp.name}" deleted successfully!`);
+                                    navigation.navigate('Workout');
+                                    dispatch(updateUserTempArr(data.data.templateArr));
+                                    dispatch(updateLoading(false));
+                                }
+                                else {
+                                    dispatch(updateLoading(false));
+                                    Alert.alert(`Error`, `${data.err}`)
+                                }
+                            }).catch(err=>console.log(err))
+                        }
+                        else console.log(err=>'invalid uid: ', uid)
+                    }).catch(err => console.log(err))
                 }
             }
         ])
