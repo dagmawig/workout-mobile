@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Alert, BackHandler } from 'react-native'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import TempExerComp from '../components/TempExerComp';
 import SearchComp from '../components/SearchComp';
@@ -253,6 +253,19 @@ const LogWorkout = () => {
     useEffect(() => {
 
     }, [])
+
+    useFocusEffect(
+        React.useCallback(()=> {
+            const onBackPress = () => {
+              handleCancel();
+              return true;
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove();
+        }, [])
+    )
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>

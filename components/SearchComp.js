@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, TextInput, FlatList, Image, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, FlatList, Image, ScrollView, BackHandler } from 'react-native'
 import React, { useState } from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
 import TagComp from './TagComp';
@@ -6,8 +6,10 @@ import Search from './Search';
 import { IMAGES } from '../assets';
 import { useDispatch, useSelector } from 'react-redux';
 import FilterTagComp from './FilterTagComp';
-import { updateActiveB, updateActiveM } from './workoutSlice';
+import { updateActiveB, updateActiveM, updateLoading } from './workoutSlice';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
+import { useFocusEffect } from '@react-navigation/native';
+import Loading from './Loading';
 
 const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) => {
 
@@ -254,6 +256,29 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
             </>
         )
     }
+
+    useFocusEffect(
+        React.useCallback(()=> {
+            const onBackPress = () => {
+                if(filterMode) {
+                    handleBackF();
+                    return true;
+                }
+                else if(searchMode) {
+                    handleSBack();
+                    return true;
+                }
+                else {
+                    handleX();
+                    return true;
+                };
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove();
+        }, [filterMode, setFilterMode, searchMode, setSearchMode, setExerMode, handleX])
+    )
 
     return (
         <>

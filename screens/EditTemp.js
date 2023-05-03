@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, TextInput, Alert, BackHandler } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import TempExerComp from '../components/TempExerComp';
 import { useDispatch, useSelector } from 'react-redux';
@@ -133,6 +133,19 @@ const EditTemp = () => {
             headerShown: false,
         })
     }, []);
+
+    useFocusEffect(
+        React.useCallback(()=> {
+            const onBackPress = () => {
+              handleDelChange();
+              return true;
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove();
+        }, [])
+    )
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>

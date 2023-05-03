@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, ScrollView, TextInput, FlatList, Image } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import TagComp from '../components/TagComp';
 import FilterTagComp from '../components/FilterTagComp';
@@ -12,6 +12,7 @@ import FooterComp from '../components/FooterComp';
 import Search from '../components/Search';
 import Loading from '../components/Loading';
 import { customStyle } from '../components/Style';
+import { BackHandler } from 'react-native';
 
 const Exercises = () => {
 
@@ -158,6 +159,28 @@ const Exercises = () => {
             setLoadList([...loadList, ...fExerArr.slice(loadList.length, loadList.length + 50)])
         }
     }
+
+    useFocusEffect(
+        React.useCallback(()=> {
+            const onBackPress = () => {
+                if(filterMode || detMode) {
+                    handleBackF();
+                    return true;
+                }
+                else if(searchMode) {
+                    handleBack();
+                    return true;
+                }
+                else {
+                    return false;
+                };
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove();
+        }, [filterMode, setFilterMode, searchMode, setSearchMode, detMode, setDetMode])
+    )
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
