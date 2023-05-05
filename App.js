@@ -20,7 +20,7 @@ import Profile from './screens/Profile';
 const Stack = createNativeStackNavigator();
 
 SplashScreen.preventAutoHideAsync();
-setTimeout(SplashScreen.hideAsync, 3000);
+setTimeout(SplashScreen.hideAsync, 1000);
 
 export default function App() {
   return (
