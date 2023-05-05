@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { TailwindProvider } from 'tailwindcss-react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as SplashScreen from 'expo-splash-screen';
 import Home from './screens/Home';
 import Exercises from './screens/Exercises';
 import { Provider } from 'react-redux';
@@ -17,6 +18,9 @@ import ResetPass from './screens/ResetPass';
 import Profile from './screens/Profile';
 
 const Stack = createNativeStackNavigator();
+
+SplashScreen.preventAutoHideAsync();
+setTimeout(SplashScreen.hideAsync, 3000);
 
 export default function App() {
   return (

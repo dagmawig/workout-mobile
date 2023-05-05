@@ -255,16 +255,22 @@ const LogWorkout = () => {
     }, [])
 
     useFocusEffect(
-        React.useCallback(()=> {
+        React.useCallback(() => {
             const onBackPress = () => {
-              handleCancel();
-              return true;
+                if (detMode) {
+                    handleDetBack();
+                    return true;
+                }
+                else {
+                    handleCancel();
+                    return true;
+                }
             };
 
             const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
             return () => subscription.remove();
-        }, [])
+        }, [detMode])
     )
 
     return (

@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, ScrollView, Alert, Image } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCurrentTemp, updateLoading, updateStartTime, updateUserTempArr } from '../components/workoutSlice';
@@ -12,6 +12,7 @@ import { IMAGES } from '../assets';
 import SecureSt from '../components/SecureStore';
 import { REACT_APP_API_URI } from '@env';
 import axios from 'axios';
+import { BackHandler } from 'react-native';
 
 
 const ShowTemp = () => {
@@ -133,6 +134,22 @@ const ShowTemp = () => {
             headerShown: false,
         })
     }, []);
+
+    useFocusEffect(
+        React.useCallback(()=> {
+            const onBackPress = () => {
+                if(detMode) {
+                    handleBack2();
+                    return true;
+                }
+                else return false;
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove();
+        }, [detMode])
+    )
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>

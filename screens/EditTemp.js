@@ -11,7 +11,7 @@ import Loading from '../components/Loading';
 import { REACT_APP_API_URI } from '@env';
 import axios from 'axios';
 import SecureSt from '../components/SecureStore';
-import {customStyle} from '../components/Style';
+import { customStyle } from '../components/Style';
 
 const EditTemp = () => {
 
@@ -135,16 +135,22 @@ const EditTemp = () => {
     }, []);
 
     useFocusEffect(
-        React.useCallback(()=> {
+        React.useCallback(() => {
             const onBackPress = () => {
-              handleDelChange();
-              return true;
+                if (detMode) {
+                    handleDetBack();
+                    return true;
+                }
+                else {
+                    handleDelChange();
+                    return true;
+                }
             };
 
             const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
             return () => subscription.remove();
-        }, [])
+        }, [detMode])
     )
 
     return (

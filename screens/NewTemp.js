@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateLoading, updateUserTempArr } from '../components/workoutSlice';
 import TempExerComp from '../components/TempExerComp';
@@ -12,6 +12,7 @@ import { REACT_APP_API_URI } from '@env';
 import SecureSt from '../components/SecureStore';
 import axios from 'axios';
 import { customStyle } from '../components/Style';
+import { BackHandler } from 'react-native';
 
 const NewTemp = () => {
 
@@ -122,6 +123,22 @@ const NewTemp = () => {
             headerShown: false,
         })
     }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const onBackPress = () => {
+                if (detMode) {
+                    handleDetBack();
+                    return true;
+                }
+                else return false;
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove();
+        }, [detMode])
+    )
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
