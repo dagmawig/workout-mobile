@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateCurrentTemp, updateLoading, updateStartTime, updateUserTempArr } from '../components/workoutSlice';
+import { updateLoading, updateStartTime, updateUserTempArr } from '../components/workoutSlice';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
@@ -65,8 +65,7 @@ const ShowTemp = () => {
     }
 
     function handleBack() {
-        dispatch(updateCurrentTemp(null))
-        navigation.navigate('Workout')
+        navigation.navigate('Workout');
     }
 
     function handleBack2() {

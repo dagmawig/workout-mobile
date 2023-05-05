@@ -5,7 +5,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import TempExerComp from '../components/TempExerComp';
 import SearchComp from '../components/SearchComp';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateCurrentTemp, updateLoading, updateStartTime, updateUserData } from '../components/workoutSlice';
+import { updateLoading, updateStartTime, updateUserData } from '../components/workoutSlice';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
 import { REACT_APP_API_URI } from '@env'
@@ -75,7 +75,6 @@ const LogWorkout = () => {
                 onPress: () => {
                     setTempExerArr([]);
                     navigation.navigate('Workout');
-                    dispatch(updateCurrentTemp(null));
                     dispatch(updateStartTime(null));
                 },
                 style: 'destructive'
@@ -205,7 +204,6 @@ const LogWorkout = () => {
                                         Alert.alert(`Success`, `Workout under template "${currentTemp.name}" saved successfully!`);
                                         setTempExerArr([]);
                                         navigation.navigate('Workout');
-                                        dispatch(updateCurrentTemp(null));
                                         dispatch(updateLoading(false));
                                         dispatch(updateStartTime(null))
                                     }
