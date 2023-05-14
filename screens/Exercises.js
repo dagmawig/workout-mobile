@@ -226,7 +226,7 @@ const Exercises = () => {
                 {filterMode ?
                     <ScrollView className='px-3'
                         keyboardShouldPersistTaps='handled'
-                        contentContainerStyle={{ paddingBottom: 70 }}>
+                        contentContainerStyle={{ paddingBottom: 10 }}>
                         <View className=''>
                             <View className='pt-2'>
                                 <Text className='text-[30px] text-white'>Filter {`(${fExerArr.length})`}</Text>
@@ -251,7 +251,7 @@ const Exercises = () => {
                     </ScrollView>
                     : detMode ?
                         <ScrollView className='px-3' keyboardShouldPersistTaps='handled'
-                            contentContainerStyle={{ paddingBottom: 70 }}>
+                            contentContainerStyle={{ paddingBottom: 10 }}>
                             <View>
                                 <ExerDetComp exerObj={fExerArr[exerDetIndex]} />
                             </View>
@@ -261,7 +261,7 @@ const Exercises = () => {
 
                             <FlatList
                                 className='px-3'
-                                contentContainerStyle={{ paddingBottom: 70 }}
+                                contentContainerStyle={{ paddingBottom: searchMode? 10 : 70 }}
                                 data={loadList}
                                 onEndReached={fetchMore}
                                 onEndReachedThreshold={3}
@@ -291,10 +291,11 @@ const Exercises = () => {
                                     </TouchableOpacity>
                                 )}
                             />
+                            {searchMode? null : <FooterComp />}
                         </>
                 }
 
-                <FooterComp />
+                
             </View>
         </View>
     )

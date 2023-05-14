@@ -3,12 +3,14 @@ import React, { useState } from 'react'
 import { IMAGES } from '../assets'
 import { Image } from 'expo-image'
 import gifLink from '../assets/ExerData/gitLink.json'
+import LineChartComp from './chart'
+
 const ExerDetComp = ({ exerObj }) => {
 
   const [valid, setValid] = useState(true);
 
   return (
-    <View>
+    <View className='pb-6'>
       {/* <Image
         source={IMAGES[exerObj.refIndex]}
         className='w-full h-96 sobject-contain bg-white' /> */}
@@ -28,6 +30,8 @@ const ExerDetComp = ({ exerObj }) => {
         <Text className='w-1/3 text-right text-white text-base'>TARGET:</Text>
         <Text className='w-2/3 text-left pl-2 text-white text-base'>{exerObj.item.target}</Text>
       </View>
+
+      <LineChartComp className='overflow-x-auto' exer={exerObj.item}/>
     </View>
   )
 }

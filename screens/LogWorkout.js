@@ -87,7 +87,7 @@ const LogWorkout = () => {
         setExerObj(null);
     }
 
-    function updateExerRecord(inputStateExer, exer, record) {
+    function updateExerRecord(inputStateExer, exer, record, timeStamp) {
         let maxVal = Math.max(...inputStateExer[0]);
         let maxIndex = inputStateExer[0].indexOf(maxVal.toString());
         let maxRep;
@@ -113,6 +113,18 @@ const LogWorkout = () => {
             else if (exer.metric === 'wr' && maxVal === 0 && exerRecord.pr1 === 0) {
                 if (maxRep > exerRecord.pr2) exerRecord.pr2 = maxRep;
             }
+
+            let sessionArr = exerRecord.session;
+
+            let newSession = {}
+            newSession.date = timeStamp;
+            newSession.record1 =  [...inputStateExer[0]];
+            newSession.best1 = maxVal;
+            if(exer.metric === 'wr' || exer.metric === 'dt') {
+                newSession.record2 =  [...inputStateExer[1]];
+                newSession.best2 = Math.max(...inputStateExer[1]);
+            }
+            sessionArr.push(newSession);
         }
         else {
             let exerRecord = {};
@@ -125,6 +137,16 @@ const LogWorkout = () => {
                 exerRecord.pr2 = parseInt(inputStateExer[1][maxIndex]);
             }
 
+            let newSession = {}
+            newSession.date = timeStamp;
+            newSession.record1 =  [...inputStateExer[0]];
+            newSession.best1 = maxVal;
+            if(exer.metric === 'wr' || exer.metric === 'dt') {
+                newSession.record2 =  [...inputStateExer[1]];
+                newSession.best2 = Math.max(...inputStateExer[1]);
+            }
+
+            exerRecord.session = [newSession];
             record[exer.name] = exerRecord;
         }
 
@@ -183,7 +205,7 @@ const LogWorkout = () => {
                             if (exer.metric === 'wr' || exer.metric === 'dt') exercise.metric2 = inputStateExer[1];
                             workoutList.push(exercise);
 
-                            updateExerRecord(inputStateExer, exer, record);
+                            updateExerRecord(inputStateExer, exer, record, timeStamp);
                         }
 
                         workObj.workoutList = workoutList;

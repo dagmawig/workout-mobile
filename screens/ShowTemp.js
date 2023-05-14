@@ -173,7 +173,7 @@ const ShowTemp = () => {
                         </View>
                     </View>
                 </View>
-                <ScrollView className='px-3 pt-3'>
+                <ScrollView className='px-3 pt-3' contentContainerStyle={{ paddingBottom: 10 }}>
                     {detMode ? <ExerDetComp exerObj={detExer} /> :
                         <>
                             <View className='border-[1px] rounded-lg p-1 border-white m-1' key='temp'>

@@ -59,7 +59,7 @@ const History = () => {
     }
 
     function exerList(workoutList, key) {
-        return workoutList.map((workout, i) => {
+        return workoutList?.map((workout, i) => {
             return (
                 <View key={'history-exer' + key + i} className=' my-[1px] '>
                     <Collapse
