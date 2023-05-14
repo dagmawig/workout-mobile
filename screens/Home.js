@@ -30,7 +30,10 @@ const Home = () => {
 
     useEffect(()=> {
         SecureSt.getVal('uid').then(uid=> {
-            if(uid) setLogged(true)
+            if(uid) {
+                setLogged(true);
+                navigation.navigate('Workout')
+            }
         })
     })
     return (
