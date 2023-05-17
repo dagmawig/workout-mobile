@@ -74,7 +74,7 @@ const LogWorkout = () => {
                 text: 'YES',
                 onPress: () => {
                     setTempExerArr([]);
-                    navigation.navigate('Workout');
+                    navigation.goBack();
                     dispatch(updateStartTime(null));
                 },
                 style: 'destructive'
@@ -225,7 +225,7 @@ const LogWorkout = () => {
                                         dispatch(updateUserData(data.data));
                                         Alert.alert(`Success`, `Workout under template "${currentTemp.name}" saved successfully!`);
                                         setTempExerArr([]);
-                                        navigation.navigate('Workout');
+                                        navigation.goBack();
                                         dispatch(updateLoading(false));
                                         dispatch(updateStartTime(null))
                                     }

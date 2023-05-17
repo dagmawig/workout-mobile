@@ -33,7 +33,12 @@ const Profile = () => {
         SecureSt.save('password', '');
         SecureSt.save('uid', '');
         dispatch(updateReset(initialState));
-        navigation.navigate('LogIn');
+        navigation.reset({
+            index: 1,
+            routes: [
+                { name: 'LogIn'}
+            ]
+        })
         dispatch(updateLoading(false));
     }
 
@@ -62,7 +67,12 @@ const Profile = () => {
                                 if (data.success) {
                                     dispatch(updateUserData(data.data))
                                     Alert.alert(`Success`, `Account reset successfully!`);
-                                    navigation.navigate('Workout');
+                                    navigation.reset({
+                                        index: 1,
+                                        routes: [
+                                            { name: 'Workout'}
+                                        ]
+                                    })
                                     dispatch(updateLoading(false));
                                 }
                                 else {
@@ -111,7 +121,12 @@ const Profile = () => {
                             if (data.success) {
                                 user.delete().then(() => {
                                     SecureSt.save('uid', '');
-                                    navigation.navigate('LogIn')
+                                    navigation.reset({
+                                        index: 1,
+                                        routes: [
+                                            { name: 'LogIn'}
+                                        ]
+                                    });
                                     Alert.alert(`Account Deleted`, `User account successfully deleted!!`, [
                                         {
                                             text: 'Ok',

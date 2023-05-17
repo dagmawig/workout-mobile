@@ -65,7 +65,7 @@ const ShowTemp = () => {
     }
 
     function handleBack() {
-        navigation.navigate('Workout');
+        navigation.goBack();
     }
 
     function handleBack2() {
@@ -74,11 +74,11 @@ const ShowTemp = () => {
     }
 
     function handleEditTemp() {
-        navigation.navigate('EditTemp');
+        navigation.replace('EditTemp');
     }
 
     function handleLogWork() {
-        navigation.navigate('LogWorkout');
+        navigation.replace('LogWorkout');
         dispatch(updateStartTime(Math.floor(Date.now() / 1000)));
     }
 
@@ -110,7 +110,7 @@ const ShowTemp = () => {
                                 if(data.success) {
                                     
                                     Alert.alert(`Success`, `Template "${currentTemp.name}" deleted successfully!`);
-                                    navigation.navigate('Workout');
+                                    navigation.goBack();
                                     dispatch(updateUserTempArr(data.data.templateArr));
                                     dispatch(updateLoading(false));
                                 }

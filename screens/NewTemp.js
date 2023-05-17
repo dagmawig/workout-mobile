@@ -29,7 +29,7 @@ const NewTemp = () => {
     function handleDelTemp() {
         setTempName('');
         setTempExerArr([]);
-        return navigation.navigate('Workout');
+        navigation.goBack();
     }
 
     function handleDetBack() {
@@ -80,7 +80,7 @@ const NewTemp = () => {
                         if (data.success) {
                             dispatch(updateUserTempArr(data.data.templateArr));
                             Alert.alert(`Success`, `Template "${tempName}" saved successfully!`);
-                            navigation.navigate('Workout');
+                            navigation.goBack();
                             setTempName('');
                             setTempExerArr([]);
                             dispatch(updateLoading(false));

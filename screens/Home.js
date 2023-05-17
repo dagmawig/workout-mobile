@@ -32,7 +32,7 @@ const Home = () => {
         SecureSt.getVal('uid').then(uid=> {
             if(uid) {
                 setLogged(true);
-                navigation.navigate('Workout')
+                navigation.replace('Workout');
             }
         })
     })

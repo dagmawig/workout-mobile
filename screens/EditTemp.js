@@ -40,7 +40,7 @@ const EditTemp = () => {
                 onPress: () => {
                     setTempName('');
                     setTempExerArr([]);
-                    navigation.navigate('Workout');
+                    navigation.goBack();
                 }
             }
         ])
@@ -92,7 +92,7 @@ const EditTemp = () => {
                             Alert.alert(`Success`, `Template "${tempName}" updated successfully!`);
                             setTempName('');
                             setTempExerArr([]);
-                            navigation.navigate('Workout');
+                            navigation.goBack();
                             dispatch(updateLoading(false));
                         }
                         else {
