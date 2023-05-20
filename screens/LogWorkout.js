@@ -95,6 +95,17 @@ const LogWorkout = () => {
             maxRep = Math.max(...inputStateExer[1]);
             maxIndex = inputStateExer[1].indexOf(maxRep.toString());
         }
+
+        let newSession = {}
+        newSession.date = timeStamp;
+        newSession.record1 = [...inputStateExer[0]];
+        newSession.index1 = inputStateExer[0].indexOf(maxVal.toString());
+        if (exer.metric === 'wr' || exer.metric === 'dt') {
+            newSession.record2 = [...inputStateExer[1]];
+            let maxRec2 = Math.max(...inputStateExer[1]);
+            newSession.index2 = inputStateExer[1].indexOf(maxRec2.toString());
+        }
+
         if (exer.name in record) {
             let exerRecord = record[exer.name];
             exerRecord.metric = exer.metric;
@@ -115,15 +126,6 @@ const LogWorkout = () => {
             }
 
             let sessionArr = exerRecord.session;
-
-            let newSession = {}
-            newSession.date = timeStamp;
-            newSession.record1 =  [...inputStateExer[0]];
-            newSession.best1 = maxVal;
-            if(exer.metric === 'wr' || exer.metric === 'dt') {
-                newSession.record2 =  [...inputStateExer[1]];
-                newSession.best2 = Math.max(...inputStateExer[1]);
-            }
             sessionArr.push(newSession);
         }
         else {
@@ -135,15 +137,6 @@ const LogWorkout = () => {
             if (exer.metric === 'wr' || exer.metric === 'dt') {
                 exerRecord.prev2 = inputStateExer[1][inputStateExer[1].length - 1];
                 exerRecord.pr2 = parseInt(inputStateExer[1][maxIndex]);
-            }
-
-            let newSession = {}
-            newSession.date = timeStamp;
-            newSession.record1 =  [...inputStateExer[0]];
-            newSession.best1 = maxVal;
-            if(exer.metric === 'wr' || exer.metric === 'dt') {
-                newSession.record2 =  [...inputStateExer[1]];
-                newSession.best2 = Math.max(...inputStateExer[1]);
             }
 
             exerRecord.session = [newSession];

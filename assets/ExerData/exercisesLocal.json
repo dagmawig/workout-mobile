@@ -9679,7 +9679,7 @@
         "name": "frog planche",
         "target": "abs",
         "localUrl": "806.gif",
-        "metric": "wr",
+        "metric": "a",
         "timeStamp": [],
         "localPng": "806.png"
     },
@@ -9739,7 +9739,7 @@
         "name": "full planche",
         "target": "abs",
         "localUrl": "811.gif",
-        "metric": "wr",
+        "metric": "a",
         "timeStamp": [],
         "localPng": "811.png"
     },
@@ -11095,7 +11095,7 @@
         "name": "lean planche",
         "target": "abs",
         "localUrl": "924.gif",
-        "metric": "wr",
+        "metric": "a",
         "timeStamp": [],
         "localPng": "924.png"
     },
