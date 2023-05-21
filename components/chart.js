@@ -14,7 +14,7 @@ function LineChartComp({ exer }) {
     let dim = Dimensions.get("window").width;
 
     function getDates() {
-        if (exer.name in record) {
+        if (exer.name in record && record[exer.name].session) {
             let sessionArr = record[exer.name].session;
             let minDate = new Date(sessionArr[0].date)
             let maxDate = new Date(sessionArr[sessionArr.length - 1].date);
@@ -33,7 +33,7 @@ function LineChartComp({ exer }) {
         }
     }
 
-    let chartArr = exer.name in record ? record[exer.name].session : sampleData.slice(-40);
+    let chartArr = exer.name in record && record[exer.name].session ? record[exer.name].session : sampleData.slice(-40);
     let length = chartArr.length * 20 < dim ? dim - 30 : chartArr.length * 20;
 
     const [sample, setSample] = useState(false);
@@ -62,7 +62,7 @@ function LineChartComp({ exer }) {
     }
 
     function resetDates() {
-        let newChartArr = exer.name in record ? record[exer.name].session.slice(-40) : sampleData.slice(-40);
+        let newChartArr = exer.name in record && record[exer.name].session ? record[exer.name].session.slice(-40) : sampleData.slice(-40);
         let newLen = chartArr.length * 20 < dim ? dim - 30 : chartArr.length * 20;
         setCarr(newChartArr);
         setLen(newLen);
@@ -72,7 +72,7 @@ function LineChartComp({ exer }) {
     }
 
     function updateChartArr(startDate, endDate) {
-        let sessionArr = exer.name in record ? record[exer.name].session : sampleData;
+        let sessionArr = exer.name in record && record[exer.name].session ? record[exer.name].session : sampleData;
         let setStartDate = new Date(startDate);
         let setEndDate = new Date(endDate);
         let newChartArr = sessionArr.filter(session => {
@@ -129,7 +129,7 @@ function LineChartComp({ exer }) {
         datasets: [
             {
                 data: cArr.map(sessionObj => {
-                    if (exer.name in record) {
+                    if (exer.name in record && record[exer.name].session) {
                         if (record[exer.name].pr1 === 0 && exer.metric === 'wr') return parseFloat(sessionObj.record2[sessionObj.index2]);
                         else return parseFloat(sessionObj.record1[sessionObj.index1]);
                     }
@@ -148,6 +148,7 @@ function LineChartComp({ exer }) {
             height={300}
             yAxisLabel=""
             withShadow={false}
+            withVerticalLines={true}
             yAxisSuffix=""
             withHorizontalLabels={false}
             yAxisInterval={1} // optional, defaults to 1
@@ -206,13 +207,13 @@ function LineChartComp({ exer }) {
             <View className='flex'>
                 <Text className='text-white text-lg text-left bg-[#326592] px-1 mb-1 font-semibold'>Workout Record Chart</Text>
             </View>
-            {exer.name in record ?
+            {exer.name in record && record[exer.name].session ?
                 <>
                     <View className='flex items-center'>
                         <Text className='text-white bg-[#326592]'>{`Session Record for ${exer.name} in ${(exer.metric === 'wr' && record[exer.name].pr1 === 0) ? 'REPS' : exer.metric === 'wr' ? 'LBS' : exer.metric === 'dt' ? 'MILES' : 'SECONDS'}`}</Text>
                     </View>
                     {dateRangeComp()}
-                    <ScrollView horizontal>
+                    <ScrollView horizontal ref={scrollViewRef} onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}>
                         <View className='w-full px-0 flex items-center'>
                             {chartComp()}
                         </View>
