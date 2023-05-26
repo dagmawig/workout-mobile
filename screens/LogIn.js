@@ -39,7 +39,7 @@ const LogIn = () => {
                     setPassword('');
                     SecureSt.save('uid', user.uid).then(() => {
                         dispatch(updateEmail(email));
-                        navigation.navigate('Workout'); 
+                        navigation.replace('Workout'); 
                     });
                 }
                 else {
