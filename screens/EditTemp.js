@@ -28,6 +28,7 @@ const EditTemp = () => {
     const [detMode, setDetMode] = useState(false);
     const [exerObj, setExerObj] = useState(null);
 
+    // handles cancelling of exercise template edit
     function handleDelChange() {
         return Alert.alert('Discard Changes?', 'Are you sure you want to discard unsaved changes?', [
             {
@@ -46,11 +47,13 @@ const EditTemp = () => {
         ])
     }
 
+    // handles cancelling exercise detail mode
     function handleDetBack() {
         setDetMode(false);
         setExerObj(null);
     }
 
+    // handles saving edited exercise template to database
     async function saveTemplate(newTempArr, uid) {
         let updateURI = REACT_APP_API_URI + 'updateTemp';
         let res = await axios.post(updateURI, { userID: uid, templateArr: newTempArr }).catch(err => console.log(err));
@@ -58,6 +61,7 @@ const EditTemp = () => {
         return res;
     }
 
+    // hanldes saving edited exercise template
     function saveTemp() {
         if (!tempName.split(' ').join('')) {
             return Alert.alert('Missing Template Name!', 'Please Add Template Name.', [
@@ -106,22 +110,26 @@ const EditTemp = () => {
         }
     }
 
+    // handles template name update
     function handleTempName(text) {
         setTempName(text);
     }
 
+    // handles exercise removal from exercise template
     function removeExer(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr.splice(index, 1);
         setTempExerArr(newTempExerArr);
     }
 
+    // handles addition of a set to a given exercise
     function addSet(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr[index].sets++;
         setTempExerArr(newTempExerArr);
     }
 
+    // handles removal of a set from a given exercise
     function removeSet(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr[index].sets--;
@@ -134,6 +142,7 @@ const EditTemp = () => {
         })
     }, []);
 
+    // handles page navigation for device back button
     useFocusEffect(
         React.useCallback(() => {
             const onBackPress = () => {

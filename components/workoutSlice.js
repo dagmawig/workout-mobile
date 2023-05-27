@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// defines initial global variables
 const initialState = {
     activeB: new Array(10).fill(false),
     activeM: new Array(17).fill(false),
@@ -161,6 +162,7 @@ const initialState = {
     }
 }
 
+// defines redux store reducers
 export const workoutSlice = createSlice({
     name: 'workout',
     initialState,
@@ -207,7 +209,8 @@ export const workoutSlice = createSlice({
     }
 });
 
+//exports redux store actions
 export const { updateActiveB, updateActiveM, updateBodyTag, updateMuscleTag, updateScroll, updateUserTempArr, updateCurrentTemp, updateWorkoutObj, updateUserData, updateEmail, updateReset, updateLoading, updateStartTime } = workoutSlice.actions;
 
-export {initialState};
+export { initialState };
 export default workoutSlice.reducer;

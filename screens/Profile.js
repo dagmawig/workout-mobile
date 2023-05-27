@@ -27,6 +27,7 @@ const Profile = () => {
     const [password, setPassword] = useState('');
     const [invisible, setInvisible] = useState(true);
 
+    // handles user logout
     function handleLogOut() {
         dispatch(updateLoading(true));
         SecureSt.save('email', '');
@@ -36,12 +37,13 @@ const Profile = () => {
         navigation.reset({
             index: 1,
             routes: [
-                { name: 'LogIn'}
+                { name: 'LogIn' }
             ]
         })
         dispatch(updateLoading(false));
     }
 
+    // handles database update after reset/deletion of user workout data
     async function resetD(uid) {
         let updateURI = REACT_APP_API_URI + 'resetData';
         let res = await axios.post(updateURI, { userID: uid }).catch(err => console.log(err));
@@ -49,6 +51,7 @@ const Profile = () => {
         return res;
     }
 
+    // handles user workout data reset
     function handleReset() {
         Alert.alert(`Warning!`, `Are you sure you want to reset account? This would wipe out ALL workout data including user created templates.`, [
             {
@@ -70,7 +73,7 @@ const Profile = () => {
                                     navigation.reset({
                                         index: 1,
                                         routes: [
-                                            { name: 'Workout'}
+                                            { name: 'Workout' }
                                         ]
                                     })
                                     dispatch(updateLoading(false));
@@ -90,6 +93,7 @@ const Profile = () => {
 
     }
 
+    // handles deletion of user data from database
     async function deleteAcc(uid) {
         let updateURI = REACT_APP_API_URI + 'deleteAccount';
         let res = await axios.post(updateURI, { userID: uid }).catch(err => console.log(err));
@@ -97,6 +101,7 @@ const Profile = () => {
         return res;
     }
 
+    // handles of deletion of user account
     function handleDelete() {
         dispatch(updateLoading(true));
 
@@ -124,7 +129,7 @@ const Profile = () => {
                                     navigation.reset({
                                         index: 1,
                                         routes: [
-                                            { name: 'LogIn'}
+                                            { name: 'LogIn' }
                                         ]
                                     });
                                     Alert.alert(`Account Deleted`, `User account successfully deleted!!`, [
@@ -205,9 +210,8 @@ const Profile = () => {
                                 secureTextEntry={invisible}
                                 onChangeText={(text) => setPassword(text)}
                                 onSubmitEditing={handleDelete} />
-                                <TouchableOpacity className='bg-[#1b4264] w-1/6 h-9 items-center justify-center' onPress={() => setInvisible(!invisible)}><FontAwesome5 className='items-center' name={invisible ? "eye" : "eye-slash"} size={16} color="white" /></TouchableOpacity>
+                            <TouchableOpacity className='bg-[#1b4264] w-1/6 h-9 items-center justify-center' onPress={() => setInvisible(!invisible)}><FontAwesome5 className='items-center' name={invisible ? "eye" : "eye-slash"} size={16} color="white" /></TouchableOpacity>
                         </View>
-
                         <View className='flex-row space-x-2'>
                             <TouchableOpacity className='h-10 w-1/3 bg-gray-500  rounded-md flex-row justify-center items-center space-x-2' onPress={() => { setDelMode(false); setEmail(''); setPassword('') }}>
                                 <Text className='text-white text-center'>Cancel</Text>
@@ -229,7 +233,6 @@ const Profile = () => {
                             </TouchableOpacity>
                         </View>
                     }
-
                 </ScrollView>
                 <FooterComp />
             </View>

@@ -6,10 +6,9 @@ import Search from './Search';
 import { IMAGES } from '../assets';
 import { useDispatch, useSelector } from 'react-redux';
 import FilterTagComp from './FilterTagComp';
-import { updateActiveB, updateActiveM, updateLoading } from './workoutSlice';
+import { updateActiveB, updateActiveM } from './workoutSlice';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import { useFocusEffect } from '@react-navigation/native';
-import Loading from './Loading';
 
 const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) => {
 
@@ -61,6 +60,7 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
     const [loadList, setLoadList] = useState(fExerArr.slice(0, 50));
     const [tagList, setTagList] = useState([]);
 
+    // handles cancelling search and filter mode on exercise screen
     function handleX() {
         setSearchMode(false);
         setFilterMode(false);
@@ -76,14 +76,17 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
         setExerMode(false);
     }
 
+    // handles cancelling search mode
     function handleSBack() {
         setSearchMode(false);
     }
 
+    // handles cancelling filter mode
     function handleBackF() {
         setFilterMode(false);
     }
 
+    // handles change in search text and filters exercises in real time
     function handleChange(text) {
         if (text === '') {
             let sRes = Search.sort(Search.search(''));
@@ -103,16 +106,19 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
         }
     }
 
+    // handles activating exercise filter mode
     function handleFilter() {
         setFilterMode(true);
     }
 
+    // handles the selection and deselection of exercises
     function handleExerSel(refIndex) {
         let newSelIndex = JSON.parse(JSON.stringify(selIndex));
         newSelIndex[refIndex] = !newSelIndex[refIndex];
         setSelIndex(newSelIndex);
     }
 
+    // handles update of exercise list based on selected filter tags
     function updateResFil(activeB, activeM, filTag) {
         let filteredArr = Search.filter(exerArr, activeB, activeM)
         setFExerArr(filteredArr);
@@ -131,12 +137,14 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
         }
     }
 
+    // fetches more exercises from the filtered exercise list as user scrolls down
     function fetchMore() {
         if (loadList.length < fExerArr.length) {
             setLoadList([...loadList, ...fExerArr.slice(loadList.length, loadList.length + 50)])
         }
     }
 
+    // adds exercises to exercise/workout template 
     function addExer() {
         let exerList = [];
         selIndex.filter((index, i) => {
@@ -158,6 +166,7 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
         handleX();
     }
 
+    // handles the cancelling of search term tag
     function clearSearch() {
         let sRes = Search.sort(Search.search(''));
         setExerArr(sRes);
@@ -167,6 +176,7 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
         setLoadList(filArr.slice(0, 50));
     }
 
+    // handles the cancelling of a filter tag
     function clearTag(tagIndex, tag) {
         const newTagList = tagList.slice(0, tagIndex).concat(tagList.slice(tagIndex + 1));
         setTagList(newTagList);
@@ -191,6 +201,7 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
         }
     }
 
+    // returns an exercise list component or filter mode component
     const SearchList = () => {
         return (
             <>
@@ -257,14 +268,15 @@ const SearchComp = ({ tempExerArr, setTempExerArr, setExerMode, inputState }) =>
         )
     }
 
+    // handles what happens when user clicks on device back button
     useFocusEffect(
-        React.useCallback(()=> {
+        React.useCallback(() => {
             const onBackPress = () => {
-                if(filterMode) {
+                if (filterMode) {
                     handleBackF();
                     return true;
                 }
-                else if(searchMode) {
+                else if (searchMode) {
                     handleSBack();
                     return true;
                 }

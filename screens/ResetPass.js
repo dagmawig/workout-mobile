@@ -19,6 +19,7 @@ const ResetPass = () => {
         setEmail(email)
     }
 
+    // handles user password reset
     function resetPass() {
         dispatch(updateLoading(true));
         sendPasswordResetEmail(auth, email).then(() => {
@@ -39,7 +40,7 @@ const ResetPass = () => {
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>
-            <Loading/>
+            <Loading />
             <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-full items-center justify-top pt-[200px]'>
                     <ImageBackground
@@ -59,7 +60,7 @@ const ResetPass = () => {
                             </TouchableOpacity>
                             <View className='w-60 flex-row justify-between items-center mt-10'>
                                 <TouchableOpacity onPress={() => navigation.navigate('LogIn')}><Text className='text-gray-300  text-center italic'>Login</Text></TouchableOpacity>
-                                <TouchableOpacity onPress={() => {navigation.navigate('SignUp'); setEmail('')}}><Text className='text-gray-300 text-center italic'>New User?</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => { navigation.navigate('SignUp'); setEmail('') }}><Text className='text-gray-300 text-center italic'>New User?</Text></TouchableOpacity>
                             </View>
                         </View>
                     </ImageBackground>

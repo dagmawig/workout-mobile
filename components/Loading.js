@@ -1,10 +1,10 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Image } from 'expo-image';
 import { LOADING } from '../assets';
 
-
+// returns loading spinner component
 const Loading = () => {
 
     const stateSelector = useSelector(state => state.workout);
@@ -15,7 +15,6 @@ const Loading = () => {
                 source={LOADING}
                 className='w-20 h-20 object-contain' />
             <View className='flex-row w-full flex-wrap pt-3'></View>
-            {/* <Text className='text-white text-[50px]'>Loading...</Text> */}
         </View>
     )
 }

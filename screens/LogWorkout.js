@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView, Alert, BackHandler } from 'react-native'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import TempExerComp from '../components/TempExerComp';
@@ -22,6 +22,7 @@ const LogWorkout = () => {
     let currentTemp = currentTempObj.userTemp ? stateSelector.userData.templateArr[currentTempObj.index] :
         stateSelector.userData.fixTempArr[currentTempObj.index];
 
+    // defines and updates exercise log input array 
     let inputArr = [];
     currentTemp.exerList.map(exer => {
         let arr = [];
@@ -39,11 +40,13 @@ const LogWorkout = () => {
     const [seconds, setSeconds] = useState(0);
     const navigation = useNavigation();
 
+    // regularly updates the time elapsed since workout session has started
     setTimeout(() => {
         setSeconds(Math.floor(Date.now() / 1000) - stateSelector.startTime);
         //setSeconds(seconds + 1);
     }, 1000);
 
+    // updates workout user input array 
     function updateInput(i, j, k, val) {
         if (+val || val === '' || val === '0') {
             inputState[i][j][k] = val === '' ? undefined : val;
@@ -51,6 +54,7 @@ const LogWorkout = () => {
         }
     }
 
+    // checks for each of the input array element to make sure user has filled out all input elements
     function checkInput(arr) {
         for (let exer of arr) {
             for (let metric of exer) {
@@ -63,6 +67,7 @@ const LogWorkout = () => {
         return true;
     }
 
+    // handles cancelling of workout session
     function handleCancel() {
         Alert.alert('Cancel Workout?', 'Are you sure you want to cancel workout session?', [
             {
@@ -82,11 +87,13 @@ const LogWorkout = () => {
         ])
     }
 
+    // handles cancelling of exercise detail mode 
     function handleDetBack() {
         setDetMode(false);
         setExerObj(null);
     }
 
+    // handles update of exercise record with new workout data
     function updateExerRecord(inputStateExer, exer, record, timeStamp) {
         let maxVal = Math.max(...inputStateExer[0]);
         let maxIndex = inputStateExer[0].indexOf(maxVal.toString());
@@ -146,6 +153,7 @@ const LogWorkout = () => {
         return record;
     }
 
+    // handles database update with updated workout data
     async function saveWorkout(workoutObj, user, updatedTempArr, record, uid) {
         let updateURI = REACT_APP_API_URI + 'updateWorkoutObj';
         let res = await axios.post(updateURI, { userID: uid, workoutObj, user, updatedTempArr, record }).catch(err => console.log(err));
@@ -153,6 +161,7 @@ const LogWorkout = () => {
         return res;
     }
 
+    // handles saving the completed workout session
     function handleSave() {
         if (tempExerArr.length === 0) {
             Alert.alert('No Exercise under Template!', 'There are no exercises under current template. Please add exercise(s) and log workout data before saving current sesssion.', [
@@ -236,6 +245,7 @@ const LogWorkout = () => {
         }
     }
 
+    // handles addition of a set to an exercise
     function addSet(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr[index].sets++;
@@ -243,6 +253,7 @@ const LogWorkout = () => {
         inputState[index].map(ar => ar.push(undefined));
     }
 
+    // handles removal of a set from an exercise
     function removeSet(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr[index].sets--;
@@ -250,6 +261,7 @@ const LogWorkout = () => {
         inputState[index].map(ar => ar.pop());
     }
 
+    // handles removal of an exercise from the current workout session
     function removeExer(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr.splice(index, 1);
@@ -263,10 +275,7 @@ const LogWorkout = () => {
         })
     }, []);
 
-    useEffect(() => {
-
-    }, [])
-
+    // handles page navigation for device back button
     useFocusEffect(
         React.useCallback(() => {
             const onBackPress = () => {

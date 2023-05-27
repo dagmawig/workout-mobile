@@ -13,6 +13,7 @@ function LineChartComp({ exer }) {
     const record = stateSelector.userData.record;
     let dim = Dimensions.get("window").width;
 
+    // Gets min and max date of a the date picker using the current workout record
     function getDates() {
         if (exer.name in record && record[exer.name].session) {
             let sessionArr = record[exer.name].session;
@@ -33,6 +34,7 @@ function LineChartComp({ exer }) {
         }
     }
 
+    // Defines initial workout record range and chart length
     let chartArr = exer.name in record && record[exer.name].session ? record[exer.name].session : sampleData.slice(-40);
     let length = chartArr.length * 20 < dim ? dim - 30 : chartArr.length * 20;
 
@@ -47,6 +49,7 @@ function LineChartComp({ exer }) {
     const [len, setLen] = useState(length);
     const [labelDist, setLabelDist] = useState(Math.floor(len / (6 * cArr.length)) < 5 ? Math.floor(len / (6 * cArr.length)) : 5);
 
+    // displays calendar to used to pick start date
     function pickStart() {
         setShow(true);
         setDateType('start');
@@ -54,6 +57,7 @@ function LineChartComp({ exer }) {
         setMinDate(getDates().min);
     }
 
+    // displays calendar used to pick end date
     function pickEnd() {
         setShow(true);
         setDateType('end');
@@ -61,6 +65,7 @@ function LineChartComp({ exer }) {
         setMinDate(startDate ? startDate : getDates().min);
     }
 
+    // resets date range for workout record chart
     function resetDates() {
         let newChartArr = exer.name in record && record[exer.name].session ? record[exer.name].session.slice(-40) : sampleData.slice(-40);
         let newLen = chartArr.length * 20 < dim ? dim - 30 : chartArr.length * 20;
@@ -71,6 +76,7 @@ function LineChartComp({ exer }) {
         setLabelDist(Math.floor(newLen / (6 * newChartArr.length)) < 5 ? Math.floor(newLen / (6 * newChartArr.length)) : 5)
     }
 
+    // updates chart with given start and end date
     function updateChartArr(startDate, endDate) {
         let sessionArr = exer.name in record && record[exer.name].session ? record[exer.name].session : sampleData;
         let setStartDate = new Date(startDate);
@@ -88,6 +94,7 @@ function LineChartComp({ exer }) {
         setLabelDist(Math.floor(newLen / (6 * newChartArr.length)) < 5 ? Math.floor(newLen / (6 * newChartArr.length)) : 5)
     }
 
+    // handles date selection
     function updateDate(event, date) {
         setShow(false);
         if (event.type === 'set') {
@@ -103,6 +110,7 @@ function LineChartComp({ exer }) {
         }
     }
 
+    // displays y values of data points on the workout record chart
     function dotContent({ x, y, indexData }) {
         return (
             <View
@@ -120,6 +128,7 @@ function LineChartComp({ exer }) {
         )
     }
 
+    // defines the data to be used for the workout record chart
     let data = {
         labels: cArr.map((sessionObj, i) => {
             let date = new Date(sessionObj.date)
@@ -141,6 +150,7 @@ function LineChartComp({ exer }) {
         ]
     };
 
+    // defines the line workout record line chart  component
     function chartComp() {
         return <LineChart
             data={data}
@@ -181,6 +191,7 @@ function LineChartComp({ exer }) {
         />
     }
 
+    // defines the date range component
     function dateRangeComp() {
         return (
             <View className='flex justify-around items-center pt-0 space-x-2'>
@@ -245,6 +256,5 @@ function LineChartComp({ exer }) {
         </View>
     );
 }
-
 
 export default LineChartComp;

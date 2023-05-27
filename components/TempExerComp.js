@@ -4,10 +4,12 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 
+// returns a component containing a list of exercises for a given exercise/workout template
 const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputState, updateInput, setExerObj, setDetMode }) => {
 
     const stateSelector = useSelector(state => state.workout);
 
+    // returns the personal best record and last record for a given exercises
     function getRec(exer) {
 
         if (exer.name in stateSelector.userData.record) {
@@ -34,6 +36,7 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
         else return ['-', '-'];
     }
 
+    // returns a list of sets component for a given exercise
     const setList = (exer, index) => {
 
         let tempArr = [...Array(exer.sets).keys()];
@@ -63,6 +66,7 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
         })
     }
 
+    // handles navigation to exercise detail
     function handleExerDet(exer) {
         let refIndex = exerLocal.findIndex(ex => ex.name === exer.name);
         setExerObj({ item: exer, refIndex: refIndex });
@@ -108,7 +112,5 @@ const TempExerComp = ({ exerArr, removeExer, addSet, removeSet, editable, inputS
     })
 
 }
-
-
 
 export default TempExerComp

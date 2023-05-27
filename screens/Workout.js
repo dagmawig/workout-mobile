@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import { useDispatch, useSelector } from 'react-redux';
 import ExerDetComp from '../components/ExerDetComp';
 import FooterComp from '../components/FooterComp';
@@ -22,6 +21,7 @@ const Workout = () => {
     const [detMode, setDetMode] = useState(false);
     const [detExer, setDetExer] = useState(null);
 
+    // returns time elapsed since last the time exercise template is used
     function calcTime(template) {
         let arr = template.workoutTimeArr;
         if (arr.length === 0) return 'Never';
@@ -30,6 +30,7 @@ const Workout = () => {
         return (hourDiff < 24) ? `${hourDiff} hour(s) ago` : `${Math.floor(hourDiff / 24)} day(s) ago`;
     }
 
+    // handles navigation to show temp page
     function handleShowTemp(temp, userTemp, index) {
         dispatch(updateCurrentTemp({
             userTemp: userTemp,
@@ -39,6 +40,7 @@ const Workout = () => {
         navigation.navigate('ShowTemp');
     }
 
+    // returns exercise template list component
     function tempList(tList, userTemp) {
         return tList.map((temp, i) => {
             return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`} onPress={() => handleShowTemp(temp, userTemp, i)}>
@@ -49,26 +51,22 @@ const Workout = () => {
         })
     }
 
+    // returns exercise list component for a given exercise template
     function exerList(eList, userTemp) {
         return eList.map((exer, i) => {
             return <View className='flex-row justify-between' key={`${userTemp ? 'user' : 'fixed'}-exer-${i}`} >
                 <Text className='text-white text'>{`${exer.sets} X ${exer.name}`}</Text>
-                {/* <View><TouchableOpacity onPress={() => handleExerDet(exer)}><FontAwesome5 name="info-circle" size={25} color="white" /></TouchableOpacity></View> */}
             </View>
         })
     }
 
-    function handleExerDet(exer) {
-        setDetMode(true);
-        let exerIndex = exerLocal.findIndex(ex => ex.name === exer.name);
-        setDetExer({ refIndex: exerIndex, item: exer });
-    }
-
+    // handles cancelling of exercise detail mode
     function handleBack() {
         setDetMode(false);
         setDetExer(null);
     }
 
+    // handles navigation to new template page
     function handleNewTemp() {
         navigation.navigate('NewTemp');
     }
@@ -79,6 +77,7 @@ const Workout = () => {
         })
     }, []);
 
+    // fetches user data from database
     useEffect(() => {
         async function loadData(uid) {
             let loadURI = REACT_APP_API_URI + 'loadData';
@@ -140,7 +139,6 @@ const Workout = () => {
                             </View>
                         </>
                     }
-
                 </ScrollView>
                 <FooterComp />
             </View>

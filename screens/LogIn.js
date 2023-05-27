@@ -27,6 +27,7 @@ const LogIn = () => {
         setPassword(password)
     }
 
+    // handles user login
     function logIn() {
         dispatch(updateLoading(true));
         signInWithEmailAndPassword(auth, email, password)
@@ -39,7 +40,7 @@ const LogIn = () => {
                     setPassword('');
                     SecureSt.save('uid', user.uid).then(() => {
                         dispatch(updateEmail(email));
-                        navigation.replace('Workout'); 
+                        navigation.replace('Workout');
                     });
                 }
                 else {

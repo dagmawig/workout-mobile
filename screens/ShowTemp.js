@@ -27,6 +27,7 @@ const ShowTemp = () => {
     const [detMode, setDetMode] = useState(false);
     const [detExer, setDetExer] = useState(null);
 
+    // returns how long ago an exersice template has been performed
     function calcTime(template) {
         let arr = template.workoutTimeArr;
         if (arr.length === 0) return 'Never';
@@ -35,9 +36,10 @@ const ShowTemp = () => {
         return (hourDiff < 24) ? `${hourDiff} hour(s) ago` : `${Math.floor(hourDiff / 24)} day(s) ago`;
     }
 
+    // returns exercise list component for a given exercise template
     function exerList(eList, userTemp) {
         return eList.map((exer, i) => {
-            
+
             let exerIndex = exerLocal.findIndex(ex => ex.name === exer.name);
 
             return <View className='flex-row justify-between items-center' key={`${userTemp ? 'user' : 'fixed'}-exer-${i}`} >
@@ -58,30 +60,36 @@ const ShowTemp = () => {
         })
     }
 
+    // handles navigation to exercise detail
     function handleExerDet(exer) {
         setDetMode(true);
         let exerIndex = exerLocal.findIndex(ex => ex.name === exer.name);
         setDetExer({ refIndex: exerIndex, item: exer });
     }
 
+    // handles navigation back from exercise template display
     function handleBack() {
         navigation.goBack();
     }
 
+    // handles cancelling of execise detail mode
     function handleBack2() {
         setDetMode(false);
         setDetExer(null);
     }
 
+    // handles navigation to edit template page
     function handleEditTemp() {
         navigation.replace('EditTemp');
     }
 
+    // handles navigation to log workout page
     function handleLogWork() {
         navigation.replace('LogWorkout');
         dispatch(updateStartTime(Math.floor(Date.now() / 1000)));
     }
 
+    // update database after exercise template is deleted
     async function saveTemplate(newTempArr, uid) {
         let updateURI = REACT_APP_API_URI + 'updateTemp';
         let res = await axios.post(updateURI, { userID: uid, templateArr: newTempArr }).catch(err => console.log(err));
@@ -89,6 +97,7 @@ const ShowTemp = () => {
         return res;
     }
 
+    // handles deletion of exercise template
     function handleDel() {
         return Alert.alert('Delete Template?', 'Are you sure you want to delete template?', [
             {
@@ -99,16 +108,16 @@ const ShowTemp = () => {
             {
                 text: 'DELETE',
                 onPress: () => {
-                   
+
                     let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
                     newUserTempArr.splice(currentTempObj.index, 1);
                     dispatch(updateLoading(true));
-                    SecureSt.getVal('uid').then(uid=> {
-                        if(uid) {
+                    SecureSt.getVal('uid').then(uid => {
+                        if (uid) {
                             saveTemplate(newUserTempArr, uid).then(res => {
                                 let data = res.data;
-                                if(data.success) {
-                                    
+                                if (data.success) {
+
                                     Alert.alert(`Success`, `Template "${currentTemp.name}" deleted successfully!`);
                                     navigation.goBack();
                                     dispatch(updateUserTempArr(data.data.templateArr));
@@ -118,9 +127,9 @@ const ShowTemp = () => {
                                     dispatch(updateLoading(false));
                                     Alert.alert(`Error`, `${data.err}`)
                                 }
-                            }).catch(err=>console.log(err))
+                            }).catch(err => console.log(err))
                         }
-                        else console.log(err=>'invalid uid: ', uid)
+                        else console.log(err => 'invalid uid: ', uid)
                     }).catch(err => console.log(err))
                 }
             }
@@ -134,10 +143,11 @@ const ShowTemp = () => {
         })
     }, []);
 
+    // handles page navigation for device back button
     useFocusEffect(
-        React.useCallback(()=> {
+        React.useCallback(() => {
             const onBackPress = () => {
-                if(detMode) {
+                if (detMode) {
                     handleBack2();
                     return true;
                 }

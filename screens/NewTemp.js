@@ -26,17 +26,20 @@ const NewTemp = () => {
     const [detMode, setDetMode] = useState(false);
     const [exerObj, setExerObj] = useState(null);
 
+    // handles cancelling of new exercise template creation
     function handleDelTemp() {
         setTempName('');
         setTempExerArr([]);
         navigation.goBack();
     }
 
+    // handles cancelling of exercise detail mode
     function handleDetBack() {
         setDetMode(false);
         setExerObj(null);
     }
 
+    // handles database update with newly created exercise template
     async function saveTemplate(newTempArr, uid) {
         let updateURI = REACT_APP_API_URI + 'updateTemp';
         let res = await axios.post(updateURI, { userID: uid, templateArr: newTempArr }).catch(err => console.log(err));
@@ -44,6 +47,7 @@ const NewTemp = () => {
         return res;
     }
 
+    // handles saving of new exercise template
     function saveTemp() {
         if (!tempName.split(' ').join('')) {
             return Alert.alert('Missing Template Name!', 'Please Add Template Name.', [
@@ -96,22 +100,26 @@ const NewTemp = () => {
         }
     }
 
+    // handles template name update
     function handleTempName(text) {
         setTempName(text);
     }
 
+    // handles exercise removal from exercise template
     function removeExer(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr.splice(index, 1);
         setTempExerArr(newTempExerArr);
     }
 
+    // handles addition of a set to an exercise
     function addSet(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr[index].sets++;
         setTempExerArr(newTempExerArr);
     }
 
+    // handles removal of a set from an exercise
     function removeSet(index) {
         let newTempExerArr = JSON.parse(JSON.stringify(tempExerArr));
         newTempExerArr[index].sets--;
@@ -124,6 +132,7 @@ const NewTemp = () => {
         })
     }, []);
 
+    // handles page navigation for device back button
     useFocusEffect(
         React.useCallback(() => {
             const onBackPress = () => {

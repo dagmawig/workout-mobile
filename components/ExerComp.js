@@ -2,7 +2,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { IMAGES } from '../assets'
 
-
+// returns exercise component
 const ExerComp = ({ filterExer, exerDet }) => {
     return filterExer.map((exer, i) => {
         return (

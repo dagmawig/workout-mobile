@@ -30,6 +30,7 @@ const History = () => {
         }, {})
     );
 
+    // returns workout session history list component
     function historyList(userWorkObj) {
         return Object.keys(userWorkObj).sort((a, b) => new Date(b) - new Date(a)).map(key => {
             return (
@@ -58,6 +59,7 @@ const History = () => {
         })
     }
 
+    // returns workout session exercise list component
     function exerList(workoutList, key) {
         return workoutList?.map((workout, i) => {
             return (
@@ -89,6 +91,7 @@ const History = () => {
         })
     }
 
+    // returns set list component with workout record for a given exercise
     function setList(metric1, metric2, exerName, exerIndex) {
         return metric1.map((val, i) => {
             return (
@@ -103,6 +106,7 @@ const History = () => {
         })
     }
 
+    // handles the expansion of a given workout session to reveal the workout record
     function handleExpand(key, index) {
         let updatedExpanded = JSON.parse(JSON.stringify(expanded));
 
@@ -118,6 +122,7 @@ const History = () => {
         }
     }
 
+    // handles the update of database after workout history is cleared
     async function resetH(uid) {
         let updateURI = REACT_APP_API_URI + 'resetHistory';
         let res = await axios.post(updateURI, { userID: uid }).catch(err => console.log(err));
@@ -125,6 +130,7 @@ const History = () => {
         return res;
     }
 
+    // handles clearing of workout history
     function clearHistory() {
         Alert.alert(`Clear History`, `Are you sure you want to clear workout history?`, [
             {
@@ -172,7 +178,7 @@ const History = () => {
             <View className='h-full w-full' style={customStyle.topPad}>
                 <View className='w-full h-10 shadow-2xl flex-row items-center justify-between px-3 sticky'>
                     <Text className='text-white text-xl font-semibold'>History</Text>
-                    {Object.keys(userWorkObj).length !== 0? <TouchableOpacity onPress={clearHistory}><FontAwesome name="eraser" size={25} color="white" /></TouchableOpacity> : null}
+                    {Object.keys(userWorkObj).length !== 0 ? <TouchableOpacity onPress={clearHistory}><FontAwesome name="eraser" size={25} color="white" /></TouchableOpacity> : null}
                 </View>
                 <ScrollView className='px-3 pt-3' contentContainerStyle={{ paddingBottom: 70 }}>
                     {Object.keys(userWorkObj).length !== 0 ? historyList(userWorkObj) :

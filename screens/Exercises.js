@@ -72,6 +72,7 @@ const Exercises = () => {
         })
     }, [])
 
+    // updates exercise filter tag list
     function updateResFil(activeB, activeM, filTag) {
         let filteredArr = Search.filter(exerArr, activeB, activeM)
         setFExerArr(filteredArr);
@@ -90,6 +91,7 @@ const Exercises = () => {
         }
     }
 
+    // updates exercise serach term
     function handleChange(text) {
         if (text === '') clearSearch()
         else {
@@ -102,20 +104,24 @@ const Exercises = () => {
         }
     }
 
+    // handles cancelling search mode
     function handleBack() {
         setSearchMode(false);
     }
 
+    // handles cancelling exercise filter mode
     function handleBackF() {
         setFilterMode(false);
         setDetMode(false);
         setExerDetIndex(null);
     }
 
+    // handles activating exercise filter mode
     function handleFilter() {
         setFilterMode(true);
     }
 
+    // handles removal of a given exercise filter tag
     function clearTag(tagIndex, tag) {
         const newTagList = tagList.slice(0, tagIndex).concat(tagList.slice(tagIndex + 1));
         setTagList(newTagList);
@@ -140,6 +146,7 @@ const Exercises = () => {
         }
     }
 
+    // handles removal of search term tag
     function clearSearch() {
         let sRes = Search.sort(Search.search(''));
         setExerArr(sRes);
@@ -149,25 +156,28 @@ const Exercises = () => {
         setLoadList(filArr.slice(0, 50));
     }
 
+    // handles navigation to exercise detail page
     function exerDet(exerIndex) {
         setDetMode(true);
         setExerDetIndex(exerIndex);
     }
 
+    // handles fetching more exercises from filtered exercise list as user scrolls down
     function fetchMore() {
         if (loadList.length < fExerArr.length) {
             setLoadList([...loadList, ...fExerArr.slice(loadList.length, loadList.length + 50)])
         }
     }
 
+    // handles page navigation for device back button
     useFocusEffect(
-        React.useCallback(()=> {
+        React.useCallback(() => {
             const onBackPress = () => {
-                if(filterMode || detMode) {
+                if (filterMode || detMode) {
                     handleBackF();
                     return true;
                 }
-                else if(searchMode) {
+                else if (searchMode) {
                     handleBack();
                     return true;
                 }
@@ -258,10 +268,9 @@ const Exercises = () => {
                         </ScrollView>
                         :
                         <>
-
                             <FlatList
                                 className='px-3'
-                                contentContainerStyle={{ paddingBottom: searchMode? 10 : 70 }}
+                                contentContainerStyle={{ paddingBottom: searchMode ? 10 : 70 }}
                                 data={loadList}
                                 onEndReached={fetchMore}
                                 onEndReachedThreshold={3}
@@ -291,11 +300,9 @@ const Exercises = () => {
                                     </TouchableOpacity>
                                 )}
                             />
-                            {searchMode? null : <FooterComp />}
+                            {searchMode ? null : <FooterComp />}
                         </>
                 }
-
-                
             </View>
         </View>
     )

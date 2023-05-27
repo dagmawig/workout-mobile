@@ -34,6 +34,7 @@ const muscleGroups = [
     "triceps"
 ];
 
+// defines fuzzy/approximate string matching search parameters
 const options = {
     includeScore: true,
     shouldSort: true,
@@ -44,15 +45,16 @@ const options = {
     keys: ['name']
 }
 
+// defines the FuseJS search object using the given input array and search options
 const exerFuse = new Fuse(exerLocal, options);
 
-
-
+// returns elements approximately matching the input text 
 const Search = (text) => {
     if(text=== '') return SortExer(exerFuse.search("!0123456789"));
     else return exerFuse.search("'" + text.trim());
 }
 
+// filters exercises based on selected body parts and muscle group filter parameters
 const Filter = (eArr, activeB, activeM) => {
     const bList = bodyParts.filter((body, i) => {
         return activeB[i]
@@ -68,6 +70,7 @@ const Filter = (eArr, activeB, activeM) => {
     else return eArr;
 }
 
+// sorts exercises based on exercise name
 const SortExer = (exerArr) => {
     return exerArr.sort((a, b) => {
 

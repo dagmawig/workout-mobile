@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
 
+// returns a component containing search and filter tags
 const TagComp = ({ tagArr, clearTag, clearSearch, search }) => {
     return tagArr.map((tag, i) => {
         const trimTag = tag.trim();

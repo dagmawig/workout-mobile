@@ -3,6 +3,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { updateActiveB, updateActiveM } from './workoutSlice';
 
+// returns exercise filter tag components using body parts and muscle groups
 const FilterTagComp = ({ filterTags, filterType, updateResFil }) => {
 
     const stateSelector = useSelector(state => state.workout);
@@ -44,6 +45,7 @@ const FilterTagComp = ({ filterTags, filterType, updateResFil }) => {
         "triceps"
     ];
 
+    // handles filter tag select/deselect toggle action
     function handleActive(i) {
         if (filterType === 'body') {
             const newActiveB = JSON.parse(JSON.stringify(activeB));
@@ -60,7 +62,6 @@ const FilterTagComp = ({ filterTags, filterType, updateResFil }) => {
 
     return filterTags.map((tag, i) => {
         const pref = (filterType === 'body' ? 'b' : 'm');
-
 
         return (
             <TouchableOpacity id={pref + 'TagF' + i.toString()} key={pref + 'TagF' + i.toString()} className='flex-row p-1 self-start items-center space-x-2 rounded-xl border-2 border-white m-1' style={{ backgroundColor: (filterType === 'body' && activeB[i]) || (filterType === 'muscle' && activeM[i]) ? '#24323f' : 'transparent' }} onPress={(e) => handleActive(i)}>
