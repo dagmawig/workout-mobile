@@ -11,6 +11,16 @@ import axios from 'axios';
 import SecureSt from '../components/SecureStore';
 import Loading from '../components/Loading';
 import { customStyle } from '../components/Style';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => {
+        return {
+            shouldShowAlert: true
+        }
+    }
+})
 
 const Workout = () => {
 
@@ -45,7 +55,8 @@ const Workout = () => {
         return tList.map((temp, i) => {
             return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`} onPress={() => handleShowTemp(temp, userTemp, i)}>
                 <View><Text className='text-white text-lg font-bold'>{temp.name}</Text></View>
-                <View><Text className='text-white pb-2 italic'>{`Last Performed: ${calcTime(temp)}`}</Text></View>
+                <View><Text className='text-white italic'>{`Last Performed: ${calcTime(temp)}`}</Text></View>
+                <View className='flex-row'><FontAwesome5 name="bell" size={18} color="white" /><Text className='text-white pb-2 italic'>{` ${temp.reminder ? 'Day and Time' : "None"}`}</Text></View>
                 {exerList(temp.exerList, userTemp)}
             </TouchableOpacity>
         })
@@ -69,6 +80,61 @@ const Workout = () => {
     // handles navigation to new template page
     function handleNewTemp() {
         navigation.navigate('NewTemp');
+    }
+
+
+    let remObj = {};
+    async function triggerNot() {
+        let date = new Date("2023-05-03T18:44:58.537Z");
+        remObj["2023-05-03T18:44:58.537Z"] = await Notifications.scheduleNotificationAsync({
+            content: {
+                title: "You’ve got mail! 📬",
+                body: "Here is the notification body",
+                data: { data: "goes here" },
+            },
+            trigger: {
+                hour: 16,
+                minute: 12,
+                repeats: true,
+                weekday: 1
+            },
+        });
+    }
+
+    async function cancelNot() {
+        console.log(remObj);
+        let res = await Notifications.cancelScheduledNotificationAsync(remObj["2023-05-03T18:44:58.537Z"]);
+        // await Notifications.getS
+        return res;
+    }
+
+    async function printAll() {
+        let res = await Notifications.getAllScheduledNotificationsAsync();
+        return res;
+    }
+
+    async function clearAll() {
+        await Notifications.cancelAllScheduledNotificationsAsync();
+    }
+
+    function triggerPrint() {
+        printAll().then(res => {
+            console.log(res)
+        })
+    }
+
+    function triggerCancel() {
+        cancelNot()
+            .then((res) => {
+                // console.log(res)
+
+                Alert.alert('Success', 'Reminder cancelled!', [
+                    {
+                        text: 'Ok',
+                        onPress: null,
+                        style: 'default'
+                    }])
+            })
     }
 
     useLayoutEffect(() => {
@@ -139,6 +205,11 @@ const Workout = () => {
                             </View>
                         </>
                     }
+                    {/* <TouchableOpacity onPress={triggerNot}><Text>Notify</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={triggerCancel}><Text>Cancel</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={triggerPrint}><Text>Print</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={clearAll}><Text>Clear ALl</Text></TouchableOpacity> */}
+
                 </ScrollView>
                 <FooterComp />
             </View>

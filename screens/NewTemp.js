@@ -13,6 +13,7 @@ import SecureSt from '../components/SecureStore';
 import axios from 'axios';
 import { customStyle } from '../components/Style';
 import { BackHandler } from 'react-native';
+import ReminderComp from '../components/ReminderComp';
 
 const NewTemp = () => {
 
@@ -25,6 +26,14 @@ const NewTemp = () => {
     const [tempName, setTempName] = useState('');
     const [detMode, setDetMode] = useState(false);
     const [exerObj, setExerObj] = useState(null);
+    const [reminder, setReminder] = useState(false);
+    const [rType, setRType] = useState('daily');
+    const [hour, setHour] = useState(0);
+    const [minute, setMinute] = useState(0);
+    const [dispH, setDispH] = useState(12);
+    const [meridian, setMeridian] = useState('AM');
+    const [day, setDay] = useState('SUNDAY');
+    const [dayIndex, setIndex] = useState(1);
 
     // handles cancelling of new exercise template creation
     function handleDelTemp() {
@@ -183,7 +192,7 @@ const NewTemp = () => {
                                 </>
                             </View>
                             <ScrollView className='px-3' keyboardShouldPersistTaps='handled'>
-                                <View>
+                                <View className='flex-row items-center justify-around'>
                                     <TextInput
                                         className='h-10 w-60  border-white text-base border-2 rounded-md bg-[#345b7c] px-2 text-white mt-1'
                                         cursorColor={'white'}
@@ -191,6 +200,12 @@ const NewTemp = () => {
                                         placeholderTextColor={'gray'}
                                         value={tempName}
                                         onChangeText={(text) => handleTempName(text)} />
+                                    <TouchableOpacity onPress={() => setReminder(!reminder)} className='mt-1'>{reminder ? <FontAwesome5 name="bell" size={24} color="white" /> : <FontAwesome5 name="bell-slash" size={24} color="white" />}</TouchableOpacity>
+                                </View>
+                                {reminder && <View className='items-center justify-center'>
+                                    <ReminderComp rType={rType} setRType={setRType} dispH={dispH} minute={minute} meridian={meridian} day={day} setHour={setHour} setMinute={setMinute} setDispH={setDispH} setMeridian={setMeridian} setDay={setDay} setIndex={setIndex} />
+                                </View>}
+                                <View>
                                 </View>
                                 <View className='pt-3'>
                                     <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} setExerObj={setExerObj} setDetMode={setDetMode} />

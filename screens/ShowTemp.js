@@ -188,7 +188,8 @@ const ShowTemp = () => {
                         <>
                             <View className='border-[1px] rounded-lg p-1 border-white m-1' key='temp'>
                                 <View><Text className='text-white font-bold text-lg'>{currentTemp.name}</Text></View>
-                                <View><Text className='text-white pb-2 italic'>{`Last Performed: ${calcTime(currentTemp)}`}</Text></View>
+                                <View><Text className='text-white italic'>{`Last Performed: ${calcTime(currentTemp)}`}</Text></View>
+                                <View className='flex-row'><FontAwesome5 name="bell" size={18} color="white" /><Text className='text-white pb-2 italic'>{` ${currentTemp.reminder ? 'Day and Time' : "None"}`}</Text></View>
                                 {exerList(currentTemp.exerList, currentTempObj.userTemp)}
                             </View>
                             <View className='w-full justify-center items-center py-3'>
