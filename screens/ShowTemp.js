@@ -13,6 +13,7 @@ import SecureSt from '../components/SecureStore';
 import { REACT_APP_API_URI } from '@env';
 import axios from 'axios';
 import { BackHandler } from 'react-native';
+import Noti from '../components/noti';
 
 
 const ShowTemp = () => {
@@ -110,27 +111,32 @@ const ShowTemp = () => {
                 onPress: () => {
 
                     let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
-                    newUserTempArr.splice(currentTempObj.index, 1);
-                    dispatch(updateLoading(true));
-                    SecureSt.getVal('uid').then(uid => {
-                        if (uid) {
-                            saveTemplate(newUserTempArr, uid).then(res => {
-                                let data = res.data;
-                                if (data.success) {
+                    let delTemp = newUserTempArr[currentTempObj.index];
 
-                                    Alert.alert(`Success`, `Template "${currentTemp.name}" deleted successfully!`);
-                                    navigation.goBack();
-                                    dispatch(updateUserTempArr(data.data.templateArr));
-                                    dispatch(updateLoading(false));
+                    Noti.cancelNot(delTemp.reminder, delTemp[delTemp.tempID])
+                        .then(response => {
+                            newUserTempArr.splice(currentTempObj.index, 1);
+                            dispatch(updateLoading(true));
+                            SecureSt.getVal('uid').then(uid => {
+                                if (uid) {
+                                    saveTemplate(newUserTempArr, uid).then(res => {
+                                        let data = res.data;
+                                        if (data.success) {
+
+                                            Alert.alert(`Success`, `Template "${currentTemp.name}" deleted successfully!`);
+                                            navigation.goBack();
+                                            dispatch(updateUserTempArr(data.data.templateArr));
+                                            dispatch(updateLoading(false));
+                                        }
+                                        else {
+                                            dispatch(updateLoading(false));
+                                            Alert.alert(`Error`, `${data.err}`)
+                                        }
+                                    }).catch(err => console.log(err))
                                 }
-                                else {
-                                    dispatch(updateLoading(false));
-                                    Alert.alert(`Error`, `${data.err}`)
-                                }
+                                else console.log(err => 'invalid uid: ', uid)
                             }).catch(err => console.log(err))
-                        }
-                        else console.log(err => 'invalid uid: ', uid)
-                    }).catch(err => console.log(err))
+                        }).catch(err=>console.log(err))
                 }
             }
         ])
@@ -189,7 +195,7 @@ const ShowTemp = () => {
                             <View className='border-[1px] rounded-lg p-1 border-white m-1' key='temp'>
                                 <View><Text className='text-white font-bold text-lg'>{currentTemp.name}</Text></View>
                                 <View><Text className='text-white italic'>{`Last Performed: ${calcTime(currentTemp)}`}</Text></View>
-                                <View className='flex-row'><FontAwesome5 name="bell" size={18} color="white" /><Text className='text-white pb-2 italic'>{` ${currentTemp.reminder ? 'Day and Time' : "None"}`}</Text></View>
+                                <View className='flex-row'><FontAwesome5 name="bell" size={18} color={currentTemp.reminder ? "yellow" : "white"} /><Text className='pb-2 italic' style={{ color: currentTemp.reminder ? "yellow" : "white" }} >{` ${currentTemp.reminder ? `${Noti.getDayTime(currentTemp)}` : "None"}`}</Text></View>
                                 {exerList(currentTemp.exerList, currentTempObj.userTemp)}
                             </View>
                             <View className='w-full justify-center items-center py-3'>

@@ -13,6 +13,7 @@ import axios from 'axios';
 import SecureSt from '../components/SecureStore';
 import { customStyle } from '../components/Style';
 import ReminderComp from '../components/ReminderComp';
+import Noti from '../components/noti';
 
 const EditTemp = () => {
 
@@ -93,30 +94,48 @@ const EditTemp = () => {
             let updatedTemp = JSON.parse(JSON.stringify(currentTemp));
             updatedTemp.name = tempName;
             updatedTemp.exerList = tempExerArr;
+
             let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
             newUserTempArr[stateSelector.currentTemp.index] = updatedTemp;
 
             dispatch(updateLoading(true));
-            SecureSt.getVal('uid').then(uid => {
-                if (uid) {
-                    saveTemplate(newUserTempArr, uid).then(res => {
-                        let data = res.data;
-                        if (data.success) {
-                            dispatch(updateUserTempArr(data.data.templateArr));
-                            Alert.alert(`Success`, `Template "${tempName}" updated successfully!`);
-                            setTempName('');
-                            setTempExerArr([]);
-                            navigation.goBack();
-                            dispatch(updateLoading(false));
+            Noti.cancelNot(updatedTemp.reminder, updatedTemp[updatedTemp.tempID]).then(response => {
+                Noti.setNot(reminder, updatedTemp, rType, hour, minute, dayIndex, dispH, meridian, day)
+                    .then(respS => {
+                        if (respS !== null) {
+                            let remObj = { reminder, rType, hour, minute, dispH, meridian, day, dayIndex, dispH, meridian, day };
+                            updatedTemp[updatedTemp.tempID] = respS;
+                            updatedTemp.remObj = remObj;
+                            updatedTemp.reminder = true;
                         }
                         else {
-                            dispatch(updateLoading(false));
-                            Alert.alert(`Error`, `${data.err}`)
+                            updatedTemp[updatedTemp.tempID] = null;
+                            updatedTemp.remObj = null;
+                            updatedTemp.reminder = false;
                         }
-                    }).catch(err => console.log(err))
-                }
-                else console.log('invalid uid: ', uid)
-            }).catch(err => console.log(err))
+
+                        SecureSt.getVal('uid').then(uid => {
+                            if (uid) {
+                                saveTemplate(newUserTempArr, uid).then(res => {
+                                    let data = res.data;
+                                    if (data.success) {
+                                        dispatch(updateUserTempArr(data.data.templateArr));
+                                        Alert.alert(`Success`, `Template "${tempName}" updated successfully!`);
+                                        setTempName('');
+                                        setTempExerArr([]);
+                                        navigation.goBack();
+                                        dispatch(updateLoading(false));
+                                    }
+                                    else {
+                                        dispatch(updateLoading(false));
+                                        Alert.alert(`Error`, `${data.err}`)
+                                    }
+                                }).catch(err => console.log(err))
+                            }
+                            else console.log('invalid uid: ', uid)
+                        }).catch(err => console.log(err))
+                    })
+            }).catch(err=>console.log(err))
         }
     }
 
@@ -216,8 +235,8 @@ const EditTemp = () => {
                                 <TouchableOpacity onPress={() => setReminder(!reminder)} className='mt-1'>{reminder ? <FontAwesome5 name="bell" size={24} color="white" /> : <FontAwesome5 name="bell-slash" size={24} color="white" />}</TouchableOpacity>
                             </View>
                             {reminder && <View className='items-center justify-center'>
-                                    <ReminderComp rType={rType} setRType={setRType} dispH={dispH} minute={minute} meridian={meridian} day={day} setHour={setHour} setMinute={setMinute} setDispH={setDispH} setMeridian={setMeridian} setDay={setDay} setIndex={setIndex} />
-                                </View>}
+                                <ReminderComp rType={rType} setRType={setRType} dispH={dispH} minute={minute} meridian={meridian} day={day} setHour={setHour} setMinute={setMinute} setDispH={setDispH} setMeridian={setMeridian} setDay={setDay} setIndex={setIndex} />
+                            </View>}
                             <View className='pt-3'>
                                 <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} setExerObj={setExerObj} setDetMode={setDetMode} />
                             </View>

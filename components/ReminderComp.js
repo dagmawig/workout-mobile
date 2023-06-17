@@ -15,7 +15,6 @@ const ReminderComp = ({ rType, setRType, dispH, minute, meridian, day, setHour, 
         setShow(false);
         if (event.type === 'set') {
             let pickedTime = new Date(date);
-            console.log(pickedTime.toLocaleTimeString());
             setHour(pickedTime.getHours());
             setMinute(pickedTime.getMinutes());
             setDispH(pickedTime.toLocaleTimeString().split(':')[0]);
@@ -50,13 +49,13 @@ const ReminderComp = ({ rType, setRType, dispH, minute, meridian, day, setHour, 
                         dropdownIconColor={'white'}
                         dropdownIconRippleColor={'blue'}
                         style={{ width: '100%', height: 30, color: 'white'}}>
-                        <Picker.Item label="SUNDAY" value="SUNDAY" />
-                        <Picker.Item label="MONDAY" value="MONDAY" />
-                        <Picker.Item label="TUESDAY" value="TUESDAY" />
-                        <Picker.Item label="WEDNESDAY" value="WEDNESDAY" />
-                        <Picker.Item label="THURSDAY" value="THURSDAY" />
-                        <Picker.Item label="FRIDAY" value="FRIDAY" />
-                        <Picker.Item label="SATURDAY" value="SATURDAY" />
+                        <Picker.Item label="SUNDAY" value="SUNDAY" style={{color: '#28547B'}} />
+                        <Picker.Item label="MONDAY" value="MONDAY" style={{color: '#28547B'}} />
+                        <Picker.Item label="TUESDAY" value="TUESDAY" style={{color: '#28547B'}} />
+                        <Picker.Item label="WEDNESDAY" value="WEDNESDAY" style={{color: '#28547B'}} />
+                        <Picker.Item label="THURSDAY" value="THURSDAY" style={{color: '#28547B'}} />
+                        <Picker.Item label="FRIDAY" value="FRIDAY" style={{color: '#28547B'}} />
+                        <Picker.Item label="SATURDAY" value="SATURDAY" style={{color: '#28547B'}} />
                     </Picker>
                 </View>}
                 {show && <RNDateTimePicker mode="time" value={new Date()} onChange={updateTime} />}

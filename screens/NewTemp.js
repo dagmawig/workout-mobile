@@ -14,6 +14,8 @@ import axios from 'axios';
 import { customStyle } from '../components/Style';
 import { BackHandler } from 'react-native';
 import ReminderComp from '../components/ReminderComp';
+import Noti from '../components/noti';
+
 
 const NewTemp = () => {
 
@@ -75,37 +77,50 @@ const NewTemp = () => {
             ])
         }
         else {
+            let tempID = new Date().toISOString();
             let workoutTemp = {
-                tempID: new Date().toISOString(),
+                tempID: tempID,
                 workoutTimeArr: [],
                 name: tempName,
                 exerList: JSON.parse(JSON.stringify(tempExerArr))
             }
 
-            let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
-            newUserTempArr.push(workoutTemp);
-
             dispatch(updateLoading(true));
-            SecureSt.getVal('uid').then(uid => {
-                if (uid) {
-                    saveTemplate(newUserTempArr, uid).then(res => {
-                        let data = res.data;
-                        if (data.success) {
-                            dispatch(updateUserTempArr(data.data.templateArr));
-                            Alert.alert(`Success`, `Template "${tempName}" saved successfully!`);
-                            navigation.goBack();
-                            setTempName('');
-                            setTempExerArr([]);
-                            dispatch(updateLoading(false));
+            Noti.setNot(reminder, workoutTemp, rType, hour, minute, dayIndex, dispH, meridian, day)
+                .then(res => {
+                    if (res !== null) {
+                        let remObj = { reminder, rType, hour, minute, dispH, meridian, day, dayIndex, dispH, meridian, day };
+                        workoutTemp[workoutTemp.tempID] = res;
+                        workoutTemp.remObj = remObj;
+                        workoutTemp.reminder = true;
+                    }
+                })
+                .then(response => {
+                    let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
+                    newUserTempArr.push(workoutTemp);
+                    console.log(workoutTemp);
+                    SecureSt.getVal('uid').then(uid => {
+                        if (uid) {
+                            saveTemplate(newUserTempArr, uid).then(res => {
+                                let data = res.data;
+                                if (data.success) {
+                                    dispatch(updateUserTempArr(data.data.templateArr));
+                                    Alert.alert(`Success`, `Template "${tempName}" saved successfully!`);
+                                    navigation.goBack();
+                                    setTempName('');
+                                    setTempExerArr([]);
+                                    dispatch(updateLoading(false));
+                                }
+                                else {
+                                    dispatch(updateLoading(false));
+                                    Alert.alert(`Error`, `${data.err}`);
+                                }
+                            }).catch(err => console.log(err))
                         }
-                        else {
-                            dispatch(updateLoading(false));
-                            Alert.alert(`Error`, `${data.err}`);
-                        }
+                        else console.log('invalid uid: ', uid)
                     }).catch(err => console.log(err))
-                }
-                else console.log('invalid uid: ', uid)
-            }).catch(err => console.log(err))
+                })
+
         }
     }
 

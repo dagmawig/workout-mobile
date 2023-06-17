@@ -13,6 +13,7 @@ import Loading from '../components/Loading';
 import { customStyle } from '../components/Style';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
+import Noti from '../components/noti'
 
 Notifications.setNotificationHandler({
     handleNotification: async () => {
@@ -56,7 +57,7 @@ const Workout = () => {
             return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`} onPress={() => handleShowTemp(temp, userTemp, i)}>
                 <View><Text className='text-white text-lg font-bold'>{temp.name}</Text></View>
                 <View><Text className='text-white italic'>{`Last Performed: ${calcTime(temp)}`}</Text></View>
-                <View className='flex-row'><FontAwesome5 name="bell" size={18} color="white" /><Text className='text-white pb-2 italic'>{` ${temp.reminder ? 'Day and Time' : "None"}`}</Text></View>
+                <View className='flex-row'><FontAwesome5 name="bell" size={18} color={temp.reminder? "yellow" : "white"} /><Text className='pb-2 italic' style={{color: temp.reminder? "yellow": "white"}} >{` ${temp.reminder ? `${Noti.getDayTime(temp)}` : "None"}`}</Text></View>
                 {exerList(temp.exerList, userTemp)}
             </TouchableOpacity>
         })
@@ -82,60 +83,20 @@ const Workout = () => {
         navigation.navigate('NewTemp');
     }
 
+    // async function printAll() {
+    //     let res = await Notifications.getAllScheduledNotificationsAsync();
+    //     return res;
+    // }
 
-    let remObj = {};
-    async function triggerNot() {
-        let date = new Date("2023-05-03T18:44:58.537Z");
-        remObj["2023-05-03T18:44:58.537Z"] = await Notifications.scheduleNotificationAsync({
-            content: {
-                title: "You’ve got mail! 📬",
-                body: "Here is the notification body",
-                data: { data: "goes here" },
-            },
-            trigger: {
-                hour: 16,
-                minute: 12,
-                repeats: true,
-                weekday: 1
-            },
-        });
-    }
-
-    async function cancelNot() {
-        console.log(remObj);
-        let res = await Notifications.cancelScheduledNotificationAsync(remObj["2023-05-03T18:44:58.537Z"]);
-        // await Notifications.getS
-        return res;
-    }
-
-    async function printAll() {
-        let res = await Notifications.getAllScheduledNotificationsAsync();
-        return res;
-    }
-
-    async function clearAll() {
-        await Notifications.cancelAllScheduledNotificationsAsync();
-    }
-
-    function triggerPrint() {
-        printAll().then(res => {
-            console.log(res)
-        })
-    }
-
-    function triggerCancel() {
-        cancelNot()
-            .then((res) => {
-                // console.log(res)
-
-                Alert.alert('Success', 'Reminder cancelled!', [
-                    {
-                        text: 'Ok',
-                        onPress: null,
-                        style: 'default'
-                    }])
-            })
-    }
+    // async function clearAll() {
+    //     await Notifications.cancelAllScheduledNotificationsAsync();
+    // }
+    
+    // function triggerPrint() {
+    //     printAll().then(res => {
+    //         console.log(res)
+    //     })
+    // }
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -206,8 +167,8 @@ const Workout = () => {
                         </>
                     }
                     {/* <TouchableOpacity onPress={triggerNot}><Text>Notify</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={triggerCancel}><Text>Cancel</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={triggerPrint}><Text>Print</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={triggerCancel}><Text>Cancel</Text></TouchableOpacity> */}
+                    {/* <TouchableOpacity onPress={triggerPrint}><Text>Print</Text></TouchableOpacity>
                     <TouchableOpacity onPress={clearAll}><Text>Clear ALl</Text></TouchableOpacity> */}
 
                 </ScrollView>
