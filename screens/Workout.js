@@ -59,7 +59,7 @@ const Workout = () => {
             return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`} onPress={() => handleShowTemp(temp, userTemp, i)}>
                 <View><Text className='text-white text-lg font-bold'>{temp.name}</Text></View>
                 <View><Text className='text-white italic'>{`Last Performed: ${calcTime(temp)}`}</Text></View>
-                <View className='flex-row'><FontAwesome5 name="bell" size={18} color={temp.reminder ? "yellow" : "white"} /><Text className='pb-2 italic' style={{ color: temp.reminder ? "yellow" : "white" }} >{` ${temp.reminder ? `${Noti.getDayTime(temp)}` : "None"}`}</Text></View>
+                {userTemp? <View className='flex-row'><FontAwesome5 name="bell" size={18} color={temp.reminder ? "yellow" : "white"} /><Text className='pb-2 italic' style={{ color: temp.reminder ? "yellow" : "white" }} >{` ${temp.reminder ? `${Noti.getDayTime(temp)}` : "None"}`}</Text></View> : null}
                 {exerList(temp.exerList, userTemp)}
             </TouchableOpacity>
         })
