@@ -98,7 +98,6 @@ const NewTemp = () => {
                 .then(response => {
                     let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
                     newUserTempArr.push(workoutTemp);
-                    console.log(workoutTemp);
                     SecureSt.getVal('uid').then(uid => {
                         if (uid) {
                             saveTemplate(newUserTempArr, uid).then(res => {

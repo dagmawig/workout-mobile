@@ -9,13 +9,13 @@ Notifications.setNotificationHandler({
 })
 
 function getDayTime(temp) {
-        // let remObj = res.filter(notif => notif.identifier === temp[temp.tempID])[0].content.data;
         let remObj = temp.remObj;
         let dayArr = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 
+        let timeStr = `${Math.floor(remObj.dispH/10)}${remObj.dispH%10}:${Math.floor(remObj.minute/10)}${remObj.minute%10} ${remObj.meridian}`;
+
         if (remObj.rType === 'weekly') {
-            // console.log('dsfdsd', `${remObj.day} @${remObj.dispH}:${remObj.minute} ${remObj.meridian}`)
-            return `${remObj.day} @${remObj.dispH}:${remObj.minute} ${remObj.meridian}`;
+            return `${remObj.day} @${timeStr}`;
         }
         else {
             let dateNow = new Date();
@@ -24,9 +24,9 @@ function getDayTime(temp) {
             let dayInd = dateNow.getDay();
 
             if (remObj.hour > hourNow || (remObj.hour === hourNow && remObj.minute > minuteNow)) {
-                return `${dayArr[dayInd]} @${remObj.dispH}:${remObj.minute} ${remObj.meridian}`;
+                return `${dayArr[dayInd]} @${timeStr}`;
             }
-            else return `${dayArr[(dayInd + 1) % 7]} @${remObj.dispH}:${remObj.minute} ${remObj.meridian}`;
+            else return `${dayArr[(dayInd + 1) % 7]} @${timeStr}`;
         }
 }
 
@@ -40,7 +40,7 @@ async function setNot(reminder, workoutTemp, rType, hour, minute, dayIndex, disp
             content: {
                 title: workoutTemp.name,
                 body: "Time to workout!",
-                data: null,
+                data: {tempID: workoutTemp.tempID},
             },
             trigger: {
                 hour: hour,

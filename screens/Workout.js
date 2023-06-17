@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,7 +12,6 @@ import SecureSt from '../components/SecureStore';
 import Loading from '../components/Loading';
 import { customStyle } from '../components/Style';
 import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
 import Noti from '../components/noti'
 
 Notifications.setNotificationHandler({
@@ -23,12 +22,15 @@ Notifications.setNotificationHandler({
     }
 })
 
+
+
+
 const Workout = () => {
 
     const navigation = useNavigation();
     const stateSelector = useSelector(state => state.workout);
     const dispatch = useDispatch();
-
+    const responseListener = useRef();
     const [detMode, setDetMode] = useState(false);
     const [detExer, setDetExer] = useState(null);
 
@@ -57,7 +59,7 @@ const Workout = () => {
             return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`} onPress={() => handleShowTemp(temp, userTemp, i)}>
                 <View><Text className='text-white text-lg font-bold'>{temp.name}</Text></View>
                 <View><Text className='text-white italic'>{`Last Performed: ${calcTime(temp)}`}</Text></View>
-                <View className='flex-row'><FontAwesome5 name="bell" size={18} color={temp.reminder? "yellow" : "white"} /><Text className='pb-2 italic' style={{color: temp.reminder? "yellow": "white"}} >{` ${temp.reminder ? `${Noti.getDayTime(temp)}` : "None"}`}</Text></View>
+                <View className='flex-row'><FontAwesome5 name="bell" size={18} color={temp.reminder ? "yellow" : "white"} /><Text className='pb-2 italic' style={{ color: temp.reminder ? "yellow" : "white" }} >{` ${temp.reminder ? `${Noti.getDayTime(temp)}` : "None"}`}</Text></View>
                 {exerList(temp.exerList, userTemp)}
             </TouchableOpacity>
         })
@@ -91,7 +93,7 @@ const Workout = () => {
     // async function clearAll() {
     //     await Notifications.cancelAllScheduledNotificationsAsync();
     // }
-    
+
     // function triggerPrint() {
     //     printAll().then(res => {
     //         console.log(res)
@@ -104,6 +106,8 @@ const Workout = () => {
         })
     }, []);
 
+
+    
     // fetches user data from database
     useEffect(() => {
         async function loadData(uid) {
@@ -112,6 +116,8 @@ const Workout = () => {
             return res;
         }
 
+
+
         dispatch(updateLoading(true));
         SecureSt.getVal('uid').then(uid => {
             if (uid) {
@@ -119,7 +125,41 @@ const Workout = () => {
                     let data = res.data;
                     if (data.success) {
                         dispatch(updateUserData(data.data))
-                        dispatch(updateLoading(false))
+                        
+                        responseListener.current =
+                            Notifications.addNotificationResponseReceivedListener((response) => {
+                                let tempID = response.notification.request.content.data.tempID;
+                                let templateArr = stateSelector.userData.templateArr;
+                                let fixTempArr = stateSelector.userData.fixTempArr;
+                                let user;
+
+                                templateArr.map((temp, i) => {
+                                    if (temp.tempID === tempID) {
+                                        user = true;
+                                        dispatch(updateCurrentTemp({
+                                            userTemp: true,
+                                            index: i
+                                        }));
+                                        navigation.navigate('ShowTemp');
+                                    }
+                                })
+
+                                if (!user) {
+                                    fixTempArr.map((temp, i) => {
+                                        if (temp.tempID === tempID) {
+                                            dispatch(updateCurrentTemp({
+                                                userTemp: false,
+                                                index: i
+                                            }));
+    
+                                            navigation.navigate('ShowTemp');
+                                        }
+                                    })
+                                }
+
+                            })
+
+                            dispatch(updateLoading(false))
                     }
                     else {
                         dispatch(updateLoading(false))
@@ -129,6 +169,7 @@ const Workout = () => {
             }
             else console.log('invalid uid: ', uid)
         })
+
     }, [stateSelector.userData.email])
 
     return (
