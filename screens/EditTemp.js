@@ -31,13 +31,13 @@ const EditTemp = () => {
     const [exerObj, setExerObj] = useState(null);
 
     const [reminder, setReminder] = useState(currentTemp.reminder ? true : false);
-    const [rType, setRType] = useState(currentTemp.rType || 'daily');
-    const [hour, setHour] = useState(currentTemp.hour || 0);
-    const [minute, setMinute] = useState(currentTemp.minute || 0);
-    const [dispH, setDispH] = useState(currentTemp.dispH || 12);
-    const [meridian, setMeridian] = useState(currentTemp.meridian || 'AM');
-    const [day, setDay] = useState(currentTemp.day || 'SUNDAY');
-    const [dayIndex, setIndex] = useState(currentTemp.dayIndex || 1);
+    const [rType, setRType] = useState(currentTemp.remObj.rType || 'daily');
+    const [hour, setHour] = useState(currentTemp.remObj.hour || 0);
+    const [minute, setMinute] = useState(currentTemp.remObj.minute || 0);
+    const [dispH, setDispH] = useState(currentTemp.remObj? currentTemp.remObj.dispH : 12);
+    const [meridian, setMeridian] = useState(currentTemp.remObj.meridian || 'AM');
+    const [day, setDay] = useState(currentTemp.remObj.day || 'SUNDAY');
+    const [dayIndex, setIndex] = useState(currentTemp.remObj? currentTemp.remObj.dayIndex : 1);
 
     // handles cancelling of exercise template edit
     function handleDelChange() {
