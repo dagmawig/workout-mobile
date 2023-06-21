@@ -59,7 +59,7 @@ const Workout = () => {
             return <TouchableOpacity className='border-[1px] rounded-lg p-1 border-white m-1' key={`${userTemp ? 'user' : 'fixed'}-temp-${i}`} onPress={() => handleShowTemp(temp, userTemp, i)}>
                 <View><Text className='text-white text-lg font-bold'>{temp.name}</Text></View>
                 <View><Text className='text-white italic'>{`Last Performed: ${calcTime(temp)}`}</Text></View>
-                {userTemp? <View className='flex-row'><FontAwesome5 name="bell" size={18} color={temp.reminder ? "yellow" : "white"} /><Text className='pb-2 italic' style={{ color: temp.reminder ? "yellow" : "white" }} >{` ${temp.reminder ? `${Noti.getDayTime(temp)}` : "None"}`}</Text></View> : null}
+                {userTemp ? <View className='flex-row'><FontAwesome5 name="bell" size={18} color={temp.reminder ? "yellow" : "white"} /><Text className='pb-2 italic' style={{ color: temp.reminder ? "yellow" : "white" }} >{` ${temp.reminder ? `${Noti.getDayTime(temp)}` : "None"}`}</Text></View> : null}
                 {exerList(temp.exerList, userTemp)}
             </TouchableOpacity>
         })
@@ -107,7 +107,7 @@ const Workout = () => {
     }, []);
 
 
-    
+
     // fetches user data from database
     useEffect(() => {
         async function loadData(uid) {
@@ -124,8 +124,12 @@ const Workout = () => {
                 loadData(uid).then(res => {
                     let data = res.data;
                     if (data.success) {
-                        dispatch(updateUserData(data.data))
-                        
+                        Noti.updateNoti(data.data.templateArr)
+                            .then(response => {
+                                data.data.templateArr = response;
+                                dispatch(updateUserData(data.data));
+                            })
+
                         responseListener.current =
                             Notifications.addNotificationResponseReceivedListener((response) => {
                                 let tempID = response.notification.request.content.data.tempID;
@@ -151,7 +155,7 @@ const Workout = () => {
                                                 userTemp: false,
                                                 index: i
                                             }));
-    
+
                                             navigation.navigate('ShowTemp');
                                         }
                                     })
@@ -159,7 +163,7 @@ const Workout = () => {
 
                             })
 
-                            dispatch(updateLoading(false))
+                        dispatch(updateLoading(false))
                     }
                     else {
                         dispatch(updateLoading(false))
@@ -209,8 +213,8 @@ const Workout = () => {
                     }
                     {/* <TouchableOpacity onPress={triggerNot}><Text>Notify</Text></TouchableOpacity>
                     <TouchableOpacity onPress={triggerCancel}><Text>Cancel</Text></TouchableOpacity> */}
-                    {/* <TouchableOpacity onPress={triggerPrint}><Text>Print</Text></TouchableOpacity>
-                    <TouchableOpacity onPress={clearAll}><Text>Clear ALl</Text></TouchableOpacity> */}
+                    {/* <TouchableOpacity onPress={triggerPrint}><Text>Print</Text></TouchableOpacity> */}
+                    {/* <TouchableOpacity onPress={clearAll}><Text>Clear ALl</Text></TouchableOpacity> */}
 
                 </ScrollView>
                 <FooterComp />
