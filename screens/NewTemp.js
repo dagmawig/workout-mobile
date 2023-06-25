@@ -36,6 +36,7 @@ const NewTemp = () => {
     const [meridian, setMeridian] = useState('AM');
     const [day, setDay] = useState('SUNDAY');
     const [dayIndex, setIndex] = useState(1);
+    const [dayTag, setDayTag] = useState(new Array(7).fill(false));
 
     // handles cancelling of new exercise template creation
     function handleDelTemp() {
@@ -60,6 +61,11 @@ const NewTemp = () => {
 
     // handles saving of new exercise template
     function saveTemp() {
+        let dayIndexArr = dayTag.reduce((filArr, tag, i) => {
+            tag && filArr.push(i + 1);
+            return filArr;
+        }, []);
+
         if (!tempName.split(' ').join('')) {
             return Alert.alert('Missing Template Name!', 'Please Add Template Name.', [
                 {
@@ -76,6 +82,14 @@ const NewTemp = () => {
                 }
             ])
         }
+        else if (rType==='weekly' && dayIndexArr.length===0) {
+            return Alert.alert('Missing Reminder Day!', 'Please pick at least one day of the week or turn off reminder before saving template.', [
+                {
+                    text: 'Ok',
+                    onPress: () => null
+                }
+            ])
+        }
         else {
             let tempID = new Date().toISOString();
             let workoutTemp = {
@@ -85,40 +99,45 @@ const NewTemp = () => {
                 exerList: JSON.parse(JSON.stringify(tempExerArr))
             }
 
-            dispatch(updateLoading(true));
-            Noti.setNot(reminder, workoutTemp, rType, hour, minute, dayIndex, dispH, meridian, day)
-                .then(res => {
-                    if (res !== null) {
-                        let remObj = { reminder, rType, hour, minute, dispH, meridian, day, dayIndex, dispH, meridian, day };
-                        workoutTemp[workoutTemp.tempID] = res;
-                        workoutTemp.remObj = remObj;
-                        workoutTemp.reminder = true;
-                    }
-                })
-                .then(response => {
-                    let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
-                    newUserTempArr.push(workoutTemp);
-                    SecureSt.getVal('uid').then(uid => {
-                        if (uid) {
-                            saveTemplate(newUserTempArr, uid).then(res => {
-                                let data = res.data;
-                                if (data.success) {
-                                    dispatch(updateUserTempArr(data.data.templateArr));
-                                    Alert.alert(`Success`, `Template "${tempName}" saved successfully!`);
-                                    navigation.goBack();
-                                    setTempName('');
-                                    setTempExerArr([]);
-                                    dispatch(updateLoading(false));
+            dispatch(updateLoading(true));            
+            let remSetting = { workoutTemp, rType: (rType==='weekly' && dayIndexArr.length===7)? 'daily' : rType , hour, minute };
+            Noti.setNotArr(reminder, dayIndexArr, remSetting)
+                .then(respo => {
+                    Promise.all(respo)
+                        .then(res => {
+                            if (res.length !== 0) {
+                                let remObj = { reminder, rType, hour, minute, dispH, meridian, day, dayIndexArr, dispH, meridian, day };
+                                workoutTemp[workoutTemp.tempID] = res;
+                                workoutTemp.remObj = remObj;
+                                workoutTemp.reminder = true;
+                            }
+                        })
+                        .then(response => {
+                            let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
+                            newUserTempArr.push(workoutTemp);
+                            SecureSt.getVal('uid').then(uid => {
+                                if (uid) {
+                                    saveTemplate(newUserTempArr, uid).then(res => {
+                                        let data = res.data;
+                                        if (data.success) {
+                                            dispatch(updateUserTempArr(data.data.templateArr));
+                                            Alert.alert(`Success`, `Template "${tempName}" saved successfully!`);
+                                            navigation.goBack();
+                                            setTempName('');
+                                            setTempExerArr([]);
+                                            dispatch(updateLoading(false));
+                                        }
+                                        else {
+                                            dispatch(updateLoading(false));
+                                            Alert.alert(`Error`, `${data.err}`);
+                                        }
+                                    }).catch(err => console.log(err))
                                 }
-                                else {
-                                    dispatch(updateLoading(false));
-                                    Alert.alert(`Error`, `${data.err}`);
-                                }
+                                else console.log('invalid uid: ', uid)
                             }).catch(err => console.log(err))
-                        }
-                        else console.log('invalid uid: ', uid)
-                    }).catch(err => console.log(err))
+                        })
                 })
+
 
         }
     }
@@ -217,7 +236,7 @@ const NewTemp = () => {
                                     <TouchableOpacity onPress={() => setReminder(!reminder)} className='mt-1'>{reminder ? <FontAwesome5 name="bell" size={24} color="white" /> : <FontAwesome5 name="bell-slash" size={24} color="white" />}</TouchableOpacity>
                                 </View>
                                 {reminder && <View className='items-center justify-center'>
-                                    <ReminderComp rType={rType} setRType={setRType} dispH={dispH} minute={minute} meridian={meridian} day={day} setHour={setHour} setMinute={setMinute} setDispH={setDispH} setMeridian={setMeridian} setDay={setDay} setIndex={setIndex} />
+                                    <ReminderComp rType={rType} setRType={setRType} dispH={dispH} minute={minute} meridian={meridian} day={day} setHour={setHour} setMinute={setMinute} setDispH={setDispH} setMeridian={setMeridian} setDay={setDay} setIndex={setIndex} dayTag={dayTag} setDayTag={setDayTag} />
                                 </View>}
                                 <View>
                                 </View>

@@ -2,7 +2,7 @@
   "expo": {
     "name": "FitFUSE",
     "slug": "FitFUSE",
-    "version": "1.0.11",
+    "version": "1.0.12",
     "orientation": "portrait",
     "icon": "./assets/home_logo.png",
     "userInterfaceStyle": "light",
@@ -11,6 +11,11 @@
       "resizeMode": "contain",
       "backgroundColor": "#28547B"
     },
+    "notification": {
+      "androidMode" : "default",
+      "icon": "./assets/noti_icon.png",
+      "color": "#28547B"
+     },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -19,7 +24,7 @@
     },
     "android": {
       "package": "com.fitfuse.workout.tracker",
-      "versionCode": 12,
+      "versionCode": 13,
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon_1.png",
         "backgroundColor": "#28547B"

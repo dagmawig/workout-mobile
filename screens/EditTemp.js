@@ -38,6 +38,7 @@ const EditTemp = () => {
     const [meridian, setMeridian] = useState(currentTemp.remObj ? currentTemp.remObj.meridian : 'AM');
     const [day, setDay] = useState(currentTemp.remObj ? currentTemp.remObj.day : 'SUNDAY');
     const [dayIndex, setIndex] = useState(currentTemp.remObj ? currentTemp.remObj.dayIndex : 1);
+    const [dayTag, setDayTag] = useState(currentTemp.reminder && currentTemp.remObj.rType==='weekly' && currentTemp.remObj.dayIndexArr ? new Array(7).fill(false).map((ele, i)=> {if(currentTemp.remObj.dayIndexArr.indexOf(i+1)!==-1) return true; else return false}) : new Array(7).fill(false));
 
     // handles cancelling of exercise template edit
     function handleDelChange() {
@@ -74,6 +75,11 @@ const EditTemp = () => {
 
     // hanldes saving edited exercise template
     function saveTemp() {
+        let dayIndexArr = dayTag.reduce((filArr, tag, i) => {
+            tag && filArr.push(i + 1);
+            return filArr;
+        }, []);
+
         if (!tempName.split(' ').join('')) {
             return Alert.alert('Missing Template Name!', 'Please Add Template Name.', [
                 {
@@ -90,6 +96,14 @@ const EditTemp = () => {
                 }
             ])
         }
+        else if (rType==='weekly' && dayIndexArr.length===0) {
+            return Alert.alert('Missing Reminder Day!', 'Please pick at least one day of the week or turn off reminder before saving template.', [
+                {
+                    text: 'Ok',
+                    onPress: () => null
+                }
+            ])
+        }
         else {
             let updatedTemp = JSON.parse(JSON.stringify(currentTemp));
             updatedTemp.name = tempName;
@@ -99,43 +113,53 @@ const EditTemp = () => {
             newUserTempArr[stateSelector.currentTemp.index] = updatedTemp;
 
             dispatch(updateLoading(true));
-            Noti.cancelNot(updatedTemp.reminder, updatedTemp[updatedTemp.tempID]).then(response => {
-                Noti.setNot(reminder, updatedTemp, rType, hour, minute, dayIndex, dispH, meridian, day)
-                    .then(respS => {
-                        if (respS !== null) {
-                            let remObj = { reminder, rType, hour, minute, dispH, meridian, day, dayIndex, dispH, meridian, day };
-                            updatedTemp[updatedTemp.tempID] = respS;
-                            updatedTemp.remObj = remObj;
-                            updatedTemp.reminder = true;
-                        }
-                        else {
-                            updatedTemp[updatedTemp.tempID] = null;
-                            updatedTemp.remObj = null;
-                            updatedTemp.reminder = false;
-                        }
+            let remSetting = { workoutTemp:updatedTemp, rType: (rType==='weekly' && dayIndexArr.length===7)? 'daily' : rType, hour, minute };
+            Noti.cancelNotArr(updatedTemp.reminder, updatedTemp[updatedTemp.tempID])
+                .then(respo => {
+                    Promise.all(respo)
+                        .then(response => {
+                            Noti.setNotArr(reminder, dayIndexArr, remSetting)
+                                .then(respo => {
+                                    Promise.all(respo)
+                                        .then(respS => {
+                                            if (respS.length !== 0) {
+                                                let remObj = { reminder, rType, hour, minute, dispH, meridian, day, dayIndexArr, dispH, meridian, day };
+                                                updatedTemp[updatedTemp.tempID] = respS;
+                                                updatedTemp.remObj = remObj;
+                                                updatedTemp.reminder = true;
+                                            }
+                                            else {
+                                                updatedTemp[updatedTemp.tempID] = null;
+                                                updatedTemp.remObj = null;
+                                                updatedTemp.reminder = false;
+                                            }
 
-                        SecureSt.getVal('uid').then(uid => {
-                            if (uid) {
-                                saveTemplate(newUserTempArr, uid).then(res => {
-                                    let data = res.data;
-                                    if (data.success) {
-                                        dispatch(updateUserTempArr(data.data.templateArr));
-                                        Alert.alert(`Success`, `Template "${tempName}" updated successfully!`);
-                                        setTempName('');
-                                        setTempExerArr([]);
-                                        navigation.goBack();
-                                        dispatch(updateLoading(false));
-                                    }
-                                    else {
-                                        dispatch(updateLoading(false));
-                                        Alert.alert(`Error`, `${data.err}`)
-                                    }
+                                            SecureSt.getVal('uid').then(uid => {
+                                                if (uid) {
+                                                    saveTemplate(newUserTempArr, uid).then(res => {
+                                                        let data = res.data;
+                                                        if (data.success) {
+                                                            dispatch(updateUserTempArr(data.data.templateArr));
+                                                            Alert.alert(`Success`, `Template "${tempName}" updated successfully!`);
+                                                            setTempName('');
+                                                            setTempExerArr([]);
+                                                            navigation.goBack();
+                                                            dispatch(updateLoading(false));
+                                                        }
+                                                        else {
+                                                            dispatch(updateLoading(false));
+                                                            Alert.alert(`Error`, `${data.err}`)
+                                                        }
+                                                    }).catch(err => console.log(err))
+                                                }
+                                                else console.log('invalid uid: ', uid)
+                                            }).catch(err => console.log(err))
+                                        })
                                 }).catch(err => console.log(err))
-                            }
-                            else console.log('invalid uid: ', uid)
-                        }).catch(err => console.log(err))
-                    })
-            }).catch(err => console.log(err))
+                        })
+                })
+
+
         }
     }
 
@@ -235,7 +259,7 @@ const EditTemp = () => {
                                 <TouchableOpacity onPress={() => setReminder(!reminder)} className='mt-1'>{reminder ? <FontAwesome5 name="bell" size={24} color="white" /> : <FontAwesome5 name="bell-slash" size={24} color="white" />}</TouchableOpacity>
                             </View>
                             {reminder && <View className='items-center justify-center'>
-                                <ReminderComp rType={rType} setRType={setRType} dispH={dispH} minute={minute} meridian={meridian} day={day} setHour={setHour} setMinute={setMinute} setDispH={setDispH} setMeridian={setMeridian} setDay={setDay} setIndex={setIndex} />
+                                <ReminderComp rType={rType} setRType={setRType} dispH={dispH} minute={minute} meridian={meridian} day={day} setHour={setHour} setMinute={setMinute} setDispH={setDispH} setMeridian={setMeridian} setDay={setDay} setIndex={setIndex} dayTag={dayTag} setDayTag={setDayTag} />
                             </View>}
                             <View className='pt-3'>
                                 <TempExerComp exerArr={tempExerArr} removeExer={removeExer} addSet={addSet} removeSet={removeSet} setExerObj={setExerObj} setDetMode={setDetMode} />

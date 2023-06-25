@@ -14,15 +14,32 @@ function getDayTime(temp) {
 
     let timeStr = `${Math.floor(remObj.dispH / 10)}${remObj.dispH % 10}:${Math.floor(remObj.minute / 10)}${remObj.minute % 10} ${remObj.meridian}`;
 
+    let dateNow = new Date();
+    let hourNow = dateNow.getHours();
+    let minuteNow = dateNow.getMinutes();
+    let dayInd = dateNow.getDay();
+
     if (remObj.rType === 'weekly') {
-        return `${remObj.day} @${timeStr}`;
+        let dayIndexArr = remObj.dayIndexArr;
+        if(!dayIndexArr) return 'Error/Reset reminder!'
+        let pickedDayArr = dayArr.reduce((newArr, pickedDay, i) => {
+            dayIndexArr.indexOf(i + 1) !== -1 && newArr.push(pickedDay);
+            return newArr;
+        }, []);
+
+        let currentDayIndex = dayInd + 1;
+        if (dayIndexArr.indexOf(currentDayIndex) === -1) {
+            while (dayIndexArr.indexOf(currentDayIndex) === -1) {
+                currentDayIndex = (currentDayIndex % 7) + 1;
+            }
+            return `${pickedDayArr[dayIndexArr.indexOf(currentDayIndex)]} @${timeStr}`
+        }
+        else {
+            if (remObj.hour > hourNow || (remObj.hour === hourNow && remObj.minute > minuteNow)) return `${pickedDayArr[dayIndexArr.indexOf(currentDayIndex)]} @${timeStr}`;
+            else return `${pickedDayArr[(dayIndexArr.indexOf(currentDayIndex) + 1) % dayIndexArr.length]} @${timeStr}`
+        }
     }
     else {
-        let dateNow = new Date();
-        let hourNow = dateNow.getHours();
-        let minuteNow = dateNow.getMinutes();
-        let dayInd = dateNow.getDay();
-
         if (remObj.hour > hourNow || (remObj.hour === hourNow && remObj.minute > minuteNow)) {
             return `${dayArr[dayInd]} @${timeStr}`;
         }
@@ -31,32 +48,45 @@ function getDayTime(temp) {
 }
 
 // handles setting of notification
-async function setNot(reminder, workoutTemp, rType, hour, minute, dayIndex, dispH, meridian, day) {
+async function setNot(workoutTemp, rType, hour, minute, dayIndex, dispH, meridian, day) {
+    return await Notifications.scheduleNotificationAsync({
+        content: {
+            title: workoutTemp.name,
+            body: "Time to workout!",
+            data: { tempID: workoutTemp.tempID },
+        },
+        trigger: {
+            hour: hour,
+            minute: minute,
+            repeats: true,
+            ...(rType === 'weekly' && { weekday: dayIndex })
+        },
+    });
+}
 
+// handles setting an array of notifications
+async function setNotArr(reminder, dayIndexarr, remSetting) {
     if (reminder) {
-        let remObj = { reminder, rType, hour, minute, dispH, meridian, day, dayIndex, dispH, meridian, day };
+        if (remSetting.rType === 'daily') {
+            return [await setNot(remSetting.workoutTemp, remSetting.rType, remSetting.hour, remSetting.minute)];
+        }
 
-        return await Notifications.scheduleNotificationAsync({
-            content: {
-                title: workoutTemp.name,
-                body: "Time to workout!",
-                data: { tempID: workoutTemp.tempID },
-            },
-            trigger: {
-                hour: hour,
-                minute: minute,
-                repeats: true,
-                ...(rType === 'weekly' && { weekday: dayIndex })
-            },
-        });
+        else return await dayIndexarr.map(dayIndex => setNot(remSetting.workoutTemp, remSetting.rType, remSetting.hour, remSetting.minute, dayIndex))
     }
-    else return null;
+
+    return [];
 }
 
 // handles cancelling a scheduled notification
-async function cancelNot(reminder, identifier) {
-    if (reminder) return await Notifications.cancelScheduledNotificationAsync(identifier);
-    else return null;
+async function cancelNot(identifier) {
+    return await Notifications.cancelScheduledNotificationAsync(identifier);
+}
+
+// handles cancelling an array of scheduled notifications
+async function cancelNotArr(reminder, identifierArr) {
+    if (reminder && typeof identifierArr !== 'string') return await identifierArr.map(identifier => cancelNot(identifier));
+    else if(reminder) return [await cancelNot(identifierArr)];
+    else return [];
 }
 
 // updates local noti object using templateArr reminder settings as source of truth
@@ -65,19 +95,25 @@ async function updateNoti(templateArr) {
         .then(notiArr => {
             let identifierArr = [];
             templateArr.map(temp => {
-                let identifier = temp[temp.tempID];
+                let idArr = temp[temp.tempID];
 
-                if (identifier) identifierArr.push(identifier);
+                if (idArr && typeof idArr !== 'string') {
+                    identifierArr.push(...idArr);
 
-                if (identifier && notiArr.filter(notiObj => notiObj.identifier === identifier).length === 0) {
+                    let updatedIDArray = [...idArr];
                     let remObj = temp.remObj;
-                    setNot(true, temp, remObj.rType, remObj.hour, remObj.minute, remObj.dayIndex, remObj.dispH, remObj.meridian, remObj.day)
-                        .then(resp => {
-                            if (resp === null) throw Error(`Error updating noti obj for template obj with tempID ${temp.tempID}.`);
-                            else {
-                                temp[temp.tempID] = resp;
-                            }
-                        })
+                    for (let i = 0; i < idArr.length; i++) {
+                        let identifier = idArr[i];
+
+                        if (notiArr.filter(notiObj => notiObj.identifier === identifier).length === 0) {
+                            setNot(temp, remObj.rType, remObj.hour, remObj.minute, remObj.dayIndexArr[i])
+                                .then(res => {
+                                    if (res === null) throw Error(`Error updating noti obj for template obj with tempID ${temp.tempID}.`);
+                                    else updatedIDArray[i] = res;
+                                })
+                        }
+                    }
+                    temp[temp.tempID] = updatedIDArray;
                 }
             });
             notiArr.map(notiObj => {
@@ -88,4 +124,4 @@ async function updateNoti(templateArr) {
         })
 }
 
-export default { getDayTime, setNot, cancelNot, updateNoti }
+export default { getDayTime, setNotArr, cancelNotArr, updateNoti }

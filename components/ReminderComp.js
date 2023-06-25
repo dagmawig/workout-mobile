@@ -5,9 +5,10 @@ import RNDateTimePicker from '@react-native-community/datetimepicker'
 import { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome5 } from '@expo/vector-icons';
+import DayTagComp from './DayTagComp';
 
 
-const ReminderComp = ({ rType, setRType, dispH, minute, meridian, day, setHour, setMinute, setDispH, setMeridian, setDay, setIndex }) => {
+const ReminderComp = ({ rType, setRType, dispH, minute, meridian, day, setHour, setMinute, setDispH, setMeridian, setDay, setIndex, dayTag, setDayTag }) => {
 
     const [show, setShow] = useState(false);
     
@@ -23,7 +24,7 @@ const ReminderComp = ({ rType, setRType, dispH, minute, meridian, day, setHour, 
     }
 
     return (
-        <View className='border-[1px] border-white rounded-md p-2 mt-2 w-2/3'>
+        <View className='border-[1px] border-white rounded-md p-2 mt-2 w-3/4'>
             <View className='flex-row items-center justify-around'>
                 <TouchableOpacity onPress={() => setRType('daily')} className='p-2 rounded-full' style={{ backgroundColor: rType === 'daily' ? '#1a364f' : 'transparent' }}><Text className='text-white text-lg'>Daily</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => setRType('weekly')} className='p-2 rounded-full' style={{ backgroundColor: rType === 'weekly' ? '#1a364f' : 'transparent' }}><Text className='text-white text-lg'>Weekly</Text></TouchableOpacity>
@@ -39,7 +40,8 @@ const ReminderComp = ({ rType, setRType, dispH, minute, meridian, day, setHour, 
                     </TouchableOpacity>
 
                 {/* <Text className='text-white'>DAY</Text> */}
-                {rType==='weekly' && <View className='w-3/4 items-center justify-center bg-[#1a364f] p-0 rounded-full'>
+                {rType==='weekly' && <View className='flex-row flex-wrap w-full justify-around items-center'>
+                {/* <View className='w-3/4 items-center justify-center bg-[#1a364f] p-0 rounded-full'>
                     <Picker
                         selectedValue={day}
                         onValueChange={(itemValue, itemIndex) => {
@@ -57,6 +59,8 @@ const ReminderComp = ({ rType, setRType, dispH, minute, meridian, day, setHour, 
                         <Picker.Item label="FRIDAY" value="FRIDAY" style={{color: '#28547B'}} />
                         <Picker.Item label="SATURDAY" value="SATURDAY" style={{color: '#28547B'}} />
                     </Picker>
+                </View>   */}
+                <DayTagComp dayTag={dayTag} setDayTag={setDayTag} />
                 </View>}
                 {show && <RNDateTimePicker mode="time" value={new Date()} onChange={updateTime} />}
             </View>
