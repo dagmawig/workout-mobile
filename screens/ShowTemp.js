@@ -113,7 +113,7 @@ const ShowTemp = () => {
                     let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
                     let delTemp = newUserTempArr[currentTempObj.index];
 
-                    Noti.cancelNot(delTemp.reminder, delTemp[delTemp.tempID])
+                    Noti.cancelNotArr(delTemp.reminder, delTemp[delTemp.tempID])
                         .then(response => {
                             newUserTempArr.splice(currentTempObj.index, 1);
                             dispatch(updateLoading(true));

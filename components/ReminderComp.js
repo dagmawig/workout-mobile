@@ -3,7 +3,6 @@ import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
 import { useState } from 'react';
-import { Picker } from '@react-native-picker/picker';
 import { FontAwesome5 } from '@expo/vector-icons';
 import DayTagComp from './DayTagComp';
 
@@ -38,28 +37,7 @@ const ReminderComp = ({ rType, setRType, dispH, minute, meridian, day, setHour, 
                         </View>
 
                     </TouchableOpacity>
-
-                {/* <Text className='text-white'>DAY</Text> */}
                 {rType==='weekly' && <View className='flex-row flex-wrap w-full justify-around items-center'>
-                {/* <View className='w-3/4 items-center justify-center bg-[#1a364f] p-0 rounded-full'>
-                    <Picker
-                        selectedValue={day}
-                        onValueChange={(itemValue, itemIndex) => {
-                            setDay(itemValue);
-                            setIndex(itemIndex + 1);
-                        }}
-                        dropdownIconColor={'white'}
-                        dropdownIconRippleColor={'blue'}
-                        style={{ width: '100%', height: 30, color: 'white'}}>
-                        <Picker.Item label="SUNDAY" value="SUNDAY" style={{color: '#28547B'}} />
-                        <Picker.Item label="MONDAY" value="MONDAY" style={{color: '#28547B'}} />
-                        <Picker.Item label="TUESDAY" value="TUESDAY" style={{color: '#28547B'}} />
-                        <Picker.Item label="WEDNESDAY" value="WEDNESDAY" style={{color: '#28547B'}} />
-                        <Picker.Item label="THURSDAY" value="THURSDAY" style={{color: '#28547B'}} />
-                        <Picker.Item label="FRIDAY" value="FRIDAY" style={{color: '#28547B'}} />
-                        <Picker.Item label="SATURDAY" value="SATURDAY" style={{color: '#28547B'}} />
-                    </Picker>
-                </View>   */}
                 <DayTagComp dayTag={dayTag} setDayTag={setDayTag} />
                 </View>}
                 {show && <RNDateTimePicker mode="time" value={new Date()} onChange={updateTime} />}
