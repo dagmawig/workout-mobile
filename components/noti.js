@@ -90,7 +90,7 @@ async function cancelNotArr(reminder, identifierArr) {
 }
 
 // updates local noti object using templateArr reminder settings as source of truth
-async function updateNoti(templateArr) {
+async function updateNoti(templateArr, fixTempArr) {
     return await Notifications.getAllScheduledNotificationsAsync()
         .then(notiArr => {
             let identifierArr = [];
@@ -116,11 +116,35 @@ async function updateNoti(templateArr) {
                     temp[temp.tempID] = updatedIDArray;
                 }
             });
+
+            fixTempArr.map(temp => {
+                let idArr = temp[temp.tempID];
+
+                if (idArr && typeof idArr !== 'string') {
+                    identifierArr.push(...idArr);
+
+                    let updatedIDArray = [...idArr];
+                    let remObj = temp.remObj;
+                    for (let i = 0; i < idArr.length; i++) {
+                        let identifier = idArr[i];
+
+                        if (notiArr.filter(notiObj => notiObj.identifier === identifier).length === 0) {
+                            setNot(temp, remObj.rType, remObj.hour, remObj.minute, remObj.dayIndexArr[i])
+                                .then(res => {
+                                    if (res === null) throw Error(`Error updating noti obj for template obj with tempID ${temp.tempID}.`);
+                                    else updatedIDArray[i] = res;
+                                })
+                        }
+                    }
+                    temp[temp.tempID] = updatedIDArray;
+                }
+            });
+
             notiArr.map(notiObj => {
                 if (identifierArr.indexOf(notiObj.identifier) === -1) Notifications.cancelScheduledNotificationAsync(notiObj.identifier);
             })
 
-            return templateArr;
+            return {templateArr, fixTempArr};
         })
 }
 

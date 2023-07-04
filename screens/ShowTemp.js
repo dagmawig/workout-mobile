@@ -178,7 +178,7 @@ const ShowTemp = () => {
                             </TouchableOpacity>
                         </View>
                         <View>
-                            {currentTempObj.userTemp && !detMode ? <TouchableOpacity onPress={handleEditTemp}>
+                            {!detMode ? <TouchableOpacity onPress={handleEditTemp}>
                                 <FontAwesome5 name="edit" size={25} color="white" />
                             </TouchableOpacity> : null}
                         </View>
