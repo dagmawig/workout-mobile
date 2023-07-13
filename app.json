@@ -12,10 +12,10 @@
       "backgroundColor": "#28547B"
     },
     "notification": {
-      "androidMode" : "default",
+      "androidMode": "default",
       "icon": "./assets/noti_icon.png",
       "color": "#28547B"
-     },
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -35,7 +35,23 @@
     },
     "plugins": [
       "./config_plugins/withAnimatedWebp",
-      "./android-datepicker-color-config-plugin.js"
+      "./android-datepicker-color-config-plugin.js",
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "Hello",
+              "label": "My Hello Widget",
+              "minWidth": "320dp",
+              "minHeight": "120dp",
+              "description": "This is my first widget",
+              "previewImage": "./assets/widget-preview/hello.png",
+              "updatePeriodMillis": 1800000
+            }
+          ]
+        }
+      ]
     ],
     "extra": {
       "eas": {
