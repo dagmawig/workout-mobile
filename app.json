@@ -46,7 +46,7 @@
               "minWidth": "320dp",
               "minHeight": "120dp",
               "description": "This is my first widget",
-              "previewImage": "./assets/widget-preview/hello.png",
+              "previewImage": "./assets/hello.png",
               "updatePeriodMillis": 1800000
             }
           ]

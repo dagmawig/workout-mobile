@@ -19,6 +19,7 @@
     "accordion-collapse-react-native": "^1.1.1",
     "axios": "^1.3.5",
     "expo": "~48.0.6",
+    "expo-dev-client": "~2.2.1",
     "expo-image": "^1.2.1",
     "expo-notifications": "^0.18.1",
     "expo-secure-store": "^12.1.1",
