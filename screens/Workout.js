@@ -13,6 +13,8 @@ import Loading from '../components/Loading';
 import { customStyle } from '../components/Style';
 import * as Notifications from 'expo-notifications';
 import Noti from '../components/noti'
+import { requestWidgetUpdate } from 'react-native-android-widget';
+import TestWidget from '../components/TestWidget';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => {
@@ -119,6 +121,13 @@ const Workout = () => {
 
 
         dispatch(updateLoading(true));
+        requestWidgetUpdate({
+            widgetName: 'Hello',
+            renderWidget: ()=><TestWidget template={stateSelector.userData.fixTempArr[0]}/>,
+            widgetNotFound: () => {
+                Alert.alert('no widget')
+            }
+        })
         SecureSt.getVal('uid').then(uid => {
             if (uid) {
                 loadData(uid).then(res => {
