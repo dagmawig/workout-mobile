@@ -2,7 +2,7 @@
   "expo": {
     "name": "FitFUSE",
     "slug": "FitFUSE",
-    "version": "1.0.15",
+    "version": "1.0.18",
     "orientation": "portrait",
     "icon": "./assets/home_logo.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,7 @@
     },
     "android": {
       "package": "com.fitfuse.workout.tracker",
-      "versionCode": 16,
+      "versionCode": 19,
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon_1.png",
         "backgroundColor": "#28547B"
@@ -42,11 +42,11 @@
           "widgets": [
             {
               "name": "Hello",
-              "label": "My Hello Widget",
+              "label": "Exercise Template",
               "minWidth": "320dp",
               "minHeight": "120dp",
               "description": "This is my first widget",
-              "previewImage": "./assets/hello.png",
+              "previewImage": "./assets/widget_prev.png",
               "updatePeriodMillis": 1800000
             }
           ]

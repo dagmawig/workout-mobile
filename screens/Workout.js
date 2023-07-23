@@ -13,8 +13,7 @@ import Loading from '../components/Loading';
 import { customStyle } from '../components/Style';
 import * as Notifications from 'expo-notifications';
 import Noti from '../components/noti'
-import { requestWidgetUpdate } from 'react-native-android-widget';
-import TestWidget from '../components/TestWidget';
+import WidgetManager from '../components/WidgetManager';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => {
@@ -110,7 +109,7 @@ const Workout = () => {
 
 
 
-    // fetches user data from database
+    // fetches user data from database and loads widget and notification object
     useEffect(() => {
         async function loadData(uid) {
             let loadURI = REACT_APP_API_URI + 'loadData';
@@ -118,27 +117,37 @@ const Workout = () => {
             return res;
         }
 
-
+        async function updateTempIDArr(tempIDArr, uid) {
+            let updateURI = REACT_APP_API_URI + 'updateTempIDArr';
+            let res = await axios.post(updateURI, { userID: uid, tempIDArr: tempIDArr }).catch(err => console.log(err));
+            return res;
+        }
 
         dispatch(updateLoading(true));
-        requestWidgetUpdate({
-            widgetName: 'Hello',
-            renderWidget: ()=><TestWidget template={stateSelector.userData.fixTempArr[0]}/>,
-            widgetNotFound: () => {
-                Alert.alert('no widget')
-            }
-        })
         SecureSt.getVal('uid').then(uid => {
             if (uid) {
                 loadData(uid).then(res => {
                     let data = res.data;
                     if (data.success) {
-                        Noti.updateNoti(data.data.templateArr, data.data.fixTempArr)
-                            .then(response => {
-                                data.data.templateArr = response.templateArr;
-                                data.data.fixTempArr = response.fixTempArr;
-                                dispatch(updateUserData(data.data));
-                            })
+                        let updatedTempIDArr = WidgetManager.loadWidget(data.data.tempIDArr, data.data.templateArr, data.data.fixTempArr);
+                        updateTempIDArr(updatedTempIDArr, uid).then(respo => {
+                            let upData = respo.data;
+                            if (upData.success) {
+                                Noti.updateNoti(upData.data.templateArr, upData.data.fixTempArr)
+                                    .then(response => {
+                                        upData.data.templateArr = response.templateArr;
+                                        upData.data.fixTempArr = response.fixTempArr;
+                                        upData.data.tempIDArr = updatedTempIDArr;
+
+                                        dispatch(updateUserData(upData.data));
+                                    })
+                            }
+                            else {
+                                dispatch(updateLoading(false))
+                                Alert.alert(`Error`, `${upData.err}`)
+                            }
+                        })
+
 
                         responseListener.current =
                             Notifications.addNotificationResponseReceivedListener((response) => {

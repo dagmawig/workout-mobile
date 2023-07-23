@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity, ScrollView, Alert, Image } from 'react-native'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateLoading, updateStartTime, updateUserTempArr } from '../components/workoutSlice';
+import { updateLoading, updateStartTime, updateUserData, updateUserTempArr } from '../components/workoutSlice';
 import exerLocal from '../assets/ExerData/exercisesLocal.json';
 import ExerDetComp from '../components/ExerDetComp';
 import Loading from '../components/Loading';
@@ -14,6 +14,7 @@ import { REACT_APP_API_URI } from '@env';
 import axios from 'axios';
 import { BackHandler } from 'react-native';
 import Noti from '../components/noti';
+import WidgetManager from '../components/WidgetManager';
 
 
 const ShowTemp = () => {
@@ -112,7 +113,12 @@ const ShowTemp = () => {
 
                     let newUserTempArr = JSON.parse(JSON.stringify(stateSelector.userData.templateArr));
                     let delTemp = newUserTempArr[currentTempObj.index];
-
+                    let currentTempIDArr = [...stateSelector.userData.tempIDArr]
+                    if(currentTempIDArr && currentTempIDArr.indexOf(delTemp.tempID)!==-1) {
+                        currentTempIDArr.splice(currentTempIDArr.indexOf(delTemp.tempID), 1);
+                        if(currentTempIDArr.length===0) currentTempIDArr = null;
+                        WidgetManager.loadWidget(currentTempIDArr, stateSelector.userData.templateArr, stateSelector.userData.fixTempArr);
+                    }
                     Noti.cancelNotArr(delTemp.reminder, delTemp[delTemp.tempID])
                         .then(response => {
                             newUserTempArr.splice(currentTempObj.index, 1);
@@ -165,6 +171,39 @@ const ShowTemp = () => {
             return () => subscription.remove();
         }, [detMode])
     )
+
+    useEffect(()=> {
+
+        async function updateTempIDArr(tempIDArr, uid) {
+
+            let updateURI = REACT_APP_API_URI + 'updateTempIDArr';
+            let res = await axios.post(updateURI, { userID: uid, tempIDArr: tempIDArr }).catch(err => console.log(err));
+    
+            return res;
+        }
+
+        dispatch(updateLoading(true));
+        // updates widget and user Data 
+        let updatedTempIDArr = WidgetManager.updateWidget(stateSelector.userData.tempIDArr, currentTemp); 
+        SecureSt.getVal('uid').then(uid=> {
+            if(uid) {
+                updateTempIDArr(updatedTempIDArr, uid).then(res=> {
+                    let data = res.data;
+                    if(data.success) {
+                        dispatch(updateUserData(data.data));
+                        dispatch(updateLoading(false));
+                    }
+                    else {
+                        dispatch(updateLoading(false))
+                        Alert.alert(`Error`, `${data.err}`)
+                    }
+                })
+            }
+            else console.log('invalid uid: ', uid)
+        })
+
+        
+    }, [] )
 
     return (
         <View className='bg-[#28547B] flex-1 max-h-screen min-w-screen overflow-hidden'>

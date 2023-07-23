@@ -80,7 +80,7 @@ const TestWidget = ({ template }) => {
       <TextWidget
         text={tempName}
         style={{
-          fontSize: 32,
+          fontSize: 20,
           fontFamily: 'Inter',
           color: '#FFFFFF',
         }}
