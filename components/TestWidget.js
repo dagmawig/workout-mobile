@@ -78,7 +78,7 @@ const TestWidget = ({ template }) => {
   function TempName() {
     return (
       <TextWidget
-        text={tempName}
+        text={tempName.length<=36? tempName : `${tempName.slice(0,33)}...`}
         style={{
           fontSize: 20,
           fontFamily: 'Inter',
@@ -99,6 +99,8 @@ const TestWidget = ({ template }) => {
           fontSize: 16,
           fontFamily: 'Inter',
           color: '#FFFFFF',
+          marginBottom:5,
+          fontStyle: 'italic'
         }}
       />
     )
@@ -109,11 +111,11 @@ const TestWidget = ({ template }) => {
       <ListWidget
         style={{
           height: 150,
-          width: 300,
+          width: 380,
           overflow: 'auto',
           borderColor: '#FFFFFF',
           borderStyle: 'solid',
-          borderWidth: 1,
+          borderWidth: 0,
           borderRadius: 10,
           padding: 5
         }}>
@@ -124,18 +126,18 @@ const TestWidget = ({ template }) => {
                 key={i}
                 style={{
                   height: 40,
-                  width: 285,
+                  width: 370,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
               >
                 <TextWidget
-                  text={`${exer.sets} X ${exer.name}`}
+                  text={`${exer.sets} X ${exer.name.length<=36? exer.name : `${exer.name.slice(0,33)}...`}`}
                   style={{
                     fontSize: 16,
                     fontFamily: 'Inter',
                     color: '#FFFFFF',
-                    borderRadius: 16,
+                    borderRadius: 10,
                     backgroundColor: '#1a364f',
                     padding: 8,
                   }}

@@ -182,7 +182,7 @@ const ShowTemp = () => {
             return res;
         }
 
-        dispatch(updateLoading(true));
+        //dispatch(updateLoading(true));
         // updates widget and user Data 
         let updatedTempIDArr = WidgetManager.updateWidget(stateSelector.userData.tempIDArr, currentTemp); 
         SecureSt.getVal('uid').then(uid=> {
@@ -191,10 +191,10 @@ const ShowTemp = () => {
                     let data = res.data;
                     if(data.success) {
                         dispatch(updateUserData(data.data));
-                        dispatch(updateLoading(false));
+                        //dispatch(updateLoading(false));
                     }
                     else {
-                        dispatch(updateLoading(false))
+                        //dispatch(updateLoading(false))
                         Alert.alert(`Error`, `${data.err}`)
                     }
                 })
