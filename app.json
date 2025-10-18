@@ -2,7 +2,7 @@
   "expo": {
     "name": "FitFUSE",
     "slug": "FitFUSE",
-    "version": "1.0.15",
+    "version": "1.0.23",
     "orientation": "portrait",
     "icon": "./assets/home_logo.png",
     "userInterfaceStyle": "light",
@@ -12,10 +12,10 @@
       "backgroundColor": "#28547B"
     },
     "notification": {
-      "androidMode" : "default",
+      "androidMode": "default",
       "icon": "./assets/noti_icon.png",
       "color": "#28547B"
-     },
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -24,7 +24,7 @@
     },
     "android": {
       "package": "com.fitfuse.workout.tracker",
-      "versionCode": 16,
+      "versionCode": 24,
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon_1.png",
         "backgroundColor": "#28547B"
@@ -35,7 +35,13 @@
     },
     "plugins": [
       "./config_plugins/withAnimatedWebp",
-      "./android-datepicker-color-config-plugin.js"
+      "./android-datepicker-color-config-plugin.js",
+     [ "expo-build-properties",
+      {
+        "android": {
+          "targetSdkVersion": 34
+        }
+      }]
     ],
     "extra": {
       "eas": {
