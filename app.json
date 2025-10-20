@@ -2,7 +2,7 @@
   "expo": {
     "name": "FitFUSE",
     "slug": "FitFUSE",
-    "version": "1.0.23",
+    "version": "1.0.26",
     "orientation": "portrait",
     "icon": "./assets/home_logo.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,7 @@
     },
     "android": {
       "package": "com.fitfuse.workout.tracker",
-      "versionCode": 24,
+      "versionCode": 27,
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon_1.png",
         "backgroundColor": "#28547B"
@@ -39,7 +39,7 @@
      [ "expo-build-properties",
       {
         "android": {
-          "targetSdkVersion": 34
+          "targetSdkVersion": 35
         }
       }]
     ],
