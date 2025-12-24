@@ -1,7 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { TailwindProvider } from 'tailwindcss-react-native';
+// import { TailwindProvider } from 'tailwindcss-react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SplashScreen from 'expo-splash-screen';
+import './global.css';
 import Home from './screens/Home';
 import Exercises from './screens/Exercises';
 import { Provider } from 'react-redux';
@@ -24,7 +25,7 @@ setTimeout(SplashScreen.hideAsync, 1000);
 
 export default function App() {
   return (
-    <TailwindProvider>
+    // <TailwindProvider>
       <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator>
@@ -43,7 +44,7 @@ export default function App() {
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
-    </TailwindProvider>
+    // </TailwindProvider>
   );
 }
 

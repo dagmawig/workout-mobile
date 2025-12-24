@@ -1,7 +1,11 @@
-module.exports = function(api) {
-  api.cache(true);
+// babel.config.js
+module.exports = function (api) {
+  api.cache(true)
   return {
     presets: ['babel-preset-expo'],
-    plugins: ["tailwindcss-react-native/babel"],
-  };
-};
+    plugins: [
+      'nativewind/babel',
+      'react-native-reanimated/plugin', // 👈 MUST be last
+    ],
+  }
+}
