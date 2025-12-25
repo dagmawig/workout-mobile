@@ -2,7 +2,6 @@ import { NavigationContainer } from '@react-navigation/native';
 // import { TailwindProvider } from 'tailwindcss-react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SplashScreen from 'expo-splash-screen';
-import './global.css';
 import Home from './screens/Home';
 import Exercises from './screens/Exercises';
 import { Provider } from 'react-redux';
