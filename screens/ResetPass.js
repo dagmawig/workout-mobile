@@ -48,7 +48,7 @@ const ResetPass = () => {
                         className='h-80 w-full'>
                         <View className='justify-center items-center h-full w-full'>
                             <TextInput
-                                className='h-7 w-60  border-white border-2 rounded-md px-2 mb-2 text-white bg-[#1b4264]'
+                                className='h-12 w-60  border-white border-2 rounded-md px-2 mb-2 text-white bg-[#1b4264]'
                                 cursorColor={'white'}
                                 placeholder='email'
                                 placeholderTextColor={'gray'}
